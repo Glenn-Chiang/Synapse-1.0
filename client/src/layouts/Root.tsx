@@ -1,16 +1,18 @@
 import { Outlet, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBoltLightning, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 
 export default function Root() {
+  const queryClient = new QueryClient()
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <TopNav/>
       <div className="pt-16">
         <Outlet />
       </div>
-    </>
+    </QueryClientProvider>
   );
 }
 

@@ -1,16 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Chats from "./views/Chats.tsx";
-import Register from "./views/Register.tsx";
-import Login from "./views/Login.tsx";
+import Chats from "./features/Chats/Chats.tsx";
+import Register from "./features/Register.tsx";
+import Login from "./features/Login.tsx";
 import "./index.css";
 import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import Root from "./views/Root.tsx";
-import Channels from "./views/Channels.tsx";
+import Root from "./layouts/Root.tsx";
+import Channels from "./features/Channels/Channels.tsx";
 
 const router = createBrowserRouter([
   {

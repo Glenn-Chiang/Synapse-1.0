@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply pt-16 flex flex-col font-medium
+    @apply flex flex-col font-medium
   }
   h1 {
     @apply font-medium text-2xl text-cyan-600

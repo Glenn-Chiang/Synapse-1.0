@@ -4,9 +4,12 @@
 
 @layer base {
   body {
-    @apply flex flex-col font-medium
+   @apply text-slate-600 
   }
   h1 {
     @apply font-medium text-2xl text-cyan-600
+  }
+  h2 {
+    @apply font-medium text-black
   }
 }

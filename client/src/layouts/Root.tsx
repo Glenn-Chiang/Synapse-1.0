@@ -18,7 +18,7 @@ export default function Root() {
 
 function TopNav() {
   return (
-    <nav className="fixed top-0 left-0 w-screen h-16 flex items-center justify-between bg-cyan-500 text-white p-4 text-2xl">
+    <nav className="fixed top-0 left-0 w-full h-16 flex items-center justify-between bg-cyan-500 text-white p-4 text-2xl">
       <Link to={"/"}>
         <h1 className="flex gap-2 items-center text-white">
           <FontAwesomeIcon icon={faBoltLightning} />

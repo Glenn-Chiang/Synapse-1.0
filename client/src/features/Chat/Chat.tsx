@@ -1,7 +1,4 @@
-import {
-  faChevronLeft,
-  faEllipsisV,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate, useParams } from "react-router-dom";
 import { Message } from "../../types";
@@ -24,7 +21,7 @@ export default function ChatRoom() {
     messages: [
       {
         id: "1",
-        text: "message 1",
+        text: "messageee 1",
         sender: {
           id: "1",
           username: "Glenn",
@@ -32,6 +29,84 @@ export default function ChatRoom() {
         recipient: {
           id: "2",
           username: "024GHOST",
+        },
+        timeStamp: new Date(),
+      },
+      {
+        id: "2",
+        text: "message 1",
+        sender: {
+          id: "2",
+          username: "024GHOST",
+        },
+        recipient: {
+          id: "1",
+          username: "Glenn",
+        },
+        timeStamp: new Date(),
+      },
+      {
+        id: "3",
+        text: "messssssssssage 1",
+        sender: {
+          id: "1",
+          username: "Glenn",
+        },
+        recipient: {
+          id: "2",
+          username: "024GHOST",
+        },
+        timeStamp: new Date(),
+      },
+      {
+        id: "4",
+        text: "messssssssssage 1",
+        sender: {
+          id: "1",
+          username: "Glenn",
+        },
+        recipient: {
+          id: "2",
+          username: "024GHOST",
+        },
+        timeStamp: new Date(),
+      },
+      {
+        id: "5",
+        text: "messssssssssage 1",
+        sender: {
+          id: "2",
+          username: "024GHOST",
+        },
+        recipient: {
+          id: "1",
+          username: "Glenn",
+        },
+        timeStamp: new Date(),
+      },
+      {
+        id: "6",
+        text: "messssssssssage 1",
+        sender: {
+          id: "1",
+          username: "Glenn",
+        },
+        recipient: {
+          id: "2",
+          username: "024GHOST",
+        },
+        timeStamp: new Date(),
+      },
+      {
+        id: "7",
+        text: "messssssssssage 1",
+        sender: {
+          id: "2",
+          username: "024GHOST",
+        },
+        recipient: {
+          id: "1",
+          username: "Glenn",
         },
         timeStamp: new Date(),
       },
@@ -44,47 +119,62 @@ export default function ChatRoom() {
 
   return (
     <section className="">
-      <header className="flex items-center justify-between p-2 gap-4 h-16 w-screen fixed z-10 bg-white">
+      <header className="flex items-center justify-between p-2 gap-4 h-16 w-screen fixed z-10 bg-white shadow">
         <BackButton />
         <h1 className=" line-clamp-1">{otherUser.username}</h1>
         <MenuButton />
       </header>
       <MessageThread messages={messages} />
-      <InputField/>
+      <InputField />
     </section>
   );
 }
 
 function InputField() {
   return (
-    <div className="fixed bottom-0 w-screen bg-white p-4 flex justify-center">
-      <input placeholder="Type something..." className="w-11/12 rounded-full p-3 bg-slate-100"/>
-
+    <div className="fixed bottom-0 w-screen bg-white p-4 flex justify-center drop-shadow-2xl">
+      <input
+        placeholder="Type something..."
+        className="w-11/12 rounded-full p-3 bg-slate-100"
+      />
     </div>
-  )
+  );
 }
 
 function MessageThread({ messages }: { messages: Message[] }) {
+  const currentUserId = "1"; // todo
+
   return (
-    <section className="relative left-0 top-16 h-screen p-4 bg-slate-100">
-      <ul className="">
+    <section className="relative left-0 bottom-20 min-h-screen p-4 bg-slate-100 flex flex-col justify-end">
+      <ul className="flex flex-col gap-4 ">
         {messages.map((message) => (
-          <li key={message.id}>
-            <MessageBubble message={message}/>
-          </li>
+          <>
+            {message.sender.id === currentUserId ? (
+              <OutgoingMessage message={message} />
+            ) : (
+              <IncomingMessage message={message} />
+            )}
+          </>
         ))}
       </ul>
     </section>
   );
 }
 
-function MessageBubble({ message }: { message: Message }) {
+function OutgoingMessage({ message }: { message: Message }) {
   return (
+    <li key={message.id} className="self-end bg-cyan-500 text-white p-2 rounded-xl w-max shadow">
+      {message.text}
+    </li>
+  );
+}
 
-  <article>
-    {message.text}
-  </article>
-  )
+function IncomingMessage({ message }: { message: Message }) {
+  return (
+    <li key={message.id} className=" bg-white flex p-2 rounded-xl w-max shadow">
+      {message.text}
+    </li>
+  );
 }
 
 function BackButton() {

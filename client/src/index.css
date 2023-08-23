@@ -7,9 +7,9 @@
    @apply text-slate-600 
   }
   h1 {
-    @apply font-medium text-2xl text-cyan-500
+    @apply font-medium text-2xl text-slate-900
   }
   h2 {
-    @apply font-medium text-black
+    @apply font-medium text-slate-900
   }
 }

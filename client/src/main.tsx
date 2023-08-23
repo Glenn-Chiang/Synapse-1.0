@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import Root from "./layouts/Root.tsx";
 import Channels from "./features/Channels/Channels.tsx";
+import ChatRoom from "./features/Chat/Chat.tsx";
 
 const router = createBrowserRouter([
   {
@@ -24,11 +25,10 @@ const router = createBrowserRouter([
       {
         path: "chats",
         element: <Chats />,
-        children: [
-          {
-            path: ":chatId",
-          },
-        ],
+      },
+      {
+        path: "chats/:chatId",
+        element: <ChatRoom />,
       },
       {
         path: "channels",

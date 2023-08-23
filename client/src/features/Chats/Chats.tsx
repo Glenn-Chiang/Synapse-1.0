@@ -19,7 +19,7 @@ function Chats() {
       messages: [
         {
           id: "1",
-          text: "message 1",
+          text: "message 1 message message 1 message 1kkpppppppppppppzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
           sender: {
             id: "1",
             username: "Glenn",
@@ -33,7 +33,7 @@ function Chats() {
       ],
     },
     {
-      id: "1",
+      id: "2",
       users: [
         {
           id: "1",
@@ -61,7 +61,7 @@ function Chats() {
       ],
     },
     {
-      id: "1",
+      id: "3",
       users: [
         {
           id: "1",
@@ -123,13 +123,13 @@ type ChatPreviewProps = {
 function ChatPreview({ chat }: ChatPreviewProps) {
   const lastMessage = chat.messages[chat.messages.length - 1]
   return (
-    <article className="p-2 h-20 shadow flex justify-between">
-      <div>
+    <article className="p-2 h-20 w-full shadow flex gap-2">
+      <div className="flex flex-col justify-between w-4/5">
         <h2>{chat.users[1].username}</h2>
-        <p>{lastMessage.text}</p>
+        <p className="line-clamp-1 py-1">{lastMessage.text}</p>
       </div>
-      <div className="flex flex-col justify-between items-end">
-        <span>{lastMessage.timeStamp.toLocaleTimeString()}</span>
+      <div className="flex flex-col justify-between items-end w-1/5">
+        <span>{lastMessage.timeStamp.toLocaleTimeString().split(' ')[0]}</span>
         <span className="rounded-full bg-cyan-500 text-white w-8 h-8 flex justify-center items-center">{chat.messages.length}</span>
       </div>
     </article>

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import FormField from "../components/FormField";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { faLock, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function Register() {
   const {
@@ -26,7 +27,7 @@ export default function Register() {
   };
 
   return (
-    <main className="bg-slate-100 h-screen flex items-center">
+    <main className="bg-slate-100 min-h-screen p-8 flex items-center">
       <section className="bg-white rounded-xl w-4/5 m-auto drop-shadow-md ">
         <header className="text-center p-4">
           <h1 className="text-cyan-500 text-4xl text-center p-4">Synapse</h1>
@@ -40,6 +41,7 @@ export default function Register() {
             name="username"
             inputType="text"
             attributes={usernameAttributes}
+            icon={faUserCircle}
           />
           {errors.username && (
             <ErrorMessage message={errors.username.message} />
@@ -48,6 +50,7 @@ export default function Register() {
             name="password"
             inputType="password"
             attributes={passwordAttributes}
+            icon={faLock}
           />
           {errors.password && (
             <ErrorMessage message={errors.password.message} />

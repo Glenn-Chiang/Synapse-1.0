@@ -15,4 +15,7 @@
   button {
     @apply transition
   }
+  a {
+    @apply transition
+  }
 }

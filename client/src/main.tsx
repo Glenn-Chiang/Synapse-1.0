@@ -12,6 +12,7 @@ import {
 import Root from "./layouts/Root.tsx";
 import Channels from "./features/Channels/Channels.tsx";
 import ChatRoom from "./features/Chat/Chat.tsx";
+import Users from "./features/Users/Users.tsx";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "users",
+        element: <Users/>,
+      }
     ],
   },
   {

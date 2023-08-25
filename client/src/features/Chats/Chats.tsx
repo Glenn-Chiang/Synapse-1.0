@@ -2,7 +2,8 @@ import { faCommentDots, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Chat } from "../../types";
 import { Link, Outlet } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import SearchBar from "../../components/Searchbar";
 
 function Chats() {
   const chats: Chat[] = [
@@ -105,7 +106,7 @@ function Chats() {
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
-      {filterShown && <SearchBar />}
+      {filterShown && <SearchBar placeholder="Search your chats..."/>}
       <ChatList chats={chats} />
       <div className="">
         <Outlet />
@@ -114,25 +115,7 @@ function Chats() {
   );
 }
 
-function SearchBar() {
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
-
-  return (
-    <div>
-      <input
-        ref={inputRef}
-        className="w-full p-4 bg-slate-100 shadow-inner focus:outline-none"
-        placeholder="Search your chats..."
-      />
-    </div>
-  );
-}
 
 type ChatListProps = {
   chats: Chat[];

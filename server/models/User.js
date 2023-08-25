@@ -4,7 +4,8 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   passwordHash: { type: String, required: true },
   dateJoined: Date,
-  messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
+  sentMessages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
+  receivedMessages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
   chats: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
 });
 
@@ -17,6 +18,6 @@ userSchema.set("toJSON", {
   },
 });
 
-const User = mongoose.model('User', userSchema)
+const User = mongoose.model("User", userSchema);
 
-module.exports = User
+module.exports = User;

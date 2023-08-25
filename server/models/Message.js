@@ -1,11 +1,12 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema({
-  text: String,
-  sender: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
-  recipient: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
-  timestamp: Date
-})
+  text: {type: String, required: true},
+  sender: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  recipient: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  chat: { type: mongoose.Schema.Types.ObjectId, ref: "Chat", required: true },
+  timestamp: Date,
+});
 
 messageSchema.set("toJSON", {
   transform: (document, object) => {
@@ -16,6 +17,6 @@ messageSchema.set("toJSON", {
   },
 });
 
-const Message = mongoose.model('Message', messageSchema)
+const Message = mongoose.model("Message", messageSchema);
 
-module.exports = Message
+module.exports = Message;

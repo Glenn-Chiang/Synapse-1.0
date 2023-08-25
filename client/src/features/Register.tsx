@@ -27,8 +27,8 @@ export default function Register() {
   };
 
   return (
-    <main className="bg-slate-100 min-h-screen p-8 flex items-center">
-      <section className="bg-white rounded-xl w-4/5 m-auto drop-shadow-md ">
+    <main className="bg-slate-100 min-h-screen p-2 sm:p-8 flex items-center">
+      <section className="bg-white rounded-xl w-11/12 sm:w-4/5 m-auto drop-shadow-md ">
         <header className="text-center p-4">
           <h1 className="text-cyan-500 text-4xl text-center p-4">Synapse</h1>
           <p className="pb-4 font-medium">Real-Time Messaging</p>

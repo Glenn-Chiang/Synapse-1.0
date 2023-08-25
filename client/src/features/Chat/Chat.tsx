@@ -1,7 +1,6 @@
 import {
   faChevronLeft,
   faEllipsisV,
-  faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate, useParams } from "react-router-dom";
@@ -123,14 +122,20 @@ export default function ChatRoom() {
 
   return (
     <section className="w-full">
-      <header className="flex items-center justify-between p-2 gap-4 h-16 w-screen fixed top-16 z-10 bg-white shadow">
-        <BackButton />
-        <h1 className=" line-clamp-1">{otherUser.username}</h1>
-        <MenuButton />
-      </header>
+      <ChatHeader chatname={otherUser.username}/>
       <MessageThread messages={messages} />
       <InputField />
     </section>
+  );
+}
+
+function ChatHeader({ chatname }: { chatname: string }) {
+  return (
+    <header className="flex items-center justify-between p-2 gap-4 h-16 w-screen fixed top-16 z-10 bg-white shadow">
+      <BackButton />
+      <h1 className=" line-clamp-1">{chatname}</h1>
+      <MenuButton />
+    </header>
   );
 }
 
@@ -169,7 +174,9 @@ function OutgoingMessage({ message }: { message: Message }) {
       <p className="bg-cyan-500 text-white p-4 rounded-xl shadow max-w-xs break-words">
         {message.text}
       </p>
-      <span className="p-2 text-sm text-slate-400">{message.timeStamp.toLocaleString()}</span>
+      <span className="p-2 text-sm text-slate-400">
+        {message.timeStamp.toLocaleString()}
+      </span>
     </li>
   );
 }

@@ -1,7 +1,8 @@
-import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
+import { faCommentDots, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Chat } from "../../types";
 import { Link, Outlet } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 
 function Chats() {
   const chats: Chat[] = [
@@ -91,17 +92,43 @@ function Chats() {
     },
   ];
 
+  const [filterShown, setFilterShown] = useState(false);
+
   return (
     <main>
-      <h1 className="w-full p-2 flex items-center gap-2 shadow text-cyan-500">
-        <FontAwesomeIcon icon={faCommentDots} />
-        Chats
-      </h1>
+      <div className="w-full p-2 flex items-center justify-between gap-2 shadow">
+        <h1 className="flex gap-2 items-center text-cyan-500">
+          <FontAwesomeIcon icon={faCommentDots} />
+          Chats
+        </h1>
+        <button onClick={() => setFilterShown((prev) => !prev)} className="p-2 rounded-full w-10 hover:bg-slate-200">
+          <FontAwesomeIcon icon={faSearch} />
+        </button>
+      </div>
+      {filterShown && <SearchBar />}
       <ChatList chats={chats} />
       <div className="">
         <Outlet />
       </div>
     </main>
+  );
+}
+
+function SearchBar() {
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
+  return (
+    <div>
+      <input
+        ref={inputRef}
+        className="w-full p-4 bg-slate-100 shadow-inner focus:outline-none"
+        placeholder="Search your chats..."
+      />
+    </div>
   );
 }
 

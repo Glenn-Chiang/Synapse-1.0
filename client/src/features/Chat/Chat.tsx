@@ -1,4 +1,8 @@
-import { faChevronLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faEllipsisV,
+  faUserCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate, useParams } from "react-router-dom";
 import { Message } from "../../types";
@@ -86,7 +90,7 @@ export default function ChatRoom() {
       },
       {
         id: "6",
-        text: "messssssssssage 1",
+        text: "This is a very looooooooooooooooooooooooooooooooooooooooonnnggggggggggggggggggg  messssssssssaaaaaaaaaaaaaaaaaggggggggggggggggggggggggggggggggggeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
         sender: {
           id: "1",
           username: "Glenn",
@@ -99,7 +103,7 @@ export default function ChatRoom() {
       },
       {
         id: "7",
-        text: "messssssssssage 1",
+        text: "Hello world. Check out my brand new real-time chat app app app app app app app app app app app appa",
         sender: {
           id: "2",
           username: "024GHOST",
@@ -118,8 +122,8 @@ export default function ChatRoom() {
   // const me = users[0];
 
   return (
-    <section className="">
-      <header className="flex items-center justify-between p-2 gap-4 h-16 w-screen fixed z-10 bg-white shadow">
+    <section className="w-full">
+      <header className="flex items-center justify-between p-2 gap-4 h-16 w-screen fixed top-16 z-10 bg-white shadow">
         <BackButton />
         <h1 className=" line-clamp-1">{otherUser.username}</h1>
         <MenuButton />
@@ -145,17 +149,15 @@ function MessageThread({ messages }: { messages: Message[] }) {
   const currentUserId = "1"; // todo
 
   return (
-    <section className="relative left-0 bottom-20 min-h-screen p-4 bg-slate-100 flex flex-col justify-end">
+    <section className="mt-16 mb-20 p-2 bg-slate-100 flex flex-col">
       <ul className="flex flex-col gap-4 ">
-        {messages.map((message) => (
-          <>
-            {message.sender.id === currentUserId ? (
-              <OutgoingMessage message={message} />
-            ) : (
-              <IncomingMessage message={message} />
-            )}
-          </>
-        ))}
+        {messages.map((message) =>
+          message.sender.id === currentUserId ? (
+            <OutgoingMessage key={message.id} message={message} />
+          ) : (
+            <IncomingMessage key={message.id} message={message} />
+          )
+        )}
       </ul>
     </section>
   );
@@ -163,16 +165,24 @@ function MessageThread({ messages }: { messages: Message[] }) {
 
 function OutgoingMessage({ message }: { message: Message }) {
   return (
-    <li key={message.id} className="self-end bg-cyan-500 text-white p-2 rounded-xl w-max shadow">
-      {message.text}
+    <li className="self-end flex flex-col items-end ">
+      <p className="bg-cyan-500 text-white p-4 rounded-xl shadow max-w-xs break-words">
+        {message.text}
+      </p>
+      <span className="p-2 text-sm text-slate-400">{message.timeStamp.toLocaleString()}</span>
     </li>
   );
 }
 
 function IncomingMessage({ message }: { message: Message }) {
   return (
-    <li key={message.id} className=" bg-white flex p-2 rounded-xl w-max shadow">
-      {message.text}
+    <li className="self-start flex flex-col ">
+      <p className="bg-white p-4 rounded-xl shadow max-w-xs break-words">
+        {message.text}
+      </p>
+      <span className="p-2 text-sm text-slate-400">
+        {message.timeStamp.toLocaleString()}
+      </span>
     </li>
   );
 }

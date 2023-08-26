@@ -1,6 +1,9 @@
 interface User {
   id: string;
   username: string;
+  dateJoined: Date;
+  sentMessages: Message[];
+  chats: Chat[];
 }
 
 // Non-senstive user info stored in local storage

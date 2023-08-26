@@ -2,11 +2,15 @@ import { Link } from "react-router-dom";
 import FormField from "../components/FormField";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { faLock, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { createUser } from "../requests/users";
+import { AxiosError } from "axios";
+import {useEffect} from 'react'
 
 export default function Register() {
   const {
     register,
     handleSubmit,
+    setFocus,
     formState: { errors },
   } = useForm<FormValues>();
 
@@ -22,9 +26,20 @@ export default function Register() {
     ...register("password", { required: "Password is required" }),
   };
 
-  const onSubmit: SubmitHandler<FormValues> = (formValues) => {
+  const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
     const { username, password } = formValues;
+    try {
+      await createUser(username, password)
+      alert('Registered!')
+    } catch (e) {
+      const error = e as AxiosError
+      console.log(error.response?.data)
+    }
   };
+
+  useEffect(() => {
+    setFocus("username")
+  }, [setFocus])
 
   return (
     <main className="bg-slate-100 min-h-screen p-2 sm:p-8 flex items-center">

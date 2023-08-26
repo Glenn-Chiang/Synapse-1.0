@@ -20,9 +20,13 @@ usersRouter.post("/users", async (req, res, next) => {
 });
 
 // Get all users
-usersRouter.get("/users", async (req, res) => {
-  const users = await User.find({})
-  res.json(users)
+usersRouter.get("/users", async (req, res, next) => {
+  try {
+    const users = await User.find({})
+    res.json(users)
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = usersRouter;

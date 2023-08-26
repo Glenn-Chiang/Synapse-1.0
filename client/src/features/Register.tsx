@@ -33,7 +33,7 @@ export default function Register() {
     try {
       await createUser(username, password)
       console.log('Registered!')
-      navigate('/') // Redirect to home screen after successful registration
+      navigate('/login') // Redirect to login screen after successful registration
     } catch (e) {
       const error = e as AxiosError
       console.error(error.response?.data)

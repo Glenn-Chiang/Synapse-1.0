@@ -1,12 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormField from "../components/FormField";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { faLock, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { useEffect } from "react";
+import login from "../requests/auth";
 
 export default function Login() {
   const {
     register,
     handleSubmit,
+    setFocus,
     formState: { errors },
   } = useForm<FormValues>();
 
@@ -22,9 +25,24 @@ export default function Login() {
     ...register("password", { required: "Password is required" }),
   };
 
-  const onSubmit: SubmitHandler<FormValues> = (formValues) => {
+  const navigate = useNavigate()
+
+  const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
     const { username, password } = formValues;
+    try {
+      const user = await login(username, password);
+      localStorage.setItem("currentUser", JSON.stringify(user)); // Store non-sensitive userinfo in localStorage for easy retrieval
+      console.log(`Signed in as: ${user.username}`)
+      navigate('/')
+
+    } catch (error) {
+      console.error("Error logging in:", error);
+    }
   };
+
+  useEffect(() => {
+    setFocus("username");
+  }, [setFocus]);
 
   return (
     <main className="bg-slate-100 min-h-screen p-2 sm:p-8 flex items-center">

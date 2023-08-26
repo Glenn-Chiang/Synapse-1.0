@@ -3,6 +3,13 @@ interface User {
   username: string;
 }
 
+// Non-senstive user info stored in local storage
+interface UserInfo {
+  token: string;
+  userId: string;
+  username: string;
+}
+
 interface Message {
   id: string;
   text: string;
@@ -16,4 +23,4 @@ interface Chat {
   users: User[];
   messages: Message[]
 }
-export type {User, Chat, Message}
+export type {User, UserInfo, Chat, Message}

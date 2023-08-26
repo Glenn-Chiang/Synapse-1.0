@@ -16,4 +16,4 @@ loginRouter.post(
   }
 );
 
-module.exports(loginRouter);
+module.exports = loginRouter;

@@ -4,6 +4,7 @@ require("dotenv").config();
 const cors = require('cors')
 const morgan = require('morgan');
 const mongoose = require("mongoose");
+const loginRouter = require('./controllers/login')
 const usersRouter = require('./controllers/users')
 const chatsRouter = require('./controllers/chats')
 const messagesRouter = require('./controllers/messages');
@@ -26,6 +27,6 @@ app.use(morgan('dev'))
 app.use(passport.initialize())
 
 // Routers
-app.use(usersRouter, chatsRouter, messagesRouter)
+app.use(loginRouter, usersRouter, chatsRouter, messagesRouter)
 
 module.exports = app

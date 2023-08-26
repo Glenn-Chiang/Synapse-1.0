@@ -1,10 +1,23 @@
 import { faSearch, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
 import SearchBar from "../../components/Searchbar";
+import { useQuery } from "react-query";
+import { getUsers } from "../../requests/users";
+import Loading from "../../components/Loading";
+import ErrorMessage from "../../components/ErrorMessage";
+import { User } from "../../types";
 
 export default function Users() {
+  const {
+    isLoading,
+    isError,
+    data: users,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: getUsers,
+  });
+
   const [filterShown, setFilterShown] = useState(false);
 
   return (
@@ -22,9 +35,25 @@ export default function Users() {
         </button>
       </div>
       {filterShown && <SearchBar placeholder="Search users..." />}
-      <div className="">
-        <Outlet />
-      </div>
+      {isLoading ? (
+        <Loading />
+      ) : isError ? (
+        <ErrorMessage message="Error fetching users" />
+      ) : (
+        <ul>
+          {users?.map((user) => (
+            <UserItem key={user.id} user={user} />
+          ))}
+        </ul>
+      )}
     </main>
+  );
+}
+
+function UserItem({ user }: { user: User }) {
+  return (
+    <li>
+      <h2>{user.username}</h2>
+    </li>
   );
 }

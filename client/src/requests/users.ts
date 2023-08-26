@@ -7,7 +7,7 @@ const createUser = async (username: string, password: string) => {
 };
 
 const getUsers = async () => {
-  const response = await axios.post('/users')
+  const response = await axios.get('/users')
   return response.data as User[]
 }
 

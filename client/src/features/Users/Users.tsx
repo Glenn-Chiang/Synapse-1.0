@@ -21,7 +21,7 @@ export default function Users() {
   const [filterShown, setFilterShown] = useState(false);
 
   return (
-    <main>
+    <main className="bg-white">
       <div className="w-full p-2 flex items-center justify-between gap-2 shadow">
         <h1 className="flex gap-2 items-center text-cyan-500">
           <FontAwesomeIcon icon={faUsers} />
@@ -52,7 +52,7 @@ export default function Users() {
 
 function UserItem({ user }: { user: User }) {
   return (
-    <li>
+    <li className="p-2 h-20 w-full shadow flex items-center gap-2 hover:bg-slate-200">
       <h2>{user.username}</h2>
     </li>
   );

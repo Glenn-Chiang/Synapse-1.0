@@ -31,7 +31,8 @@ export default function Login() {
     const { username, password } = formValues;
     try {
       const user = await login(username, password);
-      localStorage.setItem("currentUser", JSON.stringify(user)); // Store non-sensitive userinfo in localStorage for easy retrieval
+      localStorage.setItem("token", user.token); 
+      localStorage.setItem("userId", user.userId)
       console.log(`Signed in as: ${user.username}`);
       navigate("/");
     } catch (error) {

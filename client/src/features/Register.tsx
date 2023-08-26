@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormField from "../components/FormField";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { faLock, faUserCircle } from "@fortawesome/free-solid-svg-icons";
@@ -26,14 +26,17 @@ export default function Register() {
     ...register("password", { required: "Password is required" }),
   };
 
+  const navigate = useNavigate()
+
   const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
     const { username, password } = formValues;
     try {
       await createUser(username, password)
-      alert('Registered!')
+      console.log('Registered!')
+      navigate('/') // Redirect to home screen after successful registration
     } catch (e) {
       const error = e as AxiosError
-      console.log(error.response?.data)
+      console.error(error.response?.data)
     }
   };
 

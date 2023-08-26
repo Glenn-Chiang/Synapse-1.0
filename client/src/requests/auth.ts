@@ -8,6 +8,12 @@ const login = async (username: string, password: string) => {
   return response.data as UserInfo
 }
 
+const getCurrentUser = () => {
+ const userInfo = localStorage.getItem('currentUser') 
+ if (!userInfo) {
+  return null
+ }
+ return JSON.parse(userInfo) as UserInfo
+}
 
-
-export default login
+export {login, getCurrentUser}

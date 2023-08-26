@@ -3,7 +3,7 @@ import FormField from "../components/FormField";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { faLock, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
-import login from "../requests/auth";
+import { login } from "../requests/auth";
 
 export default function Login() {
   const {
@@ -25,16 +25,15 @@ export default function Login() {
     ...register("password", { required: "Password is required" }),
   };
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
     const { username, password } = formValues;
     try {
       const user = await login(username, password);
       localStorage.setItem("currentUser", JSON.stringify(user)); // Store non-sensitive userinfo in localStorage for easy retrieval
-      console.log(`Signed in as: ${user.username}`)
-      navigate('/')
-
+      console.log(`Signed in as: ${user.username}`);
+      navigate("/");
     } catch (error) {
       console.error("Error logging in:", error);
     }

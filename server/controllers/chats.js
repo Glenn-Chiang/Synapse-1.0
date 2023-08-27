@@ -21,9 +21,7 @@ chatsRouter.get("/chats/:chatId", async (req, res, next) => {
     const chat = await Chat.findById(req.params.chatId)
       .populate("messages")
       .populate("users");
-    if (!chat) {
-      return res.status(404).json({ error: "Chat not found" });
-    }
+    
     res.json(chat);
   } catch (error) {
     next(error);

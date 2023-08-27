@@ -11,4 +11,9 @@ const getUsers = async () => {
   return response.data as User[]
 }
 
-export { createUser, getUsers };
+const getUser = async (userId: string) => {
+  const response = await axios.get(`/users/${userId}`)
+  return response.data as User
+}
+
+export { createUser, getUsers, getUser };

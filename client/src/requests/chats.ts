@@ -8,7 +8,7 @@ const getChats = async (userId: string) => {
 
 const getChat = async (chatId: string) => {
   const response = await axios.get(`/chats/${chatId}`)
-  return response.data as Chat
+  return response.data as Chat | null
 }
 
 const createChat = async (chatId: string) => {

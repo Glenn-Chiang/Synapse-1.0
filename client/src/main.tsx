@@ -29,7 +29,7 @@ const router = createBrowserRouter([
         element: <Chats />,
       },
       {
-        path: "chats/:chatId",
+        path: "chats/:chatId/:username",
         element: <ChatRoom />,
       },
       {

@@ -1,129 +1,44 @@
-import {
-  faChevronLeft,
-  faEllipsisV,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Message } from "../../types";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { createChat, getChat } from "../../requests/chats";
+import Loading from "../../components/Loading";
+import ErrorMessage from "../../components/ErrorMessage";
 
 export default function ChatRoom() {
-  // const chatId = useParams().chatId
+  const chatId = useParams().chatId as string;
+  const chatname = useParams().username as string;
+  const {
+    isLoading,
+    isError,
+    data: chat,
+  } = useQuery({
+    queryKey: ["chats", chatId],
+    queryFn: () => getChat(chatId),
+  });
 
-  const chat = {
-    id: "3",
-    users: [
-      {
-        id: "1",
-        username: "Glenn",
-      },
-      {
-        id: "2",
-        username: "Kang Jie",
-      },
-    ],
-    messages: [
-      {
-        id: "1",
-        text: "messageee 1",
-        sender: {
-          id: "1",
-          username: "Glenn",
-        },
-        recipient: {
-          id: "2",
-          username: "024GHOST",
-        },
-        timeStamp: new Date(),
-      },
-      {
-        id: "2",
-        text: "message 1",
-        sender: {
-          id: "2",
-          username: "024GHOST",
-        },
-        recipient: {
-          id: "1",
-          username: "Glenn",
-        },
-        timeStamp: new Date(),
-      },
-      {
-        id: "3",
-        text: "messssssssssage 1",
-        sender: {
-          id: "1",
-          username: "Glenn",
-        },
-        recipient: {
-          id: "2",
-          username: "024GHOST",
-        },
-        timeStamp: new Date(),
-      },
-      {
-        id: "4",
-        text: "messssssssssage 1",
-        sender: {
-          id: "1",
-          username: "Glenn",
-        },
-        recipient: {
-          id: "2",
-          username: "024GHOST",
-        },
-        timeStamp: new Date(),
-      },
-      {
-        id: "5",
-        text: "messssssssssage 1",
-        sender: {
-          id: "2",
-          username: "024GHOST",
-        },
-        recipient: {
-          id: "1",
-          username: "Glenn",
-        },
-        timeStamp: new Date(),
-      },
-      {
-        id: "6",
-        text: "This is a very looooooooooooooooooooooooooooooooooooooooonnnggggggggggggggggggg  messssssssssaaaaaaaaaaaaaaaaaggggggggggggggggggggggggggggggggggeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-        sender: {
-          id: "1",
-          username: "Glenn",
-        },
-        recipient: {
-          id: "2",
-          username: "024GHOST",
-        },
-        timeStamp: new Date(),
-      },
-      {
-        id: "7",
-        text: "Hello world. Check out my brand new real-time chat app app app app app app app app app app app appa",
-        sender: {
-          id: "2",
-          username: "024GHOST",
-        },
-        recipient: {
-          id: "1",
-          username: "Glenn",
-        },
-        timeStamp: new Date(),
-      },
-    ],
-  };
-
-  const { users, messages } = chat;
-  const otherUser = users[1];
-  // const me = users[0];
+  // If chat has not been created, create it when the first message is sent
+  const queryClient = useQueryClient();
+  const createChatMutation = useMutation({
+    mutationFn: (chatId: string) => createChat(chatId),
+    onSuccess: (chat) => queryClient.invalidateQueries(["chats", chat.id]),
+  });
 
   return (
     <section className="w-full">
-      <ChatHeader chatname={otherUser.username}/>
-      <MessageThread messages={messages} />
+      <ChatHeader chatname={chatname} />
+      <section className="mt-16 mb-20 p-2 bg-slate-100 flex flex-col">
+        {isLoading ? (
+          <Loading />
+        ) : isError ? (
+          <ErrorMessage message="Error loading chat" />
+        ) : (
+          chat ? <MessageThread messages={chat.messages} />
+          : <p className="text-center bg-cyan-500 text-white w-1/3 m-auto rounded-xl p-4 shadow">Send a message and start chatting!</p>
+        )}
+      </section>
       <InputField />
     </section>
   );
@@ -151,20 +66,18 @@ function InputField() {
 }
 
 function MessageThread({ messages }: { messages: Message[] }) {
-  const currentUserId = "1"; // todo
+  const currentUserId = localStorage.getItem("userId");
 
   return (
-    <section className="mt-16 mb-20 p-2 bg-slate-100 flex flex-col">
-      <ul className="flex flex-col gap-4 ">
-        {messages.map((message) =>
-          message.sender.id === currentUserId ? (
-            <OutgoingMessage key={message.id} message={message} />
-          ) : (
-            <IncomingMessage key={message.id} message={message} />
-          )
-        )}
-      </ul>
-    </section>
+    <ul className="flex flex-col gap-4 ">
+      {messages.map((message) =>
+        message.sender.id === currentUserId ? (
+          <OutgoingMessage key={message.id} message={message} />
+        ) : (
+          <IncomingMessage key={message.id} message={message} />
+        )
+      )}
+    </ul>
   );
 }
 

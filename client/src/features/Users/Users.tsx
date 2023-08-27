@@ -7,6 +7,9 @@ import { getUsers } from "../../requests/users";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { User } from "../../types";
+import { useContext } from "react";
+import UserContext from "../../contexts/UserContext";
+import { Link } from "react-router-dom";
 
 export default function Users() {
   const {
@@ -42,7 +45,7 @@ export default function Users() {
       ) : (
         <ul>
           {users?.map((user) => (
-            <UserItem key={user.id} user={user} />
+            <UserPreview key={user.id} user={user} />
           ))}
         </ul>
       )}
@@ -50,10 +53,16 @@ export default function Users() {
   );
 }
 
-function UserItem({ user }: { user: User }) {
+function UserPreview({ user }: { user: User }) {
+  const currentUserId = localStorage.getItem("userId");
+  const chatId = [currentUserId, user.id].sort().join("");
+
   return (
-    <li className="p-2 h-20 w-full shadow flex items-center gap-2 hover:bg-slate-200">
+    <Link
+      to={`/chats/${chatId}/${user.username}`}
+      className="p-2 h-20 w-full shadow flex items-center gap-2 hover:bg-slate-200"
+    >
       <h2>{user.username}</h2>
-    </li>
+    </Link>
   );
 }

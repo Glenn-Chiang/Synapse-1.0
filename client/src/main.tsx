@@ -9,15 +9,16 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import Root from "./layouts/Root.tsx";
+import App from "./layouts/App.tsx";
 import Channels from "./features/Channels/Channels.tsx";
 import ChatRoom from "./features/Chat/Chat.tsx";
 import Users from "./features/Users/Users.tsx";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <App />,
     children: [
       {
         path: "/",
@@ -42,8 +43,8 @@ const router = createBrowserRouter([
       },
       {
         path: "users",
-        element: <Users/>,
-      }
+        element: <Users />,
+      },
     ],
   },
   {
@@ -56,8 +57,12 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </React.StrictMode>
 );

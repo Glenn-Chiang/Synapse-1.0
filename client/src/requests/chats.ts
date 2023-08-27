@@ -6,4 +6,14 @@ const getChats = async (userId: string) => {
   return response.data as Chat[];
 };
 
-export { getChats };
+const getChat = async (chatId: string) => {
+  const response = await axios.get(`/chats/${chatId}`)
+  return response.data as Chat
+}
+
+const createChat = async (chatId: string) => {
+  const response = await axios.post(`/chats/${chatId}`)
+  return response.data as Chat
+}
+
+export { getChats, getChat, createChat };

@@ -29,4 +29,14 @@ usersRouter.get("/users", async (req, res, next) => {
   }
 })
 
+// Get one user
+usersRouter.get("/users/:userId", async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId)
+    res.json(user)
+  } catch (error) {
+    next(error)
+  }
+})
+
 module.exports = usersRouter;

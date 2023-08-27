@@ -7,8 +7,6 @@ import { getUsers } from "../../requests/users";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { User } from "../../types";
-import { useContext } from "react";
-import UserContext from "../../contexts/UserContext";
 import { Link } from "react-router-dom";
 
 export default function Users() {

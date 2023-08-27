@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { createChat, getChat } from "../../requests/chats";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
+import { useRef } from "react";
 
 export default function ChatRoom() {
   const chatId = useParams().chatId as string;
@@ -26,6 +27,10 @@ export default function ChatRoom() {
     onSuccess: (chat) => queryClient.invalidateQueries(["chats", chat.id]),
   });
 
+  const handleSend = (content: string) => {
+    console.log(content);
+  };
+
   return (
     <section className="w-full">
       <ChatHeader chatname={chatname} />
@@ -34,12 +39,15 @@ export default function ChatRoom() {
           <Loading />
         ) : isError ? (
           <ErrorMessage message="Error loading chat" />
+        ) : chat ? (
+          <MessageThread messages={chat.messages} />
         ) : (
-          chat ? <MessageThread messages={chat.messages} />
-          : <p className="text-center bg-cyan-500 text-white w-1/3 m-auto rounded-xl p-4 shadow">Send a message and start chatting!</p>
+          <p className="text-center bg-cyan-500 text-white w-1/3 m-auto rounded-xl p-4 shadow">
+            Send a message and start chatting!
+          </p>
         )}
       </section>
-      <InputField />
+      <InputField onSend={handleSend} />
     </section>
   );
 }
@@ -54,12 +62,27 @@ function ChatHeader({ chatname }: { chatname: string }) {
   );
 }
 
-function InputField() {
+function InputField({ onSend }: { onSend: (content: string) => void }) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (
+    event
+  ) => {
+    const inputField = inputRef.current;
+    if (event.key === "Enter") {
+      if (!inputField) {
+        return;
+      }
+      onSend(inputField.value);
+    }
+  };
   return (
     <div className="fixed bottom-0 w-screen bg-white p-4 flex justify-center drop-shadow-2xl">
       <input
+      ref={inputRef}
+        autoFocus
         placeholder="Type something..."
         className="w-11/12 rounded-full p-3 bg-slate-100"
+        onKeyDown={handleKeyDown}
       />
     </div>
   );

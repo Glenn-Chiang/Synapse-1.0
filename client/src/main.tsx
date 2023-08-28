@@ -14,6 +14,7 @@ import Channels from "./features/Channels/Channels.tsx";
 import ChatRoom from "./features/Chat/Chat.tsx";
 import Users from "./features/Users/Users.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
+import chatsLoader from "./features/Chats/loader.ts";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
       {
         path: "chats",
         element: <Chats />,
+        loader: chatsLoader
       },
       {
         path: "chats/:chatId/:username",

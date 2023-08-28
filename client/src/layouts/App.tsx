@@ -4,36 +4,30 @@ import {
   faBoltLightning,
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import UserContext from "../contexts/UserContext";
-import { useQuery } from "react-query";
-import { getUser } from "../requests/users";
-import Loading from "../components/Loading";
-import ErrorMessage from "../components/ErrorMessage";
+// import UserContext from "../contexts/UserContext";
+// import { useQuery } from "react-query";
+// import { getUser } from "../requests/users";
+// import Loading from "../components/Loading";
+// import ErrorMessage from "../components/ErrorMessage";
 
 export default function App() {
-  const userId = localStorage.getItem("userId");
-  const {
-    isLoading,
-    isError,
-    data: user,
-  } = useQuery({
-    queryKey: ["users", userId],
-    queryFn: () => (userId ? getUser(userId) : null),
-  });
+  // const userId = localStorage.getItem("userId");
+  // const {
+  //   isLoading,
+  //   isError,
+  //   data: user,
+  // } = useQuery({
+  //   queryKey: ["users", userId],
+  //   queryFn: () => (userId ? getUser(userId) : null),
+  // });
 
   return (
-    <UserContext.Provider value={user}>
+    <>
       <TopNav />
       <div className="pt-16">
-        {isLoading ? (
-          <Loading />
-        ) : isError ? (
-          <ErrorMessage message="Error loading user" />
-        ) : (
-          <Outlet />
-        )}
+        <Outlet />
       </div>
-    </UserContext.Provider>
+    </>
   );
 }
 

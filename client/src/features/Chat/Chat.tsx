@@ -1,6 +1,6 @@
 import { faChevronLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Message } from "../../types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getChat } from "../../requests/chats";
@@ -99,7 +99,6 @@ function InputField({ onSend }: { onSend: (content: string) => void }) {
 
 function MessageThread({ messages }: { messages: Message[] }) {
   const currentUserId = localStorage.getItem("userId");
-
   return (
     <ul className="flex flex-col gap-4 ">
       {messages.map((message) =>
@@ -120,7 +119,7 @@ function OutgoingMessage({ message }: { message: Message }) {
         {message.text}
       </p>
       <span className="p-2 text-sm text-slate-400">
-        {message.timeStamp.toLocaleString()}
+        {message.timestamp.toLocaleString()}
       </span>
     </li>
   );
@@ -133,21 +132,17 @@ function IncomingMessage({ message }: { message: Message }) {
         {message.text}
       </p>
       <span className="p-2 text-sm text-slate-400">
-        {message.timeStamp.toLocaleString()}
+        {message.timestamp.toLocaleString()}
       </span>
     </li>
   );
 }
 
 function BackButton() {
-  const navigate = useNavigate();
   return (
-    <button
-      onClick={() => navigate(-1)}
-      className="hover:bg-slate-300 rounded-full w-10 h-10 "
-    >
+    <Link to={"/chats"} className="hover:bg-slate-300 rounded-full w-10 h-10 flex items-center justify-center">
       <FontAwesomeIcon icon={faChevronLeft} />
-    </button>
+    </Link>
   );
 }
 

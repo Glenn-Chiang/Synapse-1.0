@@ -9,4 +9,9 @@ const createMessage = async (
   return response.data;
 };
 
-export { createMessage };
+const getChatMessages = async (chatId: string) => {
+  const response = await axios.get(`/chats/${chatId}/messages`);
+  return response.data
+}
+
+export { createMessage, getChatMessages };

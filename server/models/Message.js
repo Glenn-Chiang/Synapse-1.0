@@ -10,6 +10,7 @@ const messageSchema = new mongoose.Schema({
 messageSchema.set("toJSON", {
   transform: (document, object) => {
     object.id = object._id.toString();
+    object.timestamp = (new Date(object.timestamp)).toLocaleString()
     delete object._id;
     delete object.__v;
     delete object.passwordHash;

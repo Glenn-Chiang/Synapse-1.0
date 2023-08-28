@@ -35,33 +35,25 @@ export default function ChatRoom() {
     // onMutate: ({text, senderId, chatId}: MessageArgs) => {
     //   const prevMessages = queryClient.getQueryData(['chats', chatId, 'messages'])
     //   const newMessage: Message = {
-    //     text, senderId, chatId, timestamp: (new Date).toLocaleTimeString()
+    //     text, sender: senderId, chatId, timestamp: (new Date).toLocaleTimeString()
     //   }
     //   queryClient.setQueryData(['chats', chatId, 'messages'], (prevMessages) => [...prevMessages, newMessage])
     //   return {prevMessages}
     // },
     onSuccess: async () => {
       await queryClient.invalidateQueries(["chats", chatId]);
-      window.scrollTo(0, document.body.scrollHeight);
     },
   });
 
   const handleSend = (text: string) => {
     createMessageMutation.mutate({ text, senderId: currentUserId, chatId });
-
   };
 
-
-  useEffect(() => {
-      window.scrollTo(0, document.body.scrollHeight);
-  }, [])
 
   return (
     <section className="w-full">
       <ChatHeader chatname={chatname} />
-      <section
-        className="mt-16 mb-20 p-2 bg-slate-100 flex flex-col"
-      >
+      <section className="mt-16 mb-20 p-2 bg-slate-100 flex flex-col">
         {isLoading ? (
           <Loading />
         ) : isError ? (
@@ -100,7 +92,7 @@ function InputField({ onSend }: { onSend: (content: string) => void }) {
         return;
       }
       onSend(inputField.value);
-      inputRef.current.value = ''
+      inputRef.current.value = "";
     }
   };
   return (
@@ -132,14 +124,18 @@ function MessageThread({ messages }: { messages: Message[] }) {
 }
 
 function OutgoingMessage({ message }: { message: Message }) {
+  const messageRef = useRef<HTMLLIElement>(null)
+  
+  useEffect(() => {
+    messageRef.current?.scrollIntoView()
+  }, [])
+
   return (
-    <li className="self-end flex flex-col items-end ">
+    <li ref={messageRef} className="self-end flex flex-col items-end ">
       <p className="bg-cyan-500 text-white p-2 rounded-xl shadow max-w-xs break-words">
         {message.text}
       </p>
-      <span className="p-2 text-sm text-slate-400">
-        {message.timestamp}
-      </span>
+      <span className="p-2 text-sm text-slate-400">{message.timestamp}</span>
     </li>
   );
 }
@@ -150,9 +146,7 @@ function IncomingMessage({ message }: { message: Message }) {
       <p className="bg-white p-2 rounded-xl shadow max-w-xs break-words">
         {message.text}
       </p>
-      <span className="p-2 text-sm text-slate-400">
-        {message.timestamp}
-      </span>
+      <span className="p-2 text-sm text-slate-400">{message.timestamp}</span>
     </li>
   );
 }

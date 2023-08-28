@@ -3,12 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate, useParams } from "react-router-dom";
 import { Message } from "../../types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { createChat, getChat } from "../../requests/chats";
+import { getChat } from "../../requests/chats";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useRef } from "react";
+import { createMessage } from "../../requests/messages";
 
 export default function ChatRoom() {
+  const currentUserId = localStorage.getItem("userId") as string;
   const chatId = useParams().chatId as string;
   const chatname = useParams().username as string;
   const {
@@ -20,15 +22,22 @@ export default function ChatRoom() {
     queryFn: () => getChat(chatId),
   });
 
-  // If chat has not been created, create it when the first message is sent
   const queryClient = useQueryClient();
-  const createChatMutation = useMutation({
-    mutationFn: (chatId: string) => createChat(chatId),
-    onSuccess: (chat) => queryClient.invalidateQueries(["chats", chat.id]),
+
+  interface MessageArgs {
+    text: string;
+    senderId: string;
+    chatId: string;
+  }
+
+  const createMessageMutation = useMutation({
+    mutationFn: ({ text, senderId, chatId }: MessageArgs) =>
+      createMessage(text, senderId, chatId),
+    onSuccess: () => queryClient.invalidateQueries(["chats", chatId]),
   });
 
-  const handleSend = (content: string) => {
-    console.log(content);
+  const handleSend = (text: string) => {
+    createMessageMutation.mutate({ text, senderId: currentUserId, chatId });
   };
 
   return (
@@ -63,7 +72,7 @@ function ChatHeader({ chatname }: { chatname: string }) {
 }
 
 function InputField({ onSend }: { onSend: (content: string) => void }) {
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null);
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (
     event
   ) => {
@@ -78,7 +87,7 @@ function InputField({ onSend }: { onSend: (content: string) => void }) {
   return (
     <div className="fixed bottom-0 w-screen bg-white p-4 flex justify-center drop-shadow-2xl">
       <input
-      ref={inputRef}
+        ref={inputRef}
         autoFocus
         placeholder="Type something..."
         className="w-11/12 rounded-full p-3 bg-slate-100"

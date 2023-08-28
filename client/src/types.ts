@@ -17,13 +17,13 @@ interface Message {
   id: string;
   text: string;
   sender: User;
-  recipient: User;
-  timeStamp: Date
+  chatId: string;
+  timeStamp: Date;
 }
 
 interface Chat {
   id: string;
   users: User[];
-  messages: Message[]
+  messages: Message[];
 }
-export type {User, UserInfo, Chat, Message}
+export type { User, UserInfo, Chat, Message };

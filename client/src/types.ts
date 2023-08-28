@@ -18,7 +18,7 @@ interface Message {
   text: string;
   sender: User;
   chatId: string;
-  timestamp: Date;
+  timestamp: string;
 }
 
 interface Chat {

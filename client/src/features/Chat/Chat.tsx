@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getChat } from "../../requests/chats";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { createMessage } from "../../requests/messages";
 
 export default function ChatRoom() {
@@ -33,17 +33,29 @@ export default function ChatRoom() {
   const createMessageMutation = useMutation({
     mutationFn: ({ text, senderId, chatId }: MessageArgs) =>
       createMessage(text, senderId, chatId),
-    onSuccess: () => queryClient.invalidateQueries(["chats", chatId]),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["chats", chatId]);
+      // window.scrollTo(0, document.body.scrollHeight);
+      bottomRef.current?.scrollIntoView();
+    },
   });
 
   const handleSend = (text: string) => {
     createMessageMutation.mutate({ text, senderId: currentUserId, chatId });
   };
 
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView()
+  }, [])
+
   return (
     <section className="w-full">
       <ChatHeader chatname={chatname} />
-      <section className="mt-16 mb-20 p-2 bg-slate-100 flex flex-col">
+      <section
+        className="mt-16 mb-20 p-2 bg-slate-100 flex flex-col"
+      >
         {isLoading ? (
           <Loading />
         ) : isError ? (
@@ -56,6 +68,7 @@ export default function ChatRoom() {
           </p>
         )}
       </section>
+        <div ref={bottomRef}></div>
       <InputField onSend={handleSend} />
     </section>
   );
@@ -119,7 +132,7 @@ function OutgoingMessage({ message }: { message: Message }) {
         {message.text}
       </p>
       <span className="p-2 text-sm text-slate-400">
-        {message.timestamp.toLocaleString()}
+        {message.timestamp}
       </span>
     </li>
   );
@@ -132,7 +145,7 @@ function IncomingMessage({ message }: { message: Message }) {
         {message.text}
       </p>
       <span className="p-2 text-sm text-slate-400">
-        {message.timestamp.toLocaleString()}
+        {message.timestamp}
       </span>
     </li>
   );
@@ -140,7 +153,10 @@ function IncomingMessage({ message }: { message: Message }) {
 
 function BackButton() {
   return (
-    <Link to={"/chats"} className="hover:bg-slate-300 rounded-full w-10 h-10 flex items-center justify-center">
+    <Link
+      to={"/chats"}
+      className="hover:bg-slate-300 rounded-full w-10 h-10 flex items-center justify-center"
+    >
       <FontAwesomeIcon icon={faChevronLeft} />
     </Link>
   );

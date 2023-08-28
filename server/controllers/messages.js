@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 
 messagesRouter.post("/messages", async (req, res, next) => {
   const { chatId, text, senderId } = req.body;
-  console.log(req.body)
+  console.log(req.body);
   try {
     const message = new Message({
       text,
@@ -38,13 +38,23 @@ messagesRouter.post("/messages", async (req, res, next) => {
       const newChat = await chat.save();
       // Add new chat to users' chats field
       await User.findByIdAndUpdate(chatId.slice(0, 24), {
-        $push: {chats: newChat._id}
-      })
+        $push: { chats: newChat._id },
+      });
       await User.findByIdAndUpdate(chatId.slice(24, 48), {
-        $push: {chats: newChat._id}
-      })
+        $push: { chats: newChat._id },
+      });
     }
     res.json(newMessage);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Get all messages in chat
+messagesRouter.get("/chats/:chatId/messages", async (req, res, next) => {
+  try {
+    const messages = await Message.find({ chat: req.params.chatId }).populate('sender');
+    res.json(messages);
   } catch (error) {
     next(error);
   }

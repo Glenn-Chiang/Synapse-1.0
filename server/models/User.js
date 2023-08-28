@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.set("toJSON", {
   transform: (document, object) => {
-    object.id = object._id.toString();
+    object.id = object.id || object._id.toString();
     delete object._id;
     delete object.__v;
     delete object.passwordHash;

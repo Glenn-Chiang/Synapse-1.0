@@ -1,13 +1,13 @@
-import { faChevronLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useLocation, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useLocation, useParams } from "react-router-dom";
+import { useQuery } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useRef } from "react";
-import { createMessage, getChatMessages } from "../../requests/messages";
+import { getChatMessages } from "../../requests/messages";
 import { IncomingMessage, OutgoingMessage } from "../../components/Message";
-import { createChat, getChat } from "../../requests/chats";
+import { getChat } from "../../requests/chats";
+import { useCreateChat, useCreateMessage } from "./queries";
+import ChatHeader from "../../components/ChatHeader";
 
 export default function ChatRoom() {
   const currentUserId = localStorage.getItem("userId") as string;
@@ -23,37 +23,8 @@ export default function ChatRoom() {
     queryFn: () => getChat(currentUserId, otherUserId),
   });
 
-  const queryClient = useQueryClient();
-
-  const createMessageMutation = useMutation({
-    mutationFn: ({
-      text,
-      senderId,
-      chatId,
-    }: {
-      text: string;
-      senderId: string;
-      chatId: string;
-    }) => createMessage(text, senderId, chatId),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(["chats", chat?.id, "messages"]);
-    },
-  });
-
-  const createChatMutation = useMutation({
-    mutationFn: ({
-      text,
-      senderId,
-      recipientId,
-    }: {
-      text: string;
-      senderId: string;
-      recipientId: string;
-    }) => createChat(text, senderId, recipientId),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(["chats", otherUserId]);
-    },
-  });
+  const createMessageMutation = useCreateMessage();
+  const createChatMutation = useCreateChat();
 
   const handleSend = async (text: string) => {
     if (chat) {
@@ -93,16 +64,6 @@ export default function ChatRoom() {
   );
 }
 
-function ChatHeader({ chatname }: { chatname: string }) {
-  return (
-    <header className="flex items-center justify-between p-2 gap-4 h-16 w-screen fixed top-16 z-10 bg-white shadow">
-      <BackButton />
-      <h1 className=" line-clamp-1">{chatname}</h1>
-      <MenuButton />
-    </header>
-  );
-}
-
 function InputField({ onSend }: { onSend: (content: string) => void }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (
@@ -131,18 +92,22 @@ function InputField({ onSend }: { onSend: (content: string) => void }) {
 }
 
 function MessageThread({ chatId }: { chatId: string }) {
-  const {isLoading, isError, data: messages} = useQuery({
+  const {
+    isLoading,
+    isError,
+    data: messages,
+  } = useQuery({
     queryKey: ["chats", chatId, "messages"],
-    queryFn: () => getChatMessages(chatId)
-  })
+    queryFn: () => getChatMessages(chatId),
+  });
   const currentUserId = localStorage.getItem("userId");
 
   if (isLoading) {
-    return <Loading/>
+    return <Loading />;
   }
 
   if (isError) {
-    return <ErrorMessage message="Error loading messages"/>
+    return <ErrorMessage message="Error loading messages" />;
   }
 
   return (
@@ -155,24 +120,5 @@ function MessageThread({ chatId }: { chatId: string }) {
         )
       )}
     </ul>
-  );
-}
-
-function BackButton() {
-  return (
-    <Link
-      to={"/chats"}
-      className="hover:bg-slate-300 rounded-full w-10 h-10 flex items-center justify-center"
-    >
-      <FontAwesomeIcon icon={faChevronLeft} />
-    </Link>
-  );
-}
-
-function MenuButton() {
-  return (
-    <button className="hover:bg-slate-300 rounded-full w-10 h-10 ">
-      <FontAwesomeIcon icon={faEllipsisV} />
-    </button>
   );
 }

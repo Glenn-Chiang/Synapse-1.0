@@ -1,21 +1,27 @@
-import { Link } from "react-router-dom";
-import { Chat } from "../types";
+import { useNavigate } from "react-router-dom";
+import { Chat, User } from "../types";
 
 export default function ChatPreview({ chat }: { chat: Chat }) {
   const currentUserId = localStorage.getItem("userId");
-  const username = chat.users.find(
+  const otherUser = chat.users.find(
     (user) => user.id !== currentUserId
-  )?.username;
+  ) as User
   const lastMessage =
   chat.messages.length > 0 && chat.messages[chat.messages.length - 1];  
+  
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    navigate(`/chats/${otherUser.id}`, {state: {chatname: otherUser.username}})
+  }
 
   return (
-    <Link
-      to={`/chats/${chat.id}/${username}`}
+    <article
+      onClick={handleClick}
       className="p-2 h-20 w-full shadow flex gap-2 hover:bg-slate-200"
     >
       <div className="flex flex-col justify-between w-4/5">
-        <h2>{username}</h2>
+        <h2>{otherUser.username}</h2>
         {lastMessage && <p className="line-clamp-1 py-1">{lastMessage.text}</p>}
       </div>
       <div className="flex flex-col justify-between items-end w-1/5">
@@ -24,6 +30,6 @@ export default function ChatPreview({ chat }: { chat: Chat }) {
           {chat.messages.length}
         </span>
       </div>
-    </Link>
+    </article>
   );
 }

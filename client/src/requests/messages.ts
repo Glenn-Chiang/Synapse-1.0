@@ -1,3 +1,4 @@
+import { Message } from "../types";
 import axios from "./axios";
 
 const createMessage = async (
@@ -11,7 +12,7 @@ const createMessage = async (
 
 const getChatMessages = async (chatId: string) => {
   const response = await axios.get(`/chats/${chatId}/messages`);
-  return response.data
+  return response.data as Message[]
 }
 
 export { createMessage, getChatMessages };

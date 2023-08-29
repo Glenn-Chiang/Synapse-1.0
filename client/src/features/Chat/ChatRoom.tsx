@@ -1,12 +1,11 @@
 import { faChevronLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { Message } from "../../types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useRef } from "react";
-import { createMessage } from "../../requests/messages";
+import { createMessage, getChatMessages } from "../../requests/messages";
 import { IncomingMessage, OutgoingMessage } from "../../components/Message";
 import { createChat, getChat } from "../../requests/chats";
 
@@ -37,7 +36,7 @@ export default function ChatRoom() {
       chatId: string;
     }) => createMessage(text, senderId, chatId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["chats", otherUserId]);
+      await queryClient.invalidateQueries(["chats", chat?.id, "messages"]);
     },
   });
 
@@ -82,7 +81,7 @@ export default function ChatRoom() {
         ) : isError ? (
           <ErrorMessage message="Error loading chat" />
         ) : chat ? (
-          <MessageThread messages={chat.messages} />
+          <MessageThread chatId={chat.id} />
         ) : (
           <p className="text-center bg-cyan-500 text-white w-1/3 m-auto rounded-xl p-4 shadow">
             Send a message and start chatting!
@@ -131,11 +130,24 @@ function InputField({ onSend }: { onSend: (content: string) => void }) {
   );
 }
 
-function MessageThread({ messages }: { messages: Message[] }) {
+function MessageThread({ chatId }: { chatId: string }) {
+  const {isLoading, isError, data: messages} = useQuery({
+    queryKey: ["chats", chatId, "messages"],
+    queryFn: () => getChatMessages(chatId)
+  })
   const currentUserId = localStorage.getItem("userId");
+
+  if (isLoading) {
+    return <Loading/>
+  }
+
+  if (isError) {
+    return <ErrorMessage message="Error loading messages"/>
+  }
+
   return (
     <ul className="flex flex-col gap-4 ">
-      {messages.map((message) =>
+      {messages?.map((message) =>
         message.sender.id === currentUserId ? (
           <OutgoingMessage key={message.id} message={message} />
         ) : (

@@ -4,7 +4,7 @@ const GroupChatSchema = new mongoose.Schema({
   name: { type: String, required: true },
   members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   admins: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-  creator: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   dateCreated: Date,
   messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
 });

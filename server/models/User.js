@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema({
   passwordHash: { type: String, required: true },
   dateJoined: Date,
   sentMessages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
-  chats: [{ type: String, ref: "Message" }],
+  chats: [{ type: mongoose.Schema.Types.ObjectId, ref: "Chat" }],
+  groupchats: [{ type: mongoose.Schema.Types.ObjectId, ref: "GroupChat" }], 
 });
 
 userSchema.set("toJSON", {

@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const loginRouter = require('./controllers/login')
 const usersRouter = require('./controllers/users')
 const chatsRouter = require('./controllers/chats')
+const groupChatsRouter = require('./controllers/groupChats')
 const messagesRouter = require('./controllers/messages');
 const passport = require('passport');
 
@@ -27,6 +28,6 @@ app.use(morgan('dev'))
 app.use(passport.initialize())
 
 // Routers
-app.use(loginRouter, usersRouter, chatsRouter, messagesRouter)
+app.use(loginRouter, usersRouter, chatsRouter, groupChatsRouter, messagesRouter)
 
 module.exports = app

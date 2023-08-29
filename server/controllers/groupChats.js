@@ -27,4 +27,16 @@ groupChatsRouter.post("/groupchats", async (req, res, next) => {
   }
 });
 
+// Get user's groupChats
+groupChatsRouter.get("/users/:userId/groupchats", async (req, res, next) => {
+  try {
+    const groupChats = await GroupChat.find({
+      members: { $in: req.params.userId },
+    }).populate("messages");
+    res.json(groupChats);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = groupChatsRouter;

@@ -1,54 +1,77 @@
 import { faChevronLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { Message } from "../../types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { useRef, useEffect } from "react";
-import { createMessage, getChatMessages } from "../../requests/messages";
+import { useRef } from "react";
+import { createMessage } from "../../requests/messages";
+import { IncomingMessage, OutgoingMessage } from "../../components/Message";
+import { createChat, getChat } from "../../requests/chats";
 
 export default function ChatRoom() {
   const currentUserId = localStorage.getItem("userId") as string;
-  const chatId = useParams().chatId as string;
-  const chatname = useParams().username as string;
+  const otherUserId = useParams().chatId as string;
+  const chatname = useLocation().state.chatname as string;
+
   const {
     isLoading,
     isError,
-    data: messages,
+    data: chat,
   } = useQuery({
-    queryKey: ["chats", chatId, "messages"],
-    queryFn: () => getChatMessages(chatId),
+    queryKey: ["chats", otherUserId],
+    queryFn: () => getChat(currentUserId, otherUserId),
   });
 
   const queryClient = useQueryClient();
 
-  interface MessageArgs {
-    text: string;
-    senderId: string;
-    chatId: string;
-  }
-
   const createMessageMutation = useMutation({
-    mutationFn: ({ text, senderId, chatId }: MessageArgs) =>
-      createMessage(text, senderId, chatId),
-    // onMutate: ({text, senderId, chatId}: MessageArgs) => {
-    //   const prevMessages = queryClient.getQueryData(['chats', chatId, 'messages'])
-    //   const newMessage: Message = {
-    //     text, sender: senderId, chatId, timestamp: (new Date).toLocaleTimeString()
-    //   }
-    //   queryClient.setQueryData(['chats', chatId, 'messages'], (prevMessages) => [...prevMessages, newMessage])
-    //   return {prevMessages}
-    // },
+    mutationFn: ({
+      text,
+      senderId,
+      chatId,
+    }: {
+      text: string;
+      senderId: string;
+      chatId: string;
+    }) => createMessage(text, senderId, chatId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["chats", chatId]);
+      await queryClient.invalidateQueries(["chats", otherUserId]);
     },
   });
 
-  const handleSend = (text: string) => {
-    createMessageMutation.mutate({ text, senderId: currentUserId, chatId });
-  };
+  const createChatMutation = useMutation({
+    mutationFn: ({
+      text,
+      senderId,
+      recipientId,
+    }: {
+      text: string;
+      senderId: string;
+      recipientId: string;
+    }) => createChat(text, senderId, recipientId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["chats", otherUserId]);
+    },
+  });
 
+  const handleSend = async (text: string) => {
+    if (chat) {
+      createMessageMutation.mutate({
+        text,
+        senderId: currentUserId,
+        chatId: chat.id,
+      });
+    } else {
+      // Create chat if it does not yet exist, together with new message
+      createChatMutation.mutate({
+        text,
+        senderId: currentUserId,
+        recipientId: otherUserId,
+      });
+    }
+  };
 
   return (
     <section className="w-full">
@@ -58,8 +81,8 @@ export default function ChatRoom() {
           <Loading />
         ) : isError ? (
           <ErrorMessage message="Error loading chat" />
-        ) : messages ? (
-          <MessageThread messages={messages} />
+        ) : chat ? (
+          <MessageThread messages={chat.messages} />
         ) : (
           <p className="text-center bg-cyan-500 text-white w-1/3 m-auto rounded-xl p-4 shadow">
             Send a message and start chatting!
@@ -120,34 +143,6 @@ function MessageThread({ messages }: { messages: Message[] }) {
         )
       )}
     </ul>
-  );
-}
-
-function OutgoingMessage({ message }: { message: Message }) {
-  const messageRef = useRef<HTMLLIElement>(null)
-  
-  useEffect(() => {
-    messageRef.current?.scrollIntoView()
-  }, [])
-
-  return (
-    <li ref={messageRef} className="self-end flex flex-col items-end ">
-      <p className="bg-cyan-500 text-white p-2 rounded-xl shadow max-w-xs break-words">
-        {message.text}
-      </p>
-      <span className="p-2 text-sm text-slate-400">{message.timestamp}</span>
-    </li>
-  );
-}
-
-function IncomingMessage({ message }: { message: Message }) {
-  return (
-    <li className="self-start flex flex-col ">
-      <p className="bg-white p-2 rounded-xl shadow max-w-xs break-words">
-        {message.text}
-      </p>
-      <span className="p-2 text-sm text-slate-400">{message.timestamp}</span>
-    </li>
   );
 }
 

@@ -7,7 +7,7 @@ import { getUsers } from "../../requests/users";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { User } from "../../types";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Users() {
   const {
@@ -52,15 +52,18 @@ export default function Users() {
 }
 
 function UserPreview({ user }: { user: User }) {
-  const currentUserId = localStorage.getItem("userId");
-  const chatId = [currentUserId, user.id].sort().join("");
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    navigate(`/chats/${user.id}`, {state: {chatname: user.username}})
+  }
 
   return (
-    <Link
-      to={`/chats/${chatId}/${user.username}`}
+    <article
+      onClick={handleClick}
       className="p-2 h-20 w-full shadow flex items-center gap-2 hover:bg-slate-200"
     >
       <h2>{user.username}</h2>
-    </Link>
+    </article>
   );
 }

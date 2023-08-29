@@ -16,7 +16,7 @@ function Chats() {
     isError,
     data: chats,
   } = useQuery({
-    queryKey: ["chats", "userId"],
+    queryKey: [userId, "chats"],
     queryFn: () => getChats(userId),
   });
 
@@ -40,7 +40,7 @@ function Chats() {
       {isLoading ? (
         <Loading />
       ) : isError ? (
-        <ErrorMessage message="Error fetching users" />
+        <ErrorMessage message="Error fetching chats" />
       ) : (
         chats && chats.length > 0 ?
         <ul>

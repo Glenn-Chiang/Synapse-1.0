@@ -24,11 +24,7 @@ chatsRouter.get(
       const chat = await Chat.findOne({
         users: { $all: [req.params.currentUserId, req.params.otherUserId] },
       })
-        .populate("users")
-        .populate({
-          path: "messages",
-          populate: "sender",
-        });
+        
       res.json(chat);
     } catch (error) {
       next(error);

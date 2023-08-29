@@ -22,28 +22,10 @@ messagesRouter.post("/messages", async (req, res, next) => {
     });
 
     // Add message to chat's messages field
-    const updatedChat = await Chat.findByIdAndUpdate(chatId, {
+    await Chat.findByIdAndUpdate(chatId, {
       $push: { messages: newMessage._id },
     });
 
-    // Create chat if chat does not yet exist
-    // Private chats are created when a user first sends a message to another user
-    if (!updatedChat) {
-      const chat = new Chat({
-        _id: chatId,
-        users: [chatId.slice(0, 24), chatId.slice(24, 48)],
-        messages: [message._id],
-        dateCreated: new Date(),
-      });
-      const newChat = await chat.save();
-      // Add new chat to users' chats field
-      await User.findByIdAndUpdate(chatId.slice(0, 24), {
-        $push: { chats: newChat._id },
-      });
-      await User.findByIdAndUpdate(chatId.slice(24, 48), {
-        $push: { chats: newChat._id },
-      });
-    }
     res.json(newMessage);
   } catch (error) {
     next(error);

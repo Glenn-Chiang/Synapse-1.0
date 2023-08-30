@@ -15,4 +15,9 @@ const getChatMessages = async (chatId: string) => {
   return response.data as Message[]
 }
 
-export { createMessage, getChatMessages };
+const getGroupMessages = async (groupId: string) => {
+  const response = await axios.get(`/groups/${groupId}/messages`)
+  return response.data as Message[]
+}
+
+export { createMessage, getChatMessages, getGroupMessages };

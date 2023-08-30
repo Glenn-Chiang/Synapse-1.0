@@ -14,8 +14,9 @@ import ChatRoom from "./features/Chat/ChatRoom.tsx";
 import Users from "./features/Users/Users.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
 import chatsLoader from "./features/Chats/loader.ts";
-import GroupChats from "./features/GroupChats/GroupChats.tsx";
+import Groups from "./features/Groups/Groups.tsx";
 import CreateGroup from "./features/CreateGroup/CreateGroup.tsx";
+import GroupRoom from "./features/Group/GroupRoom.tsx";
 
 const router = createBrowserRouter([
   {
@@ -37,12 +38,11 @@ const router = createBrowserRouter([
       },
       {
         path: "groups",
-        element: <GroupChats />,
-        children: [
-          {
-            path: ":chatId",
-          },
-        ],
+        element: <Groups />,
+      },
+      {
+        path: "groups/:groupId",
+        element: <GroupRoom />,
       },
       {
         path: "createGroup",

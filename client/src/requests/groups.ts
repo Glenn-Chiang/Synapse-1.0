@@ -6,9 +6,14 @@ const getGroups = async (userId: string) => {
   return response.data as Group[];
 };
 
+const getGroup = async (groupId: string) => {
+  const response = await axios.get(`/groups/${groupId}`)
+  return response.data as Group
+}
+
 const createGroup = async (name: string, creatorId: string, description: string) => {
   const response = await axios.post('/groups', {name, creatorId, description})
   return response.data as Group
 }
 
-export { getGroups, createGroup };
+export { getGroups, getGroup, createGroup };

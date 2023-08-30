@@ -2,12 +2,12 @@ import { useLocation, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { useRef } from "react";
 import { getChatMessages } from "../../requests/messages";
 import { IncomingMessage, OutgoingMessage } from "../../components/Message";
 import { getChat } from "../../requests/chats";
 import { useCreateChat, useCreateMessage } from "./queries";
 import ChatHeader from "../../components/ChatHeader";
+import MessageInput from "../../components/MessageInput";
 
 export default function ChatRoom() {
   const currentUserId = localStorage.getItem("userId") as string;
@@ -59,37 +59,11 @@ export default function ChatRoom() {
           </p>
         )}
       </section>
-      <InputField onSend={handleSend} />
+      <MessageInput onSend={handleSend} />
     </section>
   );
 }
 
-function InputField({ onSend }: { onSend: (content: string) => void }) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (
-    event
-  ) => {
-    const inputField = inputRef.current;
-    if (event.key === "Enter") {
-      if (!inputField) {
-        return;
-      }
-      onSend(inputField.value);
-      inputRef.current.value = "";
-    }
-  };
-  return (
-    <div className="fixed bottom-0 w-screen bg-white p-4 flex justify-center drop-shadow-2xl">
-      <input
-        ref={inputRef}
-        autoFocus
-        placeholder="Type something..."
-        className="w-11/12 rounded-full p-3 bg-slate-100"
-        onKeyDown={handleKeyDown}
-      />
-    </div>
-  );
-}
 
 function MessageThread({ chatId }: { chatId: string }) {
   const {

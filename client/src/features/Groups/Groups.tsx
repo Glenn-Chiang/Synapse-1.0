@@ -1,4 +1,8 @@
-import { faPlus, faSearch, faUserGroup } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faSearch,
+  faUserGroup,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import SearchBar from "../../components/Searchbar";
@@ -9,7 +13,7 @@ import { getGroups } from "../../requests/groups";
 import GroupPreview from "./GroupPreview";
 import { Link } from "react-router-dom";
 
-export default function GroupChats() {
+export default function Groups() {
   const userId = localStorage.getItem("userId") as string;
 
   const {
@@ -31,7 +35,7 @@ export default function GroupChats() {
             <FontAwesomeIcon icon={faUserGroup} />
             Groups
           </h1>
-          <CreateGroupButton/>
+          <CreateGroupButton />
         </div>
         <button
           onClick={() => setFilterShown((prev) => !prev)}
@@ -62,8 +66,12 @@ export default function GroupChats() {
 
 function CreateGroupButton() {
   return (
-    <Link to={'/createGroup'}  className="bg-cyan-500 text-white p-2 rounded-full w-10 h-10 flex justify-center items-center hover:bg-cyan-600">
-      <FontAwesomeIcon icon={faPlus}/>
+    <Link
+      to={"/createGroup"}
+      className="bg-cyan-500 text-white p-2 rounded-md  gap-2 flex justify-center items-center hover:bg-cyan-600"
+    >
+      <FontAwesomeIcon icon={faPlus} />
+      Create group
     </Link>
-  )
+  );
 }

@@ -1,3 +1,4 @@
+import { useMutation, useQueryClient } from "react-query";
 import { Chat } from "../types";
 import axios from "./axios";
 
@@ -16,4 +17,24 @@ const createChat = async (text: string, senderId: string, recipientId: string) =
   return response.data as Chat
 }
 
-export { getChats, getChat, createChat };
+const useCreateChat = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: ({
+      text,
+      senderId,
+      recipientId,
+    }: {
+      text: string;
+      senderId: string;
+      recipientId: string;
+    }) => createChat(text, senderId, recipientId),
+    onSuccess: async (_, variables) => {
+      await queryClient.invalidateQueries(["chats", variables.recipientId]);
+    },
+  });
+  return mutation;
+};
+
+
+export { getChats, getChat, createChat, useCreateChat };

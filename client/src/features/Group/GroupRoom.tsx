@@ -5,21 +5,32 @@ import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import MessageInput from "../../components/MessageInput";
 import { getGroup } from "../../requests/groups";
-import { getGroupMessages } from "../../requests/messages";
+import { getChatMessages, useCreateMessage } from "../../requests/messages";
 import { IncomingMessage, OutgoingMessage } from "../../components/Message";
 
 export default function GroupRoom() {
-  const groupId = useParams().groupId as string
-  const groupname = useLocation().state.groupname
+  const groupId = useParams().groupId as string;
+  const groupname = useLocation().state.groupname;
+  const currentUserId = localStorage.getItem("userId") as string;
 
-  const {isLoading, isError, data: group} = useQuery({
+  const {
+    isLoading,
+    isError,
+    data: group,
+  } = useQuery({
     queryKey: ["groups", groupId],
-    queryFn: () => getGroup(groupId)
-  })
+    queryFn: () => getGroup(groupId),
+  });
 
-  const handleSend = () => {
-    
-  }
+  const createMessageMutation = useCreateMessage()
+
+  const handleSend = async (text: string) => {
+    createMessageMutation.mutate({
+      text,
+      senderId: currentUserId,
+      chatId: group ? group.id : '',
+    });
+  };
 
   return (
     <section className="w-full">
@@ -42,15 +53,14 @@ export default function GroupRoom() {
   );
 }
 
-
 function MessageThread({ groupId }: { groupId: string }) {
   const {
     isLoading,
     isError,
     data: messages,
   } = useQuery({
-    queryKey: ["groups", groupId, "messages"],
-    queryFn: () => getGroupMessages(groupId),
+    queryKey: ["chats", groupId, "messages"],
+    queryFn: () => getChatMessages(groupId),
   });
   const currentUserId = localStorage.getItem("userId");
 

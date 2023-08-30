@@ -2,12 +2,12 @@ import { useLocation, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { getChatMessages } from "../../requests/messages";
+import { getChatMessages, useCreateMessage } from "../../requests/messages";
 import { IncomingMessage, OutgoingMessage } from "../../components/Message";
-import { getChat } from "../../requests/chats";
-import { useCreateChat, useCreateMessage } from "./queries";
+import { getChat, useCreateChat } from "../../requests/chats";
 import ChatHeader from "../../components/ChatHeader";
 import MessageInput from "../../components/MessageInput";
+
 
 export default function ChatRoom() {
   const currentUserId = localStorage.getItem("userId") as string;

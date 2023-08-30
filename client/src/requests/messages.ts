@@ -1,3 +1,4 @@
+import { useMutation, useQueryClient } from "react-query";
 import { Message } from "../types";
 import axios from "./axios";
 
@@ -15,9 +16,32 @@ const getChatMessages = async (chatId: string) => {
   return response.data as Message[]
 }
 
-const getGroupMessages = async (groupId: string) => {
-  const response = await axios.get(`/groups/${groupId}/messages`)
-  return response.data as Message[]
-}
+const useCreateMessage = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: ({
+      text,
+      senderId,
+      chatId,
+    }: {
+      text: string;
+      senderId: string;
+      chatId: string;
+    }) => createMessage(text, senderId, chatId),
+    onSuccess: async (_, variables) => {
+      await queryClient.invalidateQueries([
+        "chats",
+        variables.chatId,
+        "messages",
+      ]);
+    },
+  });
+  return mutation;
+};
 
-export { createMessage, getChatMessages, getGroupMessages };
+// const getGroupMessages = async (groupId: string) => {
+//   const response = await axios.get(`/groups/${groupId}/messages`)
+//   return response.data as Message[]
+// }
+
+export { createMessage, getChatMessages, useCreateMessage };

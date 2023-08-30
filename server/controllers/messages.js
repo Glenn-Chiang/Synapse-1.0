@@ -6,12 +6,11 @@ const mongoose = require("mongoose");
 
 messagesRouter.post("/messages", async (req, res, next) => {
   const { chatId, text, senderId } = req.body;
-  console.log(req.body);
+
   try {
     const message = new Message({
       text,
       sender: new mongoose.Types.ObjectId(senderId),
-      chat: chatId,
       timestamp: new Date(),
     });
     const newMessage = await message.save();

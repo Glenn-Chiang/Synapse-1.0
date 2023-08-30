@@ -1,9 +1,13 @@
 const mongoose = require("mongoose");
 
 const chatSchema = new mongoose.Schema({
-  users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  name: {type: String, required: true},
+  description: String,
+  members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  admins: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  dateCreated: Date,
+  creator: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
   messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
-  dateCreated: Date
 });
 
 chatSchema.set('toJSON', {

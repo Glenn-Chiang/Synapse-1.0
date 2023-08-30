@@ -1,23 +1,23 @@
-import { faCommentDots, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faUserGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import SearchBar from "../../components/Searchbar";
 import { useQuery } from "react-query";
-import { getChats } from "../../requests/chats";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import ChatPreview from "./ChatPreview";
+import { getGroups } from "../../requests/groupchats";
+import GroupPreview from "./GroupPreview";
 
-function Chats() {
+export default function GroupChats() {
   const userId = localStorage.getItem("userId") as string;
 
   const {
     isLoading,
     isError,
-    data: chats,
+    data: groupchats,
   } = useQuery({
-    queryKey: [userId, "chats"],
-    queryFn: () => getChats(userId),
+    queryKey: [userId, "groupchats"],
+    queryFn: () => getGroups(userId),
   });
 
   const [filterShown, setFilterShown] = useState(false);
@@ -26,8 +26,8 @@ function Chats() {
     <main className="bg-white">
       <div className="w-full p-2 flex items-center justify-between gap-2 shadow">
         <h1 className="flex gap-2 items-center text-cyan-500">
-          <FontAwesomeIcon icon={faCommentDots} />
-          Chats
+          <FontAwesomeIcon icon={faUserGroup} />
+          Groups
         </h1>
         <button
           onClick={() => setFilterShown((prev) => !prev)}
@@ -36,24 +36,22 @@ function Chats() {
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
-      {filterShown && <SearchBar placeholder="Search your chats..." />}
+      {filterShown && <SearchBar placeholder="Search your groups..." />}
       {isLoading ? (
         <Loading />
       ) : isError ? (
-        <ErrorMessage message="Error fetching chats" />
-      ) : chats && chats.length > 0 ? (
+        <ErrorMessage message="Error fetching groups" />
+      ) : groupchats && groupchats.length > 0 ? (
         <ul>
-          {chats?.map((chat) => (
-            <li key={chat.id}>
-              <ChatPreview chat={chat} />
+          {groupchats?.map((group) => (
+            <li key={group.id}>
+              <GroupPreview group={group} />
             </li>
           ))}
         </ul>
       ) : (
-        <p className="p-4 shadow">No chats found</p>
+        <p className="p-4 shadow">No groups found</p>
       )}
     </main>
   );
 }
-
-export default Chats;

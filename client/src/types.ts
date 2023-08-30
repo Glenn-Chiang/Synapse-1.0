@@ -26,4 +26,15 @@ interface Chat {
   users: User[];
   messages: Message[];
 }
-export type { User, UserInfo, Chat, Message };
+
+interface GroupChat {
+  id: string;
+  name: string;
+  users: User[];
+  admins: User[];
+  creator: User;
+  dateCreated: string;
+  messages: Message[];
+}
+
+export type { User, UserInfo, Chat, GroupChat, Message };

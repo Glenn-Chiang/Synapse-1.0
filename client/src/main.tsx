@@ -10,11 +10,11 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import App from "./layouts/App.tsx";
-import Channels from "./features/Channels/Channels.tsx";
 import ChatRoom from "./features/Chat/ChatRoom.tsx";
 import Users from "./features/Users/Users.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
 import chatsLoader from "./features/Chats/loader.ts";
+import GroupChats from "./features/GroupChats/GroupChats.tsx";
 
 const router = createBrowserRouter([
   {
@@ -35,11 +35,11 @@ const router = createBrowserRouter([
         element: <ChatRoom />,
       },
       {
-        path: "channels",
-        element: <Channels />,
+        path: "groups",
+        element: <GroupChats/>,
         children: [
           {
-            path: ":channelId",
+            path: ":chatId",
           },
         ],
       },

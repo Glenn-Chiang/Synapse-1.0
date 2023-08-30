@@ -6,8 +6,7 @@ import { useQuery } from "react-query";
 import { getUsers } from "../../requests/users";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { User } from "../../types";
-import { useNavigate } from "react-router-dom";
+import UserPreview from "../../components/UserPreview";
 
 export default function Users() {
   const {
@@ -48,22 +47,5 @@ export default function Users() {
         </ul>
       )}
     </main>
-  );
-}
-
-function UserPreview({ user }: { user: User }) {
-  const navigate = useNavigate()
-
-  const handleClick = () => {
-    navigate(`/chats/${user.id}`, {state: {chatname: user.username}})
-  }
-
-  return (
-    <article
-      onClick={handleClick}
-      className="p-2 h-20 w-full shadow flex items-center gap-2 hover:bg-slate-200"
-    >
-      <h2>{user.username}</h2>
-    </article>
   );
 }

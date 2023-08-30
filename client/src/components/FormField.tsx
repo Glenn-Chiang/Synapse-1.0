@@ -6,14 +6,14 @@ type FormFieldProps = {
   name: string;
   inputType: string;
   attributes: UseFormRegisterReturn
-  icon: IconDefinition
+  icon?: IconDefinition
 };
 
 export default function FormField({ name, inputType, attributes, icon }: FormFieldProps) {
   return (
     <div className="flex flex-col gap-4 w-full">
-      <label htmlFor={name} className="capitalize flex gap-2 items-center">
-        <FontAwesomeIcon icon={icon}/>
+      <label htmlFor={name} className="capitalize flex gap-2 items-center text-slate-800 font-medium">
+        {icon && <FontAwesomeIcon icon={icon}/>}
         {name}
       </label>
       <input

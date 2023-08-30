@@ -30,7 +30,7 @@ interface Chat {
 interface GroupChat {
   id: string;
   name: string;
-  users: User[];
+  members: User[];
   admins: User[];
   creator: User;
   dateCreated: string;

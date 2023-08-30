@@ -4,7 +4,7 @@ const User = require("../models/User");
 const mongoose = require("mongoose");
 
 // Create groupChat
-groupChatsRouter.post("/groupchats", async (req, res, next) => {
+groupChatsRouter.post("/groups", async (req, res, next) => {
   try {
     const { name, creatorId } = req.body;
     const groupChat = new GroupChat({
@@ -28,7 +28,7 @@ groupChatsRouter.post("/groupchats", async (req, res, next) => {
 });
 
 // Get user's groupChats
-groupChatsRouter.get("/users/:userId/groupchats", async (req, res, next) => {
+groupChatsRouter.get("/users/:userId/groups", async (req, res, next) => {
   try {
     const groupChats = await GroupChat.find({
       members: { $in: req.params.userId },

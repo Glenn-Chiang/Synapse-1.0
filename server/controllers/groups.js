@@ -1,13 +1,13 @@
-const groupChatsRouter = require("express").Router();
+const groupsRouter = require("express").Router();
 const Group = require("../models/Group");
 const User = require("../models/User");
 const mongoose = require("mongoose");
 
-// Create groupChat
-groupChatsRouter.post("/groups", async (req, res, next) => {
+// Create group
+groupsRouter.post("/groups", async (req, res, next) => {
   try {
     const { name, creatorId, description } = req.body;
-    const groupChat = new Group({
+    const group = new Group({
       name,
       description,
       creator: new mongoose.Types.ObjectId(creatorId),
@@ -15,29 +15,39 @@ groupChatsRouter.post("/groups", async (req, res, next) => {
       admins: [new mongoose.Types.ObjectId(creatorId)],
       dateCreated: new Date(),
     });
-    const newGroupChat = await groupChat.save();
+    const newGroup = await group.save();
 
     // Add group chat to creator's groupchats
     await User.findByIdAndUpdate(creatorId, {
-      $push: { groups: newGroupChat._id },
+      $push: { groups: newGroup._id },
     });
 
-    res.json(newGroupChat);
+    res.json(newGroup);
   } catch (error) {
     next(error);
   }
 });
 
-// Get user's groupChats
-groupChatsRouter.get("/users/:userId/groups", async (req, res, next) => {
+// Get user's groups
+groupsRouter.get("/users/:userId/groups", async (req, res, next) => {
   try {
-    const groupChats = await Group.find({
+    const groups = await Group.find({
       members: { $in: req.params.userId },
     }).populate("messages");
-    res.json(groupChats);
+    res.json(groups);
   } catch (error) {
     next(error);
   }
 });
 
-module.exports = groupChatsRouter;
+// Get individual group
+groupsRouter.get('/groups/:groupId', async (req, res, next) => {
+  try {
+    const group = await Group.findById(req.params.groupId)
+    res.json(group)
+  } catch (error) {
+    next(error)
+  }
+})
+
+module.exports = groupsRouter;

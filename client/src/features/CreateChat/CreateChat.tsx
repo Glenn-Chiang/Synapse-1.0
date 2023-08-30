@@ -5,14 +5,15 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
-import { createGroup } from "../../requests/groups";
+import { createChat } from "../../requests/chats";
 
-export default function CreateGroup() {
+
+export default function CreateChat() {
   const currentUserId = localStorage.getItem("userId") as string;
   const navigate = useNavigate();
 
   interface FormValues {
-    "group name": string;
+    "chatname": string;
     description: string;
   }
 
@@ -22,24 +23,24 @@ export default function CreateGroup() {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const createGroupMutation = useMutation({
-    mutationFn: ({ "group name": name, description }: FormValues) =>
-      createGroup(name, currentUserId, description),
+  const createchatMutation = useMutation({
+    mutationFn: ({ chatname, description }: FormValues) =>
+      createChat(chatname, description, currentUserId),
     onSuccess: () => {
-      console.log("Group created");
-      navigate('/groups')
+      console.log("chat created");
+      navigate('/chats')
     },
   });
 
   const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
-    createGroupMutation.mutate(formValues);
+    createchatMutation.mutate(formValues);
   };
 
 
   return (
     <main className="bg-white">
       <div className="w-full p-2 flex items-center justify-center gap-2 shadow">
-        <h1 className="flex gap-2 items-center text-cyan-500">Create Group</h1>
+        <h1 className="flex gap-2 items-center text-cyan-500">Create chat</h1>
         <button
           onClick={() => navigate(-1)}
           className="text-slate-500 hover:bg-slate-200 rounded-full p-2 w-8 absolute right-2 text-xs"
@@ -52,20 +53,20 @@ export default function CreateGroup() {
         className="p-4 flex flex-col gap-8"
       >
         <FormField
-          name="group name"
+          name="chat name"
           inputType="text"
           attributes={{
-            ...register("group name", {
-              required: "Group name is required",
+            ...register("chatname", {
+              required: "chatname is required",
               maxLength: {
                 value: 50,
-                message: "Group name cannot be longer than 50 characters",
+                message: "Chatname cannot be longer than 50 characters",
               },
             }),
           }}
         />
-        {errors["group name"]?.message && (
-          <ErrorMessage message={errors["group name"].message} />
+        {errors.chatname?.message && (
+          <ErrorMessage message={errors.chatname.message} />
         )}
 
         <FormField
@@ -76,7 +77,7 @@ export default function CreateGroup() {
               maxLength: {
                 value: 1000,
                 message:
-                  "Group description cannot be longer than 1000 characters",
+                  "Chat description cannot be longer than 1000 characters",
               },
             }),
           }}

@@ -7,13 +7,13 @@ const getChats = async (userId: string) => {
   return response.data as Chat[];
 };
 
-const getChat = async (currentUserId: string, otherUserId: string) => {
-  const response = await axios.get(`/users/${currentUserId}/chats/${otherUserId}`);
-  return response.data as Chat | null;
+const getChat = async (chatId: string) => {
+  const response = await axios.get(`/chats/${chatId}`);
+  return response.data as Chat;
 };
 
-const createChat = async (text: string, senderId: string, recipientId: string) => {
-  const response = await axios.post('chats', {text, senderId, recipientId})
+const createChat = async (name: string, description: string, creatorId: string) => {
+  const response = await axios.post('/chats', {name, description, creatorId})
   return response.data as Chat
 }
 

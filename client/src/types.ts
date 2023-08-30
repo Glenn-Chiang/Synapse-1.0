@@ -23,12 +23,6 @@ interface Message {
 
 interface Chat {
   id: string;
-  users: User[];
-  messages: Message[];
-}
-
-interface Group {
-  id: string;
   name: string;
   description: string;
   members: User[];
@@ -38,4 +32,4 @@ interface Group {
   messages: Message[];
 }
 
-export type { User, UserInfo, Chat, Group, Message };
+export type { User, UserInfo, Chat, Message };

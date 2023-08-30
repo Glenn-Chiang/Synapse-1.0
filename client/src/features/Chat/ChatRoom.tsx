@@ -4,43 +4,33 @@ import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { getChatMessages, useCreateMessage } from "../../requests/messages";
 import { IncomingMessage, OutgoingMessage } from "../../components/Message";
-import { getChat, useCreateChat } from "../../requests/chats";
+import { getChat } from "../../requests/chats";
 import ChatHeader from "../../components/ChatHeader";
 import MessageInput from "../../components/MessageInput";
 
 
 export default function ChatRoom() {
   const currentUserId = localStorage.getItem("userId") as string;
-  const otherUserId = useParams().chatId as string;
   const chatname = useLocation().state.chatname as string;
+  const chatId = useParams().chatId as string
 
   const {
     isLoading,
     isError,
     data: chat,
   } = useQuery({
-    queryKey: ["chats", otherUserId],
-    queryFn: () => getChat(currentUserId, otherUserId),
+    queryKey: ["chats", chatId],
+    queryFn: () => getChat(chatId)
   });
 
   const createMessageMutation = useCreateMessage();
-  const createChatMutation = useCreateChat();
 
   const handleSend = async (text: string) => {
-    if (chat) {
       createMessageMutation.mutate({
         text,
         senderId: currentUserId,
-        chatId: chat.id,
+        chatId,
       });
-    } else {
-      // Create chat if it does not yet exist, together with new message
-      createChatMutation.mutate({
-        text,
-        senderId: currentUserId,
-        recipientId: otherUserId,
-      });
-    }
   };
 
   return (

@@ -5,9 +5,9 @@ const Chat = require("../models/Chat");
 // Get all user's chats
 chatsRouter.get("/users/:userId/chats", async (req, res, next) => {
   try {
-    const chats = await Chat.find({ users: { $in: req.params.userId } })
+    const chats = await Chat.find({ members: { $in: req.params.userId } })
       .populate("messages")
-      .populate("users");
+      .populate("members");
     res.json(chats);
   } catch (error) {
     next(error);

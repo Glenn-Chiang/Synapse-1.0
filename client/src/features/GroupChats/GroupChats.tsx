@@ -5,7 +5,7 @@ import SearchBar from "../../components/Searchbar";
 import { useQuery } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { getGroups } from "../../requests/groupchats";
+import { getGroups } from "../../requests/groups";
 import GroupPreview from "./GroupPreview";
 import { Link } from "react-router-dom";
 

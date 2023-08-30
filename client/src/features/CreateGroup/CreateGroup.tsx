@@ -1,12 +1,16 @@
 import { faUserPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import FormField from "../components/FormField";
+import FormField from "../../components/FormField";
 import { SubmitHandler, useForm } from "react-hook-form";
-import ErrorMessage from "../components/ErrorMessage";
+import ErrorMessage from "../../components/ErrorMessage";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "react-query";
+import { useMutation } from "react-query";
+import { createGroup } from "../../requests/groups";
 
 export default function CreateGroup() {
+  const currentUserId = localStorage.getItem("userId") as string;
+  const navigate = useNavigate();
+
   interface FormValues {
     "group name": string;
     description: string;
@@ -18,11 +22,19 @@ export default function CreateGroup() {
     formState: { errors },
   } = useForm<FormValues>();
 
+  const createGroupMutation = useMutation({
+    mutationFn: ({ "group name": name, description }: FormValues) =>
+      createGroup(name, currentUserId, description),
+    onSuccess: () => {
+      console.log("Group created");
+      navigate('/groups')
+    },
+  });
+
   const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
-    
+    createGroupMutation.mutate(formValues);
   };
 
-  const navigate = useNavigate();
 
   return (
     <main className="bg-white">
@@ -47,8 +59,8 @@ export default function CreateGroup() {
               required: "Group name is required",
               maxLength: {
                 value: 50,
-                message: "Group name cannot be longer than 50 characters"
-              }
+                message: "Group name cannot be longer than 50 characters",
+              },
             }),
           }}
         />
@@ -63,7 +75,8 @@ export default function CreateGroup() {
             ...register("description", {
               maxLength: {
                 value: 1000,
-                message: "Group description cannot be longer than 1000 characters",
+                message:
+                  "Group description cannot be longer than 1000 characters",
               },
             }),
           }}
@@ -85,4 +98,3 @@ export default function CreateGroup() {
     </main>
   );
 }
-

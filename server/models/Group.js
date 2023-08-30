@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 
-const GroupChatSchema = new mongoose.Schema({
+const groupSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  description: String,
   members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   admins: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -9,7 +10,7 @@ const GroupChatSchema = new mongoose.Schema({
   messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
 });
 
-GroupChatSchema.set("toJSON", {
+groupSchema.set("toJSON", {
   transform: (document, object) => {
     object.id = object._id.toString();
     delete object._id;
@@ -17,6 +18,6 @@ GroupChatSchema.set("toJSON", {
   },
 });
 
-const GroupChat = mongoose.model('GroupChat', GroupChatSchema)
+const Group = mongoose.model('Group', groupSchema)
 
-module.exports = GroupChat
+module.exports = Group

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { GroupChat } from "../../types";
+import { Group } from "../../types";
 
-export default function GroupPreview({ group }: { group: GroupChat }) {
+export default function GroupPreview({ group }: { group: Group }) {
   const lastMessage =
     group.messages.length > 0 && group.messages[group.messages.length - 1];
 

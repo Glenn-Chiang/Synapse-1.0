@@ -27,9 +27,10 @@ interface Chat {
   messages: Message[];
 }
 
-interface GroupChat {
+interface Group {
   id: string;
   name: string;
+  description: string;
   members: User[];
   admins: User[];
   creator: User;
@@ -37,4 +38,4 @@ interface GroupChat {
   messages: Message[];
 }
 
-export type { User, UserInfo, Chat, GroupChat, Message };
+export type { User, UserInfo, Chat, Group, Message };

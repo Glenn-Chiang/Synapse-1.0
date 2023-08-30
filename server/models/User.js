@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   dateJoined: Date,
   sentMessages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
   chats: [{ type: mongoose.Schema.Types.ObjectId, ref: "Chat" }],
-  groupchats: [{ type: mongoose.Schema.Types.ObjectId, ref: "GroupChat" }], 
+  groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }], 
 });
 
 userSchema.set("toJSON", {

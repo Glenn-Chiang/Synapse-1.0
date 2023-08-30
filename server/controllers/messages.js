@@ -12,6 +12,7 @@ messagesRouter.post("/messages", async (req, res, next) => {
       text,
       sender: new mongoose.Types.ObjectId(senderId),
       timestamp: new Date(),
+      chat: new mongoose.Types.ObjectId(chatId)
     });
     const newMessage = await message.save();
 

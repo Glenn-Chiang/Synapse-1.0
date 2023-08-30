@@ -18,12 +18,6 @@ chatsRouter.get("/users/:userId/chats", async (req, res, next) => {
 chatsRouter.get("/chats/:chatId", async (req, res, next) => {
   try {
     const chat = await Chat.findById(req.params.chatId)
-      .populate({
-        path: "messages",
-        populate: "sender",
-      })
-      .populate("users");
-
     res.json(chat);
   } catch (error) {
     next(error);

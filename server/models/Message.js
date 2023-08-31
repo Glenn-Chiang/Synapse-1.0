@@ -14,7 +14,7 @@ messageSchema.set("toJSON", {
     object.timestamp =
       object.timestamp.toDateString() < new Date().toDateString()
         ? object.timestamp.toLocaleDateString() // If earlier than today, show date
-        : object.timestamp.toLocaleTimeString(); // If today, show time
+        : object.timestamp.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: false }); // If today, show time
 
     delete object._id;
     delete object.__v;

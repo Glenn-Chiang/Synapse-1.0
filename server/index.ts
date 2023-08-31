@@ -1,8 +1,8 @@
-import httpServer from "./src/app"
+import server from "./src/app"
 
 const PORT = process.env.PORT || 3000
 
-httpServer.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)
 })
 

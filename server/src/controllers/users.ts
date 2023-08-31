@@ -1,12 +1,13 @@
-const usersRouter = require("express").Router();
-const bcrypt = require("bcrypt");
-const User = require("../models/User");
+import * as express from 'express'
+const usersRouter = express.Router();
+import {hash} from 'bcrypt'
+import User from '../models/User';
 
 // Register/Create new user
 usersRouter.post("/users", async (req, res, next) => {
   const { username, password } = req.body;
   try {
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await hash(password, 10);
     const user = new User({
       username,
       passwordHash,
@@ -39,4 +40,4 @@ usersRouter.get("/users/:userId", async (req, res, next) => {
   }
 })
 
-module.exports = usersRouter;
+export default usersRouter

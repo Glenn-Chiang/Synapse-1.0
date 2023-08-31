@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const chatSchema = new mongoose.Schema({
   name: {type: String, required: true},
@@ -21,4 +21,4 @@ chatSchema.set('toJSON', {
 
 const Chat = mongoose.model('Chat', chatSchema)
 
-module.exports = Chat
+export default Chat

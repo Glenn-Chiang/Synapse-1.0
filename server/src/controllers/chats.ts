@@ -1,6 +1,7 @@
-const chatsRouter = require("express").Router();
-const { default: mongoose } = require("mongoose");
-const Chat = require("../models/Chat");
+import * as express from "express";
+const chatsRouter = express.Router();
+import mongoose from "mongoose";
+import Chat from "../models/Chat";
 
 // Get all user's chats
 chatsRouter.get("/users/:userId/chats", async (req, res, next) => {
@@ -46,4 +47,4 @@ chatsRouter.post("/chats", async (req, res, next) => {
   }
 });
 
-module.exports = chatsRouter;
+export default chatsRouter

@@ -1,9 +1,8 @@
-const passport = require("passport");
-const JwtStrategy = require("passport-jwt").Strategy;
-const ExtractJwt = require("passport-jwt").ExtractJwt;
-const LocalStrategy = require("passport-local").Strategy;
-const User = require("../models/User");
-const bcrypt = require("bcrypt");
+import passport from 'passport';
+import {ExtractJwt, Strategy as JwtStrategy} from 'passport-jwt'
+import {Strategy as LocalStrategy} from 'passport-local'
+import User from '../models/User';
+import {compare} from 'bcrypt'
 
 // Local strategy used for login
 passport.use(
@@ -13,13 +12,13 @@ passport.use(
       const user = await User.findOne({ username });
 
       if (!user) {
-        return done(null, false, { info: "User not found" });
+        return done(null, false, { message: "User not found" });
       }
 
       // Verify password
-      const passwordsMatch = await bcrypt.compare(password, user.passwordHash);
+      const passwordsMatch = await compare(password, user.passwordHash);
       if (!passwordsMatch) {
-        return done(null, false, { info: "Incorrect password" });
+        return done(null, false, { message: "Incorrect password" });
       }
 
       // Success
@@ -51,4 +50,4 @@ passport.use(
   )
 );
 
-module.exports = passport;
+export default passport

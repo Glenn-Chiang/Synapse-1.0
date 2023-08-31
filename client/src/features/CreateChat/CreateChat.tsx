@@ -4,13 +4,12 @@ import FormField from "../../components/FormField";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { createChat } from "../../requests/chats";
 import React from "react";
 
 export default function CreateChat({handleClose}: {handleClose: () => void}) {
   const currentUserId = localStorage.getItem("userId") as string;
-  const navigate = useNavigate();
 
   interface FormValues {
     chatname: string;
@@ -23,17 +22,20 @@ export default function CreateChat({handleClose}: {handleClose: () => void}) {
     formState: { errors },
   } = useForm<FormValues>();
 
+  const queryClient = useQueryClient()
+
   const createchatMutation = useMutation({
     mutationFn: ({ chatname, description }: FormValues) =>
       createChat(chatname, description, currentUserId),
     onSuccess: () => {
       console.log("chat created");
-      navigate("/chats");
+      queryClient.invalidateQueries({queryKey: ['chats'], exact: true})
     },
   });
 
   const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
     createchatMutation.mutate(formValues);
+    handleClose()
   };
 
   return (

@@ -26,7 +26,7 @@ function Chats() {
   return (
     <main className="flex">
       <section className="fixed w-1/3 h-full bg-slate-200">
-        <div className="w-full p-2 flex items-center justify-between gap-2 shadow bg-white h-16">
+        <div className="p-2 flex items-center justify-between gap-2 shadow bg-white h-16">
           <h1 className="flex gap-2 items-center text-cyan-500">
             <FontAwesomeIcon icon={faCommentDots} />
             Chats
@@ -44,7 +44,7 @@ function Chats() {
         ) : isError ? (
           <ErrorMessage message="Error fetching chats" />
         ) : chats && chats.length > 0 ? (
-          <ul className="flex flex-col gap-2 p-2">
+          <ul className="flex flex-col gap-2 p-2 h-[calc(100%-8rem)] overflow-auto">
             {chats?.map((chat) => (
               <li key={chat.id}>
                 <ChatPreview chat={chat} />

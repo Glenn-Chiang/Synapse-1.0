@@ -11,7 +11,7 @@ export default function UserPreview({ user }: { user: User }) {
   return (
     <article
       onClick={handleClick}
-      className="p-2 h-20 w-full shadow flex items-center gap-2 hover:bg-slate-200"
+      className="px-2 py-4 rounded shadow-md flex items-center gap-2 hover:bg-slate-200 bg-white"
     >
       <h2>{user.username}</h2>
     </article>

@@ -18,6 +18,9 @@ chatsRouter.get("/users/:userId/chats", async (req, res, next) => {
 chatsRouter.get("/chats/:chatId", async (req, res, next) => {
   try {
     const chat = await Chat.findById(req.params.chatId)
+      .populate("members")
+      .populate("admins")
+      .populate("creator");
     res.json(chat);
   } catch (error) {
     next(error);
@@ -36,8 +39,8 @@ chatsRouter.post("/chats", async (req, res, next) => {
       members: [new mongoose.Types.ObjectId(creatorId)],
       admins: [new mongoose.Types.ObjectId(creatorId)],
     });
-    const newChat = await chat.save()
-    res.json(newChat)
+    const newChat = await chat.save();
+    res.json(newChat);
   } catch (error) {
     next(error);
   }

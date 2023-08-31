@@ -24,7 +24,7 @@ export default function ChatRoom() {
 
   return (
     <>
-      <section className="mt-16 mb-20 p-2 bg-slate-100 flex flex-col">
+      <section className="mb-20 p-2 bg-slate-100 flex flex-col">
         <MessageThread chatId={chat.id} />
       </section>
       <MessageInput onSend={handleSend} />

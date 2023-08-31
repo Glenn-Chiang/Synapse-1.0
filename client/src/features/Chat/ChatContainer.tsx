@@ -19,14 +19,14 @@ export default function ChatContainer() {
 
 
   return (
-    <section className="w-full">
+    <section>
       {chat && <ChatHeader chat={chat} />}
       {isLoading ? (
         <Loading />
       ) : isError ? (
         <ErrorMessage message="Error loading chat" />
       ) : chat && (
-      <div>
+      <div className="mt-16 h-full">
         <Outlet context={chat}/>
       </div>
       ) }

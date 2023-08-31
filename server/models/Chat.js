@@ -13,6 +13,7 @@ const chatSchema = new mongoose.Schema({
 chatSchema.set('toJSON', {
   transform: (document, object) => {
     object.id = object.id || object._id.toString()
+    object.dateCreated = object.dateCreated.toLocaleDateString()
     delete object._id;
     delete object.__v;
   }

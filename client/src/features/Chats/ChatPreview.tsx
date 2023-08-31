@@ -10,7 +10,7 @@ export default function ChatPreview({ chat }: { chat: Chat }) {
       to={`/chats/${chat.id}`}
       className={({ isActive }) =>
         `p-2 h-20 w-full shadow flex gap-2 rounded-md ${
-          isActive ? "bg-cyan-500 text-white " : "hover:text-slate-950 bg-white "
+          isActive ? "bg-cyan-500 text-white " : "hover:text-slate-950 hover:shadow-md bg-white "
         }`
       }
     >

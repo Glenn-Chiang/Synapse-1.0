@@ -6,14 +6,14 @@ import ErrorMessage from "../../components/ErrorMessage";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import { createChat } from "../../requests/chats";
+import React from "react";
 
-
-export default function CreateChat() {
+export default function CreateChat({handleClose}: {handleClose: () => void}) {
   const currentUserId = localStorage.getItem("userId") as string;
   const navigate = useNavigate();
 
   interface FormValues {
-    "chatname": string;
+    chatname: string;
     description: string;
   }
 
@@ -28,7 +28,7 @@ export default function CreateChat() {
       createChat(chatname, description, currentUserId),
     onSuccess: () => {
       console.log("chat created");
-      navigate('/chats')
+      navigate("/chats");
     },
   });
 
@@ -36,18 +36,16 @@ export default function CreateChat() {
     createchatMutation.mutate(formValues);
   };
 
-
   return (
-    <main className="bg-white">
-      <div className="w-full p-2 flex items-center justify-center gap-2 shadow">
-        <h1 className="flex gap-2 items-center text-cyan-500">Create chat</h1>
-        <button
-          onClick={() => navigate(-1)}
-          className="text-slate-500 hover:bg-slate-200 rounded-full p-2 w-8 absolute right-2 text-xs"
-        >
-          <FontAwesomeIcon icon={faX} />
+    <Modal>
+      <header className="bg-cyan-500 text-white p-4 pr-2 rounded-t-xl flex justify-between">
+        <h1 className="text-white">
+          Create chat
+        </h1>
+        <button onClick={handleClose} className="hover:bg-cyan-600 rounded-full p-2 w-10">
+          <FontAwesomeIcon icon={faX}/>
         </button>
-      </div>
+      </header>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="p-4 flex flex-col gap-8"
@@ -68,7 +66,6 @@ export default function CreateChat() {
         {errors.chatname?.message && (
           <ErrorMessage message={errors.chatname.message} />
         )}
-
         <FormField
           name="description"
           inputType="text"
@@ -82,20 +79,28 @@ export default function CreateChat() {
             }),
           }}
         />
-
         <section>
           <h2 className="flex gap-2 items-center">
             <FontAwesomeIcon icon={faUserPlus} />
             Add members
           </h2>
         </section>
-
         <div className="text-center pt-4">
           <button className="bg-cyan-500 text-white p-2 rounded-md hover:bg-cyan-600">
             Create
           </button>
         </div>
       </form>
-    </main>
+    </Modal>
+  );
+}
+
+function Modal({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="fixed left-0 top-0 w-screen h-screen bg-cyan-800/50 z-10">
+      <div className="w-1/2 relative top-20 m-auto rounded-xl shadow bg-white">
+        {children}
+      </div>
+    </div>
   );
 }

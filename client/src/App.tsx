@@ -1,37 +1,28 @@
 import { Outlet, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {useState} from 'react'
 import {
   faBoltLightning,
+  faPlus,
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
-// import UserContext from "../contexts/UserContext";
-// import { useQuery } from "react-query";
-// import { getUser } from "../requests/users";
-// import Loading from "../components/Loading";
-// import ErrorMessage from "../components/ErrorMessage";
+import CreateChat from "./features/CreateChat/CreateChat";
 
 export default function App() {
-  // const userId = localStorage.getItem("userId");
-  // const {
-  //   isLoading,
-  //   isError,
-  //   data: user,
-  // } = useQuery({
-  //   queryKey: ["users", userId],
-  //   queryFn: () => (userId ? getUser(userId) : null),
-  // });
+  const [showModal, setShowModal] = useState(false)
 
   return (
     <>
-      <TopNav />
+      <TopNav handleCreateClick={() => setShowModal(true)}/>
       <div className="pt-16">
         <Outlet />
       </div>
+      {showModal && <CreateChat handleClose={() => setShowModal(false)}/>}
     </>
   );
 }
 
-function TopNav() {
+function TopNav({handleCreateClick}: {handleCreateClick: () => void}) {
   return (
     <nav className="z-10 fixed top-0 left-0 w-full h-16 flex items-center justify-between bg-cyan-500 text-white p-4 text-2xl">
       <Link to={"/"}>
@@ -40,6 +31,10 @@ function TopNav() {
           Synapse
         </h1>
       </Link>
+      <button onClick={handleCreateClick} className="flex items-center gap-2 text-xl">
+        <FontAwesomeIcon icon={faPlus}/>
+        Create
+      </button>
       <Link to={"/profile"}>
         <h1 className="text-white">
           <FontAwesomeIcon icon={faUserCircle} />

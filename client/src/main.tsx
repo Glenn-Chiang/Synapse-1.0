@@ -9,12 +9,11 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import App from "./layouts/App.tsx";
+import App from "./App.tsx";
 import ChatRoom from "./features/Chat/ChatRoom.tsx";
 import Users from "./features/Users/Users.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
 import chatsLoader from "./features/Chats/loader.ts";
-import CreateChat from "./features/CreateChat/CreateChat.tsx";
 
 const router = createBrowserRouter([
   {
@@ -33,12 +32,8 @@ const router = createBrowserRouter([
           {
             path: ":chatId",
             element: <ChatRoom />,
-          }
+          },
         ]
-      },
-      {
-        path: "createChat",
-        element: <CreateChat />,
       },
       {
         path: "users",

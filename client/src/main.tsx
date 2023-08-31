@@ -29,10 +29,12 @@ const router = createBrowserRouter([
         path: "chats",
         element: <Chats />,
         loader: chatsLoader,
-      },
-      {
-        path: "chats/:chatId",
-        element: <ChatRoom />,
+        children: [
+          {
+            path: ":chatId",
+            element: <ChatRoom />,
+          }
+        ]
       },
       {
         path: "createChat",

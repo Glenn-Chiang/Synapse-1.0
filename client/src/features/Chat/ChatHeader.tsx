@@ -5,7 +5,7 @@ import { Chat } from "../../types";
 
 export default function ChatHeader({ chat }: { chat: Chat }) {
   return (
-    <header className="flex items-center justify-between p-2 gap-4 h-16 w-screen fixed top-16 z-10 bg-white shadow">
+    <header className="flex items-center justify-between p-2 gap-4 h-16 w-2/3 fixed top-16 z-10 bg-white shadow">
       <BackButton />
       <div className="text-center">
         <h1 className="line-clamp-1">{chat.name}</h1>

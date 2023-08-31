@@ -41,9 +41,7 @@ export default function ChatRoom() {
           ) : isError ? (
             <ErrorMessage message="Error loading chat" />
             ) : chat ? (
-          <>
             <MessageThread chatId={chat.id} />
-          </>
         ) : (
           <p className="text-center bg-cyan-500 text-white w-1/3 m-auto rounded-xl p-4 shadow">
             Send a message and start chatting!

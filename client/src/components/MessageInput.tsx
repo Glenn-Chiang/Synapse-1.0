@@ -15,7 +15,7 @@ export default function MessageInput({ onSend }: { onSend: (content: string) => 
     }
   };
   return (
-    <div className="fixed bottom-0 w-2/3 bg-white p-4 flex justify-center drop-shadow-2xl">
+    <div className="fixed bottom-0 w-2/3 bg-white p-4 flex justify-center">
       <input
         ref={inputRef}
         autoFocus

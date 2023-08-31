@@ -16,7 +16,7 @@ export default function ChatPreview({ chat }: { chat: Chat }) {
   return (
     <article
       onClick={handleClick}
-      className="p-2 h-20 w-full shadow flex gap-2 hover:bg-slate-200"
+      className="p-2 h-20 w-full shadow flex gap-2 hover:bg-slate-200 bg-white rounded-md"
     >
       <div className="flex flex-col justify-between w-4/5">
         <h2>{chat.name}</h2>

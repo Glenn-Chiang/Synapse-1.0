@@ -10,9 +10,8 @@ const messageSchema = new mongoose.Schema({
 messageSchema.set("toJSON", {
   transform: (document, object) => {
     object.id = object._id.toString();
-
     object.timestamp =
-      object.timestamp.toDateString() < new Date().toDateString()
+      object.timestamp.toLocaleDateString() < new Date().toLocaleDateString()
         ? object.timestamp.toLocaleDateString() // If earlier than today, show date
         : object.timestamp.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: false }); // If today, show time
 

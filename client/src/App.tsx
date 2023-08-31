@@ -31,15 +31,17 @@ function TopNav({handleCreateClick}: {handleCreateClick: () => void}) {
           Synapse
         </h1>
       </Link>
-      <button onClick={handleCreateClick} className="flex items-center gap-2 text-xl">
-        <FontAwesomeIcon icon={faPlus}/>
-        Create
-      </button>
-      <Link to={"/profile"}>
-        <h1 className="text-white">
-          <FontAwesomeIcon icon={faUserCircle} />
-        </h1>
-      </Link>
+      <div className="flex gap-4">
+        <button onClick={handleCreateClick} className="flex items-center gap-2 text-xl">
+          <FontAwesomeIcon icon={faPlus}/>
+          Create
+        </button>
+        <Link to={"/profile"}>
+          <h1 className="text-white">
+            <FontAwesomeIcon icon={faUserCircle} />
+          </h1>
+        </Link>
+      </div>
     </nav>
   );
 }

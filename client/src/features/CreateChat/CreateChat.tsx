@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FormField from "../../components/FormField";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ErrorMessage from "../../components/ErrorMessage";
-import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { createChat } from "../../requests/chats";
 import React from "react";

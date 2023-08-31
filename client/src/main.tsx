@@ -14,6 +14,8 @@ import ChatRoom from "./features/Chat/ChatRoom.tsx";
 import Users from "./features/Users/Users.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
 import chatsLoader from "./features/Chats/loader.ts";
+import ChatInfo from "./features/Chat/ChatInfo.tsx";
+import ChatContainer from "./features/Chat/ChatContainer.tsx";
 
 const router = createBrowserRouter([
   {
@@ -31,7 +33,17 @@ const router = createBrowserRouter([
         children: [
           {
             path: ":chatId",
-            element: <ChatRoom />,
+            element: <ChatContainer />,
+            children: [
+              {
+                path: "",
+                element: <ChatRoom/>
+              },
+              {
+                path: "info",
+                element: <ChatInfo/>
+              }
+            ]
           },
         ]
       },

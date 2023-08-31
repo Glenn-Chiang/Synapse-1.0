@@ -13,8 +13,8 @@ const createMessage = async (
 
 const getChatMessages = async (chatId: string) => {
   const response = await axios.get(`/chats/${chatId}/messages`);
-  return response.data as Message[]
-}
+  return response.data as Message[];
+};
 
 const useCreateMessage = () => {
   const queryClient = useQueryClient();
@@ -34,6 +34,10 @@ const useCreateMessage = () => {
         variables.chatId,
         "messages",
       ]);
+      await queryClient.invalidateQueries({
+        queryKey: ["chats"],
+        exact: true,
+      });
     },
   });
   return mutation;

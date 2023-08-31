@@ -17,7 +17,7 @@ function Chats() {
     isError,
     data: chats,
   } = useQuery({
-    queryKey: [userId, "chats"],
+    queryKey: ["chats"],
     queryFn: () => getChats(userId),
   });
 

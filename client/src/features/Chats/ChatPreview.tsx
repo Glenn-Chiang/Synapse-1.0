@@ -1,22 +1,18 @@
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Chat } from "../../types";
 
 export default function ChatPreview({ chat }: { chat: Chat }) {
   const lastMessage =
     chat.messages.length > 0 && chat.messages[chat.messages.length - 1];
 
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate(`/chats/${chat.id}`, {
-      state: { chatname: chat.name },
-    });
-  };
-
   return (
-    <article
-      onClick={handleClick}
-      className="p-2 h-20 w-full shadow flex gap-2 hover:bg-slate-200 bg-white rounded-md"
+    <NavLink
+      to={`/chats/${chat.id}`}
+      className={({ isActive }) =>
+        `p-2 h-20 w-full shadow flex gap-2 rounded-md ${
+          isActive ? "bg-cyan-500 text-white " : "hover:text-slate-950 bg-white "
+        }`
+      }
     >
       <div className="flex flex-col justify-between w-4/5">
         <h2>{chat.name}</h2>
@@ -28,6 +24,6 @@ export default function ChatPreview({ chat }: { chat: Chat }) {
           {chat.messages.length}
         </span>
       </div>
-    </article>
+    </NavLink>
   );
 }

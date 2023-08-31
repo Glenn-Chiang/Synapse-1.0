@@ -10,7 +10,7 @@
     @apply font-medium text-2xl text-slate-900
   }
   h2 {
-    @apply font-medium text-slate-900
+    @apply font-medium 
   }
   button {
     @apply transition

@@ -7,7 +7,7 @@ import { getChannels } from "../../requests/channels";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { Outlet } from "react-router-dom";
-import ChannelPreview from "./ChannelPreview";
+import ChannelPreview from "./ChannelPreview"
 
 function Channels() {
   const userId = localStorage.getItem("userId") as string;

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "react-query";
 import { Channel } from "../types";
 import axios from "./axios";
+import socket from "../socket";
 
 const getChannels = async (userId: string) => {
   const response = await axios.get(`/users/${userId}/channels`);
@@ -29,19 +30,23 @@ const useCreateChannel = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: ({
-      text,
-      senderId,
-      recipientId,
+      name,
+      description,
+      creatorId,
     }: {
-      text: string;
-      senderId: string;
-      recipientId: string;
-    }) => createChannel(text, senderId, recipientId),
+      name: string;
+      description: string;
+      creatorId: string;
+    }) => createChannel(name, description, creatorId),
     onSuccess: async (_, variables) => {
-      await queryClient.invalidateQueries(["channels", variables.recipientId]);
+      await queryClient.invalidateQueries(["channels", variables.creatorId]);
     },
   });
   return mutation;
 };
 
-export { getChannels, getChannel, createChannel, useCreateChannel };
+const joinChannel = (userId: string, channelId: string) => {
+  socket.emit("join channel", userId, channelId)
+}
+
+export { getChannels, getChannel, createChannel, useCreateChannel, joinChannel };

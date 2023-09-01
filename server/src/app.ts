@@ -15,6 +15,7 @@ import passport from "passport";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import messageHandler from "./socketHandlers/messages";
+import channelHandler from "./socketHandlers/channels";
 
 // Db connection
 const connectToDb = async () => {
@@ -43,9 +44,10 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("User connected");
-  socket.broadcast.emit("connection", "A user has connected");
 
-  messageHandler(io, socket); // register handlers
+  messageHandler(io, socket);
+  channelHandler(io, socket);
 });
+
 
 export default server;

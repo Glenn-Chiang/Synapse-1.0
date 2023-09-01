@@ -17,6 +17,7 @@ import channelsLoader from "./features/Channels/loader.ts";
 import ChannelContainer from "./features/Channel/ChannelContainer.tsx";
 import ChannelRoom from "./features/Channel/ChannelRoom.tsx";
 import ChannelInfo from "./features/Channel/ChannelInfo.tsx";
+import Explorer from "./features/Explorer/Explorer.tsx";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Navigate to={"/channels"} />,
+      },
+      {
+        path: "explore",
+        element: <Explorer/>
       },
       {
         path: "channels",

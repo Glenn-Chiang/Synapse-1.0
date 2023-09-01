@@ -17,7 +17,7 @@ function Channels() {
     isError,
     data: channels,
   } = useQuery({
-    queryKey: ["channels"],
+    queryKey: [userId, "channels"],
     queryFn: () => getUserChannels(userId),
   });
 

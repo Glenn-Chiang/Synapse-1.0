@@ -44,7 +44,7 @@ const useCreateChannel = () => {
       creatorId: string;
     }) => createChannel(name, description, creatorId),
     onSuccess: async (_, variables) => {
-      await queryClient.invalidateQueries(["channels", variables.creatorId]);
+      await queryClient.invalidateQueries([variables.creatorId, "channels"]);
     },
   });
   return mutation;

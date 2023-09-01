@@ -6,7 +6,7 @@ import Chat from "../models/Chat";
 import { MessagePayload } from "../types";
 import mongoose from "mongoose";
 
-const createMessage = async (messagePayload: MessagePayload) => {
+export const createMessage = async (messagePayload: MessagePayload) => {
   const { chatId, text, senderId } = messagePayload;
   const message = new Message({
     text,

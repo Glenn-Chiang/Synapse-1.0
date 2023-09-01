@@ -40,8 +40,12 @@ const server = createServer(app);
 const io = new Server(server, {
   cors: { origin: ["http://localhost:5173"] },
 });
-// io.on("connection", (socket) => {
-//   messageHandler(io, socket) // register handlers
-// });
+
+io.on("connection", (socket) => {
+  console.log('User connected')
+  socket.broadcast.emit("connection", "A user has connected")
+
+  messageHandler(io, socket) // register handlers
+});
 
 export default server;

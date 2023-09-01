@@ -3,7 +3,7 @@ interface User {
   username: string;
   dateJoined: Date;
   sentMessages: Message[];
-  chats: Chat[];
+  channels: Channel[];
 }
 
 // Non-senstive user info stored in local storage
@@ -17,11 +17,11 @@ interface Message {
   id: string;
   text: string;
   sender: User;
-  chatId: string;
+  channelId: string;
   timestamp: string;
 }
 
-interface Chat {
+interface Channel {
   id: string;
   name: string;
   description: string;
@@ -32,4 +32,4 @@ interface Chat {
   messages: Message[];
 }
 
-export type { User, UserInfo, Chat, Message };
+export type { User, UserInfo, Channel, Message };

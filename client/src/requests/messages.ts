@@ -5,14 +5,14 @@ import axios from "./axios";
 const createMessage = async (
   text: string,
   senderId: string,
-  chatId: string
+  channelId: string
 ) => {
-  const response = await axios.post("/messages", { text, senderId, chatId });
+  const response = await axios.post("/messages", { text, senderId, channelId });
   return response.data;
 };
 
-const getChatMessages = async (chatId: string) => {
-  const response = await axios.get(`/chats/${chatId}/messages`);
+const getChannelMessages = async (channelId: string) => {
+  const response = await axios.get(`/channels/${channelId}/messages`);
   return response.data as Message[];
 };
 
@@ -22,20 +22,20 @@ const useCreateMessage = () => {
     mutationFn: ({
       text,
       senderId,
-      chatId,
+      channelId,
     }: {
       text: string;
       senderId: string;
-      chatId: string;
-    }) => createMessage(text, senderId, chatId),
+      channelId: string;
+    }) => createMessage(text, senderId, channelId),
     onSuccess: async (_, variables) => {
       await queryClient.invalidateQueries([
-        "chats",
-        variables.chatId,
+        "channels",
+        variables.channelId,
         "messages",
       ]);
       await queryClient.invalidateQueries({
-        queryKey: ["chats"],
+        queryKey: ["channels"],
         exact: true,
       });
     },
@@ -48,4 +48,4 @@ const useCreateMessage = () => {
 //   return response.data as Message[]
 // }
 
-export { createMessage, getChatMessages, useCreateMessage };
+export { createMessage, getChannelMessages, useCreateMessage };

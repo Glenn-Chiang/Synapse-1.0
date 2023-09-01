@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-import { Chat } from "../../types";
+import { Channel } from "../../types";
 import UserPreview from "../../components/UserPreview";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,14 +9,14 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function ChatInfo() {
-  const chat = useOutletContext() as Chat;
+export default function ChannelInfo() {
+  const channel = useOutletContext() as Channel;
 
   return (
     <section className="p-4 bg-slate-100 flex flex-col gap-4">
       <div>
         <h2>Description</h2>
-        <p>{chat.description}</p>
+        <p>{channel.description}</p>
       </div>
       <div className="flex gap-4">
         <div className="flex-1">
@@ -24,23 +24,23 @@ export default function ChatInfo() {
             <FontAwesomeIcon icon={faUserPen} />
             Created by
           </h2>
-          <UserPreview user={chat.creator} />
+          <UserPreview user={channel.creator} />
         </div>
         <div className="flex-1">
           <h2 className="flex gap-2 items-center py-2">
             <FontAwesomeIcon icon={faCalendarPlus} />
             Created on
           </h2>
-          <p className="py-2">{chat.dateCreated}</p>
+          <p className="py-2">{channel.dateCreated}</p>
         </div>
       </div>
       <div>
         <h2 className="flex gap-2 items-center py-2">
           <FontAwesomeIcon icon={faUserShield} />
-          Admins ({chat.admins.length})
+          Admins ({channel.admins.length})
         </h2>
         <ul>
-          {chat.admins.map((user) => (
+          {channel.admins.map((user) => (
             <UserPreview key={user.id} user={user} />
           ))}
         </ul>
@@ -48,10 +48,10 @@ export default function ChatInfo() {
       <div>
         <h2 className="flex gap-2 items-center py-2">
           <FontAwesomeIcon icon={faUsers} />
-          Members ({chat.members.length})
+          Members ({channel.members.length})
         </h2>
         <ul>
-          {chat.members.map((user) => (
+          {channel.members.map((user) => (
             <UserPreview key={user.id} user={user} />
           ))}
         </ul>

@@ -5,7 +5,7 @@ export default function UserPreview({ user }: { user: User }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/chats/${user.id}`, { state: { chatname: user.username } });
+    navigate(`/channels/${user.id}`, { state: { channelname: user.username } });
   };
 
   return (

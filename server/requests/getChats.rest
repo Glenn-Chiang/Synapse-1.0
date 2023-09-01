@@ -1,1 +1,1 @@
-GET http://localhost:3000/users/64e9788cf04f890e54262c34/chats
+GET http://localhost:3000/users/64e9788cf04f890e54262c34/channels

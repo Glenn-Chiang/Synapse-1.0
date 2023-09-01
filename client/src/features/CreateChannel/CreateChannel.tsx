@@ -4,14 +4,18 @@ import FormField from "../../components/FormField";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useMutation, useQueryClient } from "react-query";
-import { createChat } from "../../requests/chats";
+import { createChannel } from "../../requests/channels";
 import React from "react";
 
-export default function CreateChat({handleClose}: {handleClose: () => void}) {
+export default function CreateChannel({
+  handleClose,
+}: {
+  handleClose: () => void;
+}) {
   const currentUserId = localStorage.getItem("userId") as string;
 
   interface FormValues {
-    chatname: string;
+    channelname: string;
     description: string;
   }
 
@@ -21,30 +25,31 @@ export default function CreateChat({handleClose}: {handleClose: () => void}) {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
-  const createchatMutation = useMutation({
-    mutationFn: ({ chatname, description }: FormValues) =>
-      createChat(chatname, description, currentUserId),
+  const createChannelMutation = useMutation({
+    mutationFn: ({ channelname, description }: FormValues) =>
+      createChannel(channelname, description, currentUserId),
     onSuccess: () => {
-      console.log("chat created");
-      queryClient.invalidateQueries({queryKey: ['chats'], exact: true})
+      console.log("channel created");
+      queryClient.invalidateQueries({ queryKey: ["channels"], exact: true });
     },
   });
 
   const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
-    createchatMutation.mutate(formValues);
-    handleClose()
+    createChannelMutation.mutate(formValues);
+    handleClose();
   };
 
   return (
     <Modal>
       <header className="bg-cyan-500 text-white p-4 pr-2 rounded-t-xl flex justify-between">
-        <h1 className="text-white">
-          Create chat
-        </h1>
-        <button onClick={handleClose} className="hover:bg-cyan-600 rounded-full p-2 w-10">
-          <FontAwesomeIcon icon={faX}/>
+        <h1 className="text-white">Create channel</h1>
+        <button
+          onClick={handleClose}
+          className="hover:bg-cyan-600 rounded-full p-2 w-10"
+        >
+          <FontAwesomeIcon icon={faX} />
         </button>
       </header>
       <form
@@ -52,20 +57,20 @@ export default function CreateChat({handleClose}: {handleClose: () => void}) {
         className="p-4 flex flex-col gap-8"
       >
         <FormField
-          name="chat name"
+          name="channel name"
           inputType="text"
           attributes={{
-            ...register("chatname", {
-              required: "chatname is required",
+            ...register("channelname", {
+              required: "channelname is required",
               maxLength: {
                 value: 50,
-                message: "Chatname cannot be longer than 50 characters",
+                message: "channelname cannot be longer than 50 characters",
               },
             }),
           }}
         />
-        {errors.chatname?.message && (
-          <ErrorMessage message={errors.chatname.message} />
+        {errors.channelname?.message && (
+          <ErrorMessage message={errors.channelname.message} />
         )}
         <FormField
           name="description"
@@ -75,7 +80,7 @@ export default function CreateChat({handleClose}: {handleClose: () => void}) {
               maxLength: {
                 value: 1000,
                 message:
-                  "Chat description cannot be longer than 1000 characters",
+                  "channel description cannot be longer than 1000 characters",
               },
             }),
           }}

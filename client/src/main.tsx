@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Chats from "./features/Chats/Chats.tsx";
 import Register from "./features/Register.tsx";
 import Login from "./features/Login.tsx";
 import "./index.css";
@@ -10,13 +9,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import App from "./App.tsx";
-import ChatRoom from "./features/Chat/ChatRoom.tsx";
 import Users from "./features/Users/Users.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
-import chatsLoader from "./features/Chats/loader.ts";
-import ChatInfo from "./features/Chat/ChatInfo.tsx";
-import ChatContainer from "./features/Chat/ChatContainer.tsx";
 import Logout from "./features/Logout.tsx";
+import Channels from "./features/Channels/Channels.tsx";
+import channelsLoader from "./features/Channels/loader.ts";
+import ChannelContainer from "./features/Channel/ChannelContainer.tsx";
+import ChannelRoom from "./features/Channel/ChannelRoom.tsx";
+import ChannelInfo from "./features/Channel/ChannelInfo.tsx";
 
 const router = createBrowserRouter([
   {
@@ -25,28 +25,28 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Navigate to={"/chats"} />,
+        element: <Navigate to={"/channels"} />,
       },
       {
-        path: "chats",
-        element: <Chats />,
-        loader: chatsLoader,
+        path: "channels",
+        element: <Channels />,
+        loader: channelsLoader,
         children: [
           {
-            path: ":chatId",
-            element: <ChatContainer />,
+            path: ":channelId",
+            element: <ChannelContainer />,
             children: [
               {
                 path: "",
-                element: <ChatRoom/>
+                element: <ChannelRoom />,
               },
               {
                 path: "info",
-                element: <ChatInfo/>
-              }
-            ]
+                element: <ChannelInfo />,
+              },
+            ],
           },
-        ]
+        ],
       },
       {
         path: "users",
@@ -64,8 +64,8 @@ const router = createBrowserRouter([
   },
   {
     path: "/logout",
-    element: <Logout/>
-  }
+    element: <Logout />,
+  },
 ]);
 
 const queryClient = new QueryClient();

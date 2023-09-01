@@ -2,15 +2,15 @@ import { useOutletContext } from "react-router-dom";
 import { useQuery } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { getChatMessages, useCreateMessage } from "../../requests/messages";
+import { getChannelMessages, useCreateMessage } from "../../requests/messages";
 import { IncomingMessage, OutgoingMessage } from "../../components/Message";
 import MessageInput from "../../components/MessageInput";
-import { Chat } from "../../types";
+import { Channel } from "../../types";
 
-export default function ChatRoom() {
+export default function ChannelRoom() {
   const currentUserId = localStorage.getItem("userId") as string;
 
-  const chat = useOutletContext() as Chat;
+  const channel = useOutletContext() as Channel;
 
   const createMessageMutation = useCreateMessage();
 
@@ -18,28 +18,28 @@ export default function ChatRoom() {
     createMessageMutation.mutate({
       text,
       senderId: currentUserId,
-      chatId: chat.id,
+      channelId: channel.id,
     });
   };
 
   return (
     <>
       <section className="mb-20 p-2 bg-slate-100 flex flex-col">
-        <MessageThread chatId={chat.id} />
+        <MessageThread channelId={channel.id} />
       </section>
       <MessageInput onSend={handleSend} />
     </>
   );
 }
 
-function MessageThread({ chatId }: { chatId: string }) {
+function MessageThread({ channelId }: { channelId: string }) {
   const {
     isLoading,
     isError,
     data: messages,
   } = useQuery({
-    queryKey: ["chats", chatId, "messages"],
-    queryFn: () => getChatMessages(chatId),
+    queryKey: ["channels", channelId, "messages"],
+    queryFn: () => getChannelMessages(channelId),
   });
   const currentUserId = localStorage.getItem("userId");
 

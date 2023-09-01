@@ -3,6 +3,16 @@ const channelsRouter = express.Router();
 import mongoose from "mongoose";
 import Channel from "../models/Channel";
 
+// Get all channels
+channelsRouter.get("/channels", async (req, res, next) => {
+  try {
+    const channels = await Channel.find({}).populate("messages")
+    res.json(channels)
+  } catch (error) {
+    next(error)
+  }
+})
+
 // Get all user's channels
 channelsRouter.get("/users/:userId/channels", async (req, res, next) => {
   try {

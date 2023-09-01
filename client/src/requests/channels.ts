@@ -3,7 +3,12 @@ import { Channel } from "../types";
 import axios from "./axios";
 import socket from "../socket";
 
-const getChannels = async (userId: string) => {
+const getAllChannels = async () => {
+  const response = await axios.get('/channels')
+  return response.data as Channel[]
+}
+
+const getUserChannels = async (userId: string) => {
   const response = await axios.get(`/users/${userId}/channels`);
   return response.data as Channel[];
 };
@@ -49,4 +54,4 @@ const joinChannel = (userId: string, channelId: string) => {
   socket.emit("join channel", userId, channelId)
 }
 
-export { getChannels, getChannel, createChannel, useCreateChannel, joinChannel };
+export { getAllChannels, getUserChannels, getChannel, createChannel, useCreateChannel, joinChannel };

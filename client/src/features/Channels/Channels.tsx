@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import SearchBar from "../../components/Searchbar";
 import { useQuery } from "react-query";
-import { getChannels } from "../../requests/channels";
+import { getUserChannels } from "../../requests/channels";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { Outlet } from "react-router-dom";
@@ -18,7 +18,7 @@ function Channels() {
     data: channels,
   } = useQuery({
     queryKey: ["channels"],
-    queryFn: () => getChannels(userId),
+    queryFn: () => getUserChannels(userId),
   });
 
   const [filterShown, setFilterShown] = useState(false);

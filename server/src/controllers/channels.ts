@@ -2,6 +2,7 @@ import * as express from "express";
 const channelsRouter = express.Router();
 import mongoose from "mongoose";
 import Channel from "../models/Channel";
+import User from "../models/User";
 
 // Get all channels
 channelsRouter.get("/channels", async (req, res, next) => {
@@ -52,6 +53,10 @@ channelsRouter.post("/channels", async (req, res, next) => {
       admins: [new mongoose.Types.ObjectId(creatorId)],
     });
     const newChannel = await channel.save();
+    // Add channels to creator's channels
+    await User.findByIdAndUpdate(creatorId, {
+      $push: {channels: newChannel._id}
+    })
     res.json(newChannel);
   } catch (error) {
     next(error);

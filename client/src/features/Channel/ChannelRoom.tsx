@@ -16,14 +16,10 @@ export default function ChannelRoom() {
 
   const channel = useOutletContext() as Channel;
 
-  const createMessageMutation = useCreateMessage();
-
+  const createMessage = useCreateMessage();
+  
   const handleSend = async (text: string) => {
-    createMessageMutation.mutate({
-      text,
-      senderId: currentUserId,
-      channelId: channel.id,
-    });
+    createMessage({text, senderId: currentUserId, channelId: channel.id})
   };
 
   return (

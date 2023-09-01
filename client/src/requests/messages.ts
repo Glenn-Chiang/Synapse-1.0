@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { Message } from "../types";
 import axios from "./axios";
 import socket from "../socket";
@@ -9,37 +9,34 @@ const getChannelMessages = async (channelId: string) => {
   return response.data as Message[];
 };
 
-
 const useCreateMessage = () => {
   const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: (payload: MessagePayload) => socket.emit("message:create", payload),
-    onSuccess: async (_, variables) => {
-      await queryClient.invalidateQueries([
-        "channels",
-        variables.channelId,
-        "messages",
-      ]);
-      const currentUserId = localStorage.getItem("userId");
-      await queryClient.invalidateQueries([currentUserId, "channels"]);
-    },
-  });
-  return mutation;
+  return async (payload: MessagePayload) => {
+    socket.emit("message:create", payload);
+  
+    await queryClient.invalidateQueries([
+      "channels",
+      payload.channelId,
+      "messages",
+    ]);
+    const currentUserId = localStorage.getItem("userId");
+    await queryClient.invalidateQueries([currentUserId, "channels"]);
+  }
+
 };
 
 const useMessageSubscription = () => {
   const queryClient = useQueryClient();
-  const currentUserId = localStorage.getItem('userId')
-  
-  socket.on("message:create", (message: Message) => {
-    queryClient.invalidateQueries([
+  const currentUserId = localStorage.getItem("userId");
+
+  socket.on("message:create", async (message: Message) => {
+    await queryClient.invalidateQueries([
       "channels",
       message.channel,
       "messages",
     ]);
-    queryClient.invalidateQueries([currentUserId, 'channels'])
+    await queryClient.invalidateQueries([currentUserId, "channels"]);
   });
-  
-}
+};
 
 export { getChannelMessages, useCreateMessage, useMessageSubscription };

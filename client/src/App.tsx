@@ -1,47 +1,38 @@
-import { Outlet, Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {useState} from 'react'
-import {
-  faBoltLightning,
-  faPlus,
-  faUserCircle,
-} from "@fortawesome/free-solid-svg-icons";
-import CreateChat from "./features/CreateChat/CreateChat";
+import { Outlet } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import socket from "./socket";
+import TopNav from "./components/TopNav";
 
 export default function App() {
-  const [showModal, setShowModal] = useState(false)
+  const [isConnected, setIsConnected] = useState(socket.connected)
+
+  useEffect(() => {
+    const onConnect = () => {
+      setIsConnected(true)
+      console.log('Connected')
+    }
+
+    const onDisconnect = () => {
+      setIsConnected(false)
+      console.log('Disconnected')
+    }
+
+    socket.on('connect', onConnect)
+
+    socket.on('disconnect', onDisconnect)
+
+    return () => {
+      socket.off('connect', onConnect)
+      socket.off('disconnect', onDisconnect)
+    }
+  }, [])
 
   return (
     <>
-      <TopNav handleCreateClick={() => setShowModal(true)}/>
+      <TopNav/>
       <div className="pt-16">
         <Outlet />
       </div>
-      {showModal && <CreateChat handleClose={() => setShowModal(false)}/>}
     </>
-  );
-}
-
-function TopNav({handleCreateClick}: {handleCreateClick: () => void}) {
-  return (
-    <nav className="z-10 fixed top-0 left-0 w-full h-16 flex items-center justify-between bg-cyan-500 text-white p-4 text-2xl">
-      <Link to={"/"}>
-        <h1 className="flex gap-2 items-center text-white">
-          <FontAwesomeIcon icon={faBoltLightning} />
-          Synapse
-        </h1>
-      </Link>
-      <div className="flex gap-4">
-        <button onClick={handleCreateClick} className="flex items-center gap-2 text-xl">
-          <FontAwesomeIcon icon={faPlus}/>
-          Create
-        </button>
-        <Link to={"/profile"}>
-          <h1 className="text-white">
-            <FontAwesomeIcon icon={faUserCircle} />
-          </h1>
-        </Link>
-      </div>
-    </nav>
   );
 }

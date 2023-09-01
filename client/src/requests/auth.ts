@@ -1,9 +1,17 @@
 import axios from "./axios";
 import { UserInfo } from "../types";
+import socket from "../socket";
 
 const login = async (username: string, password: string) => {
   const response = await axios.post("/login", { username, password });
-  return response.data as UserInfo;
+  const user = response.data as UserInfo
+  localStorage.setItem("token", user.token);
+  localStorage.setItem("userId", user.userId);
+  
+  // Socket connection
+  socket.connect()
+
+  return user;
 };
 
 export { login };

@@ -1,7 +1,7 @@
 import { faChevronLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Chat } from "../../types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ChatHeader({ chat }: { chat: Chat }) {
   return (
@@ -17,13 +17,13 @@ export default function ChatHeader({ chat }: { chat: Chat }) {
 }
 
 function BackButton() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   return (
-    <Link to={'..'}
+    <button onClick={() => navigate(-1)}
       className="hover:bg-slate-300 rounded-full w-10 h-10 flex items-center justify-center"
     >
       <FontAwesomeIcon icon={faChevronLeft} />
-    </Link>
+    </button>
   );
 }
 

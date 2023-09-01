@@ -4,6 +4,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { faLock, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { login } from "../requests/auth";
+import ErrorMessage from "../components/ErrorMessage";
 
 export default function Login() {
   const {
@@ -30,9 +31,7 @@ export default function Login() {
   const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
     const { username, password } = formValues;
     try {
-      const user = await login(username, password);
-      localStorage.setItem("token", user.token); 
-      localStorage.setItem("userId", user.userId)
+      const user = await login(username, password);      
       console.log(`Signed in as: ${user.username}`);
       navigate("/");
     } catch (error) {
@@ -93,6 +92,3 @@ export default function Login() {
   );
 }
 
-function ErrorMessage({ message }: { message: string | undefined }) {
-  return <p className="p-2 rounded-md bg-rose-200 text-rose-500">{message}</p>;
-}

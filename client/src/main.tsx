@@ -16,6 +16,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import chatsLoader from "./features/Chats/loader.ts";
 import ChatInfo from "./features/Chat/ChatInfo.tsx";
 import ChatContainer from "./features/Chat/ChatContainer.tsx";
+import Logout from "./features/Logout.tsx";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
     path: "/login",
     element: <Login />,
   },
+  {
+    path: "/logout",
+    element: <Logout/>
+  }
 ]);
 
 const queryClient = new QueryClient();

@@ -52,6 +52,7 @@ const useCreateChannel = () => {
 
 const joinChannel = (userId: string, channelId: string) => {
   socket.emit("join channel", userId, channelId)
+  console.log('emitted join channel')
 }
 
 export { getAllChannels, getUserChannels, getChannel, createChannel, useCreateChannel, joinChannel };

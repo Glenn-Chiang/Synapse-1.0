@@ -19,8 +19,14 @@ export function OutgoingMessage({ message }: { message: Message }) {
 }
 
 export function IncomingMessage({ message }: { message: Message }) {
+  const ref = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    ref.current?.scrollIntoView();
+  }, []);
+
   return (
-    <li className="self-start flex flex-col ">
+    <li ref={ref} className="self-start flex flex-col ">
       <p className="bg-white p-2 rounded-xl shadow max-w-xs break-words">
         {message.text}
       </p>

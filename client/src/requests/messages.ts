@@ -33,15 +33,9 @@ const useCreateMessage = () => {
       channelId: string;
     }) => createMessage(text, senderId, channelId),
     onSuccess: async (_, variables) => {
-      await queryClient.invalidateQueries([
-        "channels", 
-        variables.channelId,
-        "messages",
-      ]);
-      // await queryClient.invalidateQueries({
-      //   queryKey: ["channels"],
-      //   exact: true,
-      // });
+      await queryClient.invalidateQueries(["channels", variables.channelId, "messages"]);
+      const currentUserId = localStorage.getItem("userId")
+      await queryClient.invalidateQueries([currentUserId, "channels"]);
     },
   });
   return mutation;

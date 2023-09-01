@@ -18,8 +18,9 @@ export default function App() {
     }
 
     socket.on('connect', onConnect)
-
     socket.on('disconnect', onDisconnect)
+
+    socket.connect()
 
     return () => {
       socket.off('connect', onConnect)

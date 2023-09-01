@@ -1,4 +1,4 @@
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
@@ -25,14 +25,15 @@ export default function ChannelRoom() {
   return (
     <>
       <section className="mb-20 p-2 bg-slate-100 flex flex-col">
-        <MessageThread channelId={channel.id} />
+        <MessageThread/>
       </section>
       <MessageInput onSend={handleSend} />
     </>
   );
 }
 
-function MessageThread({ channelId }: { channelId: string }) {
+function MessageThread() {
+  const channelId = useParams().channelId as string
   const {
     isLoading,
     isError,

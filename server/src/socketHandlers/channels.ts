@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 
 const channelHandler = (io: Server, socket: Socket) => {
   socket.on("join channel", async (userId: string, channelId: string) => {
+    console.log('HELLO WORLD')
+
     socket.join(`channel:${channelId}`);
 
     const channel = await Channel.findByIdAndUpdate(channelId, {
@@ -16,7 +18,7 @@ const channelHandler = (io: Server, socket: Socket) => {
 
     io.to(`channel:${channelId}`).emit(
       "join channel",
-      `${user?.username} has joined the channel!`
+      `${user?.username} has joined the channel!` 
     );
 
     console.log(`${user?.username} has joined the channel!`);

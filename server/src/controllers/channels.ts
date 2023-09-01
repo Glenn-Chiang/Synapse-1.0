@@ -29,6 +29,7 @@ channelsRouter.get("/users/:userId/channels", async (req, res, next) => {
 channelsRouter.get("/channels/:channelId", async (req, res, next) => {
   try {
     const channel = await Channel.findById(req.params.channelId)
+      .populate({path: "messages", populate: "sender"})
       .populate("members")
       .populate("admins")
       .populate("creator");

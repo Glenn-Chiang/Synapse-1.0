@@ -1,10 +1,11 @@
 import { faEarth } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "react-query";
-import { getAllChannels } from "../../requests/channels";
+import { getAllChannels, joinChannel } from "../../requests/channels";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { Channel } from "../../types";
+import { useNavigate } from "react-router-dom";
 
 export default function Explorer() {
   const {
@@ -44,8 +45,13 @@ function ChannelsGrid({ channels }: { channels: Channel[] }) {
 }
 
 function ChannelCard({ channel }: { channel: Channel }) {
-  const handleClick = () => {
+  const currentUserId = localStorage.getItem("userId") as string
 
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    joinChannel(currentUserId, channel.id)
+    navigate(`/channels/${channel.id}`)
   }
 
   return (

@@ -1,36 +1,35 @@
 import { Server, Socket } from "socket.io";
 import mongoose from "mongoose";
 import Message from "../models/Message";
-import Chat from "../models/Chat";
-
+import Channel from "../models/Channel";
 
 interface MessagePayload {
   text: string;
   senderId: string;
-  chatId: string;
+  channelId: string;
 }
 
 const messageHandler = (io: Server, socket: Socket) => {
   const createMessage = async (messagePayload: MessagePayload) => {
-    const { chatId, text, senderId } = messagePayload;
+    const { channelId, text, senderId } = messagePayload;
     const message = new Message({
       text,
       sender: new mongoose.Types.ObjectId(senderId),
       timestamp: new Date(),
-      chat: new mongoose.Types.ObjectId(chatId),
+      channel: new mongoose.Types.ObjectId(channelId),
     });
     const newMessage = await message.save();
 
-    // Add message to chat's messages field
-    await Chat.findByIdAndUpdate(chatId, {
+    // Add message to channel's messages field
+    await Channel.findByIdAndUpdate(channelId, {
       $push: { messages: newMessage._id },
     });
 
-    console.log(newMessage.toJSON())
-    socket.broadcast.emit("message:create", newMessage.toJSON())
+    console.log(newMessage.toJSON());
+    socket.broadcast.to(channelId).emit("message:create", newMessage.toJSON());
   };
 
-  socket.on("message:create", createMessage)
-}
- 
-export default messageHandler
+  socket.on("message:create", createMessage);
+};
+
+export default messageHandler;

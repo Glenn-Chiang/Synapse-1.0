@@ -1,14 +1,14 @@
 import express from "express";
 const app = express();
 import { configDotenv } from "dotenv";
-configDotenv()
-import cors from 'cors'
-import morgan from 'morgan'
+configDotenv();
+import cors from "cors";
+import morgan from "morgan";
 import mongoose from "mongoose";
 
 import loginRouter from "./controllers/login";
 import usersRouter from "./controllers/users";
-import chatsRouter from "./controllers/chats";
+import channelsRouter from "./controllers/channels";
 import messagesRouter from "./controllers/messages";
 
 import passport from "passport";
@@ -33,7 +33,7 @@ app.use(morgan("dev"));
 app.use(passport.initialize());
 
 // Routers
-app.use(loginRouter, usersRouter, chatsRouter, messagesRouter);
+app.use(loginRouter, usersRouter, channelsRouter, messagesRouter);
 
 // Sockets
 const server = createServer(app);
@@ -42,10 +42,10 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log('User connected')
-  socket.broadcast.emit("connection", "A user has connected")
+  console.log("User connected");
+  socket.broadcast.emit("connection", "A user has connected");
 
-  messageHandler(io, socket) // register handlers
+  messageHandler(io, socket); // register handlers
 });
 
 export default server;

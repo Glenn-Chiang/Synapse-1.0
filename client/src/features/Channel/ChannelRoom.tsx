@@ -2,7 +2,11 @@ import { useOutletContext, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { getChannelMessages, useCreateMessage } from "../../requests/messages";
+import {
+  getChannelMessages,
+  useCreateMessage,
+  useMessageSubscription,
+} from "../../requests/messages";
 import { IncomingMessage, OutgoingMessage } from "../../components/Message";
 import MessageInput from "../../components/MessageInput";
 import { Channel } from "../../types";
@@ -25,7 +29,7 @@ export default function ChannelRoom() {
   return (
     <>
       <section className="mb-20 p-2 bg-slate-100 flex flex-col">
-        <MessageThread/>
+        <MessageThread />
       </section>
       <MessageInput onSend={handleSend} />
     </>
@@ -33,7 +37,9 @@ export default function ChannelRoom() {
 }
 
 function MessageThread() {
-  const channelId = useParams().channelId as string
+  const channelId = useParams().channelId as string;
+  useMessageSubscription(); // Listen for new messages from the server
+
   const {
     isLoading,
     isError,

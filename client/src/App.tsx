@@ -4,34 +4,25 @@ import socket from "./socket";
 import TopNav from "./components/TopNav";
 import { Message } from "./types";
 import { useQueryClient } from 'react-query';
+import { useMessageSubscription } from "./requests/messages";
 
 export default function App() {
   const [isConnected, setIsConnected] = useState(socket.connected)
-  const queryClient = useQueryClient();
-
+  
   useEffect(() => {
     const onConnect = () => {
       setIsConnected(true)
       console.log('Connected')
     }
-
+    
     const onDisconnect = () => {
       setIsConnected(false)
       console.log('Disconnected')
     }
-
+    
     socket.on('connect', onConnect)
     socket.on('disconnect', onDisconnect)
-    socket.on("message:create", (message: Message) => {
-      console.log("message received");
-      queryClient.invalidateQueries([
-        "channels",
-        message.channelId,
-        "messages",
-      ]);
-    });
-
-
+    
     socket.connect()
 
     return () => {

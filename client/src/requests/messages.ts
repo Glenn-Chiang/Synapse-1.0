@@ -27,11 +27,19 @@ const useCreateMessage = () => {
   return mutation;
 };
 
-// Listen for new messages and update UI accordingly
-// socket.on('message:create', (message: Message) => {
-//   console.log("message received")
-//   const queryClient = useQueryClient()
-//   queryClient.invalidateQueries(["channels", message.channelId, "messages"])
-// })
+const useMessageSubscription = () => {
+  const queryClient = useQueryClient();
+  const currentUserId = localStorage.getItem('userId')
+  
+  socket.on("message:create", (message: Message) => {
+    queryClient.invalidateQueries([
+      "channels",
+      message.channel,
+      "messages",
+    ]);
+    queryClient.invalidateQueries([currentUserId, 'channels'])
+  });
+  
+}
 
-export { getChannelMessages, useCreateMessage };
+export { getChannelMessages, useCreateMessage, useMessageSubscription };

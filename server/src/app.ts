@@ -44,7 +44,7 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("User connected");
-  socket.on("join channel", () => console.log("someone joined a channel"))
+  // socket.join('channel:64f160969976c0b260458d7f')
   messageHandler(io, socket);
   channelHandler(io, socket);
 });

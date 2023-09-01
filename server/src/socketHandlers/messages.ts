@@ -26,7 +26,8 @@ const messageHandler = (io: Server, socket: Socket) => {
     });
 
     console.log(newMessage.toJSON());
-    socket.to(`channel:${channelId}`).emit("message:create", newMessage.toJSON());
+    // socket.to(`channel:${channelId}`).emit("message:create", newMessage.toJSON());
+    socket.broadcast.emit("message:create", newMessage.toJSON());
   };
 
   socket.on("message:create", createMessage);

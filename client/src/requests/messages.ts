@@ -9,18 +9,11 @@ const getChannelMessages = async (channelId: string) => {
   return response.data as Message[];
 };
 
-interface MessagePayload {
-  text: string;
-  senderId: string;
-  channelId: string;
-}
 
 const useCreateMessage = () => {
   const queryClient = useQueryClient();
-
   const mutation = useMutation({
-    mutationFn: (payload: MessagePayload) =>
-      socket.emit("message:create", payload),
+    mutationFn: (payload: MessagePayload) => socket.emit("message:create", payload),
     onSuccess: async (_, variables) => {
       await queryClient.invalidateQueries([
         "channels",
@@ -33,5 +26,12 @@ const useCreateMessage = () => {
   });
   return mutation;
 };
+
+// Listen for new messages and update UI accordingly
+// socket.on('message:create', (message: Message) => {
+//   console.log("message received")
+//   const queryClient = useQueryClient()
+//   queryClient.invalidateQueries(["channels", message.channelId, "messages"])
+// })
 
 export { getChannelMessages, useCreateMessage };

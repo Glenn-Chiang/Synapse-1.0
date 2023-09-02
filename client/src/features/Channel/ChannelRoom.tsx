@@ -1,17 +1,15 @@
 import { useOutletContext, useParams } from "react-router-dom";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import {
   getChannelMessages,
   useCreateMessage,
-
+  useMessageSubscription,
 } from "../../requests/messages";
 import { IncomingMessage, OutgoingMessage } from "../../components/Message";
 import MessageInput from "../../components/MessageInput";
-import { Channel, Message } from "../../types";
-import socket from "../../socket";
-import { useEffect } from "react";
+import { Channel } from "../../types";
 
 export default function ChannelRoom() {
   const currentUserId = localStorage.getItem("userId") as string;
@@ -36,7 +34,7 @@ export default function ChannelRoom() {
 
 function MessageThread() {
   const channelId = useParams().channelId as string;
-  const currentUserId = localStorage.getItem('userId')
+  const currentUserId = localStorage.getItem("userId");
 
   const {
     isLoading,
@@ -47,24 +45,7 @@ function MessageThread() {
     queryFn: () => getChannelMessages(channelId),
   });
 
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    const onMessage = async (message: Message) => {
-      console.log("message received");
-      await queryClient.invalidateQueries([
-        "channels",
-        message.channel,
-        "messages",
-      ]);
-      await queryClient.invalidateQueries(["user", "channels"]);
-    };
-    socket.on("message:create", onMessage);
-
-    return () => {
-      socket.off("message:create");
-    };
-  }, [queryClient]);
+  useMessageSubscription();
 
   if (isLoading) {
     return <Loading />;

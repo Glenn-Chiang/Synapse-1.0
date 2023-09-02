@@ -15,14 +15,10 @@ import passport from "passport";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import handleMessages from "./socketHandlers/messages";
-import {
-  handleDisconnect,
-  getChannels,
-  joinChannels,
-  handleChannels,
-} from "./socketHandlers/channels";
+import { handleChannels } from "./socketHandlers/channels";
 import { verify } from "jsonwebtoken";
 import { JwtPayload } from "./types";
+import { handleConnect, handleDisconnect } from "./socketHandlers/connection";
 
 // Db connection
 const connectToDb = async () => {
@@ -67,10 +63,7 @@ io.use((socket, next) => {
 io.on("connection", async (socket) => {
   const userId = socket.data.userId as string;
   console.log(`User ${userId} connected`);
-  socket.join(`user:${userId}`); // When user opens multiple tabs, each socket will join the same room identified by the userId
-  const channels = await getChannels(userId);
-  await joinChannels(socket, channels);
-
+  handleConnect(io, socket);
   handleMessages(io, socket);
   handleChannels(io, socket);
   handleDisconnect(io, socket);

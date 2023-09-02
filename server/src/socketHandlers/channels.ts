@@ -44,22 +44,4 @@ const joinChannels = async (socket: Socket, channels: IChannel[]) => {
 };
 
 
-
-const handleDisconnect = async (io: Server, socket: Socket) => {
-  const userId = socket.data.userId;
-  const channels = await getChannels(userId);
-
-  socket.on("disconnect", async () => {
-    const userSockets = await io.in(`user:${userId}`).fetchSockets(); // Get all sockets associated with user
-    const isDisconnected = userSockets.length === 0; // User is only considered disconnected when they close all sockets
-    if (isDisconnected) {
-      channels.forEach((channel) => {
-        socket
-          .to(channel._id.toString())
-          .emit("user disconnected", socket.data.userId);
-      });
-    }
-  });
-};
-
-export {handleChannels, getChannels, joinChannels, handleDisconnect};
+export {handleChannels, getChannels, joinChannels};

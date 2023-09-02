@@ -12,6 +12,11 @@ interface MessagePayload {
 const messageHandler = (io: Server, socket: Socket) => {
   const createMessage = async (messagePayload: MessagePayload) => {
     const { channelId, text, senderId } = messagePayload;
+
+    if (!text) { // Reject empty message
+      return 
+    }
+
     const message = new Message({
       text,
       sender: new mongoose.Types.ObjectId(senderId),
@@ -26,8 +31,8 @@ const messageHandler = (io: Server, socket: Socket) => {
     });
 
     console.log(newMessage.toJSON());
-    // socket.to(`channel:${channelId}`).emit("message:create", newMessage.toJSON());
-    socket.broadcast.emit("message:create", newMessage.toJSON());
+    socket.to(`channel:${channelId}`).emit("message:create", newMessage.toJSON());
+    // socket.broadcast.emit("message:create", newMessage.toJSON());
   };
 
   socket.on("message:create", createMessage);

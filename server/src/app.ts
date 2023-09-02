@@ -13,9 +13,9 @@ import messagesRouter from "./controllers/messages";
 
 import passport from "passport";
 import { createServer } from "http";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import messageHandler from "./socketHandlers/messages";
-import channelHandler from "./socketHandlers/channels";
+import channelHandler, { joinRooms } from "./socketHandlers/channels";
 
 // Db connection
 const connectToDb = async () => {
@@ -42,12 +42,18 @@ const io = new Server(server, {
   cors: { origin: ["http://localhost:5173"] },
 });
 
-io.on("connection", (socket) => {
+io.use(async (socket, next) => {
+  await joinRooms(socket)
+  next()
+})
+
+io.on("connection", async (socket) => {
   console.log("User connected");
-  // socket.join('channel:64f160969976c0b260458d7f')
   messageHandler(io, socket);
   channelHandler(io, socket);
 });
+
+
 
 
 export default server;

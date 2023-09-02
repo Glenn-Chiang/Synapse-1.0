@@ -4,9 +4,9 @@ import axios from "./axios";
 import socket from "../socket";
 
 const getAllChannels = async () => {
-  const response = await axios.get('/channels')
-  return response.data as Channel[]
-}
+  const response = await axios.get("/channels");
+  return response.data as Channel[];
+};
 
 const getUserChannels = async (userId: string) => {
   const response = await axios.get(`/users/${userId}/channels`);
@@ -43,16 +43,23 @@ const useCreateChannel = () => {
       description: string;
       creatorId: string;
     }) => createChannel(name, description, creatorId),
-    onSuccess: async (_, variables) => {
-      await queryClient.invalidateQueries([variables.creatorId, "channels"]);
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["user", "channels"]);
     },
   });
   return mutation;
 };
 
 const joinChannel = (userId: string, channelId: string) => {
-  socket.emit("join channel", userId, channelId)
-  console.log('emitted join channel')
-}
+  socket.emit("join channel", userId, channelId);
+  console.log("emitted join channel");
+};
 
-export { getAllChannels, getUserChannels, getChannel, createChannel, useCreateChannel, joinChannel };
+export {
+  getAllChannels,
+  getUserChannels,
+  getChannel,
+  createChannel,
+  useCreateChannel,
+  joinChannel,
+};

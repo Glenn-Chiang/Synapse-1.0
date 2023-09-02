@@ -19,8 +19,7 @@ const useCreateMessage = () => {
       payload.channelId,
       "messages",
     ]);
-    const currentUserId = localStorage.getItem("userId");
-    await queryClient.invalidateQueries([currentUserId, "channels"]);
+    await queryClient.invalidateQueries(['user', "channels"]);
   }
 
 };
@@ -28,8 +27,9 @@ const useCreateMessage = () => {
 const useMessageSubscription = () => {
   const queryClient = useQueryClient();
   const currentUserId = localStorage.getItem("userId");
-
+  
   socket.on("message:create", async (message: Message) => {
+    console.log('message received')
     await queryClient.invalidateQueries([
       "channels",
       message.channel,

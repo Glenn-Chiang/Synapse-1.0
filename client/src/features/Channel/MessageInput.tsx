@@ -7,7 +7,7 @@ export default function MessageInput({ onSend }: { onSend: (content: string) => 
   ) => {
     const inputField = inputRef.current;
     if (event.key === "Enter") {
-      if (!inputField) {
+      if (!inputField || !inputRef.current.value) {
         return;
       }
       onSend(inputField.value);

@@ -8,7 +8,9 @@ const login = async (username: string, password: string) => {
   localStorage.setItem("token", user.token);
   localStorage.setItem("userId", user.userId);
   socket.connect();
+  socket.auth.token = user.token
   return user;
 };
 
 export { login };
+

@@ -1,25 +1,22 @@
-import { useOutletContext, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import {
   getChannelMessages,
-  useCreateMessage,
   useMessageSubscription,
 } from "../../requests/messages";
 import { IncomingMessage, OutgoingMessage } from "../../components/Message";
 import MessageInput from "../../components/MessageInput";
-import { Channel } from "../../types";
+import socket from "../../socket";
 
 export default function ChannelRoom() {
   const currentUserId = localStorage.getItem("userId") as string;
+  const channelId = useParams().channelId as string
 
-  const channel = useOutletContext() as Channel;
-
-  const createMessage = useCreateMessage();
 
   const handleSend = async (text: string) => {
-    createMessage({ text, senderId: currentUserId, channelId: channel.id });
+    socket.emit("message:create", {senderId: currentUserId, channelId, text});
   };
 
   return (
@@ -45,12 +42,12 @@ function MessageThread() {
     queryFn: () => getChannelMessages(channelId),
   });
 
-  useMessageSubscription();
-
+  useMessageSubscription(); // Listen to messages from the server
+  
   if (isLoading) {
     return <Loading />;
   }
-
+  
   if (isError) {
     return <ErrorMessage message="Error loading messages" />;
   }

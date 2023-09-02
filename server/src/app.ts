@@ -16,6 +16,8 @@ import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import messageHandler from "./socketHandlers/messages";
 import channelHandler, { joinRooms } from "./socketHandlers/channels";
+import {verify} from 'jsonwebtoken'
+import { JwtPayload } from "./types";
 
 // Db connection
 const connectToDb = async () => {
@@ -33,6 +35,7 @@ app.use(morgan("dev"));
 // Auth
 app.use(passport.initialize());
 
+
 // Routers
 app.use(loginRouter, usersRouter, channelsRouter, messagesRouter);
 
@@ -42,18 +45,25 @@ const io = new Server(server, {
   cors: { origin: ["http://localhost:5173"] },
 });
 
-io.use(async (socket, next) => {
-  await joinRooms(socket)
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token as string; // jwt from client
+  if (!token) {
+    return;
+  }
+  const decodedToken = verify(token, process.env.SECRET as string) as JwtPayload;
+  const userId = decodedToken.id;
+  socket.data.userId = userId
   next()
 })
 
+
 io.on("connection", async (socket) => {
-  console.log("User connected");
+  const userId = socket.data.userId
+  console.log(`User ${userId} connected`);
+  await joinRooms(socket)
   messageHandler(io, socket);
   channelHandler(io, socket);
 });
 
-
-
-
 export default server;
+

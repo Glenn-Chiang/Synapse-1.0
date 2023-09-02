@@ -4,3 +4,6 @@ export interface MessagePayload {
   channelId: string;
 }
 
+export interface JwtPayload {
+  id: string
+}

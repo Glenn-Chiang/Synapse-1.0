@@ -27,12 +27,7 @@ const channelHandler = (io: Server, socket: Socket) => {
 
 // Join rooms of all channels of which the user is a member
 export const joinRooms = async (socket: Socket) => {
-  const token = socket.handshake.auth.token as string; // jwt from client
-  if (!token) {
-    return;
-  }
-  const decodedToken = verify(token, process.env.SECRET as string) as any;
-  const userId = decodedToken.id as string;
+  const userId = socket.data.userId
   const channels = await Channel.find({
     members: { $in: new mongoose.Types.ObjectId(userId) },
   });

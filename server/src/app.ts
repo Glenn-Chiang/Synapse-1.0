@@ -9,7 +9,7 @@ import mongoose from "mongoose";
 import loginRouter from "./controllers/login";
 import usersRouter from "./controllers/users";
 import channelsRouter from "./controllers/channels";
-import messagesRouter from "./controllers/messages";
+import chatsRouter from "./controllers/chats"
 
 import passport from "passport";
 import { createServer } from "http";
@@ -19,6 +19,7 @@ import { handleChannels } from "./socketHandlers/channels";
 import { verify } from "jsonwebtoken";
 import { JwtPayload } from "./types";
 import { handleConnect, handleDisconnect } from "./socketHandlers/connection";
+import messagesRouter from "./controllers/messages";
 
 // Db connection
 const connectToDb = async () => {
@@ -37,7 +38,7 @@ app.use(morgan("dev"));
 app.use(passport.initialize());
 
 // Routers
-app.use(loginRouter, usersRouter, channelsRouter, messagesRouter);
+app.use(loginRouter, usersRouter, channelsRouter, chatsRouter, messagesRouter);
 
 // Sockets
 const server = createServer(app);

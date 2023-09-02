@@ -14,9 +14,14 @@ import messagesRouter from "./controllers/messages";
 import passport from "passport";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
-import messageHandler from "./socketHandlers/messages";
-import channelHandler, { joinRooms } from "./socketHandlers/channels";
-import {verify} from 'jsonwebtoken'
+import handleMessages from "./socketHandlers/messages";
+import {
+  handleDisconnect,
+  getChannels,
+  joinChannels,
+  handleChannels,
+} from "./socketHandlers/channels";
+import { verify } from "jsonwebtoken";
 import { JwtPayload } from "./types";
 
 // Db connection
@@ -35,7 +40,6 @@ app.use(morgan("dev"));
 // Auth
 app.use(passport.initialize());
 
-
 // Routers
 app.use(loginRouter, usersRouter, channelsRouter, messagesRouter);
 
@@ -48,22 +52,28 @@ const io = new Server(server, {
 io.use((socket, next) => {
   const token = socket.handshake.auth.token as string; // jwt from client
   if (!token) {
+    console.log("Unauthorised");
     return;
   }
-  const decodedToken = verify(token, process.env.SECRET as string) as JwtPayload;
+  const decodedToken = verify(
+    token,
+    process.env.SECRET as string
+  ) as JwtPayload;
   const userId = decodedToken.id;
-  socket.data.userId = userId
-  next()
-})
-
+  socket.data.userId = userId;
+  next();
+});
 
 io.on("connection", async (socket) => {
-  const userId = socket.data.userId
+  const userId = socket.data.userId as string;
   console.log(`User ${userId} connected`);
-  await joinRooms(socket)
-  messageHandler(io, socket);
-  channelHandler(io, socket);
+  socket.join(`user:${userId}`); // When user opens multiple tabs, each socket will join the same room identified by the userId
+  const channels = await getChannels(userId);
+  await joinChannels(socket, channels);
+
+  handleMessages(io, socket);
+  handleChannels(io, socket);
+  handleDisconnect(io, socket);
 });
 
 export default server;
-

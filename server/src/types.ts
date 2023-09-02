@@ -5,5 +5,9 @@ export interface MessagePayload {
 }
 
 export interface JwtPayload {
-  id: string
+  id: string;
+}
+
+export interface SocketData {
+  userId: string;
 }

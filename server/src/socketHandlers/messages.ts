@@ -9,7 +9,7 @@ interface MessagePayload {
   channelId: string;
 }
 
-const messageHandler = (io: Server, socket: Socket) => {
+const handleMessages = (io: Server, socket: Socket) => {
   const createMessage = async (messagePayload: MessagePayload) => {
     const { channelId, text, senderId } = messagePayload;
 
@@ -38,4 +38,4 @@ const messageHandler = (io: Server, socket: Socket) => {
   socket.on("message:create", createMessage);
 };
 
-export default messageHandler;
+export default handleMessages;

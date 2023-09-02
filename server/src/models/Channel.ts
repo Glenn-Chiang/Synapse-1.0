@@ -1,5 +1,15 @@
 import mongoose from "mongoose";
 
+export interface IChannel extends mongoose.Document {
+  name: string;
+  description: string;
+  members: [{ type: mongoose.Schema.Types.ObjectId; ref: "User" }];
+  admins: [{ type: mongoose.Schema.Types.ObjectId; ref: "User" }];
+  dateCreated: Date;
+  creator: { type: mongoose.Schema.Types.ObjectId; ref: "User" };
+  messages: [{ type: mongoose.Schema.Types.ObjectId; ref: "Message" }];
+}
+
 const channelSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: String,
@@ -19,6 +29,6 @@ channelSchema.set("toJSON", {
   },
 });
 
-const Channel = mongoose.model("Channel", channelSchema);
+const Channel = mongoose.model<IChannel>("Channel", channelSchema);
 
 export default Channel;

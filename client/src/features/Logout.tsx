@@ -1,10 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import socket from "../socket";
 
 export default function Logout() {
+  const navigate = useNavigate()
+
   const handleClick = () => {
     localStorage.clear();
     socket.disconnect();
     console.log('Logged out')
+    navigate('/login')
   };
 
   return (

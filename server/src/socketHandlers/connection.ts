@@ -16,6 +16,7 @@ const handleDisconnect = async (io: Server, socket: Socket) => {
     const userSockets = await io.in(`user:${userId}`).fetchSockets(); // Get all sockets associated with user
     const isDisconnected = userSockets.length === 0; // User is only considered disconnected when they close all sockets
     if (isDisconnected) {
+      console.log(`User ${userId} disconnected`)
       channels.forEach((channel) => {
         socket
           .to(channel._id.toString())

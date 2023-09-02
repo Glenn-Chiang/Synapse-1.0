@@ -32,4 +32,10 @@ interface Channel {
   messages: Message[];
 }
 
-export type { User, UserInfo, Channel, Message };
+interface Chat {
+  id: string;
+  users: User[];
+  messages: Message[]
+}
+
+export type { User, UserInfo, Channel, Chat, Message };

@@ -18,6 +18,9 @@ import ChannelRoom from "./features/Channel/ChannelRoom.tsx";
 import ChannelInfo from "./features/Channel/ChannelInfo.tsx";
 import Explorer from "./features/Explorer/Explorer.tsx";
 import appLoader from "./features/App/loader.ts";
+import Chats from "./features/Chats/Chats.tsx";
+import ChatContainer from "./features/Chat/ChatContainer.tsx";
+import ChatRoom from "./features/Chat/ChatRoom.tsx";
 
 const router = createBrowserRouter([
   {
@@ -27,7 +30,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Navigate to={"/channels"} />,
+        element: <Navigate to={"channels"} />,
       },
       {
         path: "explore",
@@ -48,6 +51,22 @@ const router = createBrowserRouter([
               {
                 path: "info",
                 element: <ChannelInfo />,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: "Chats",
+        element: <Chats />,
+        children: [
+          {
+            path: ":chatId",
+            element: <ChatContainer />,
+            children: [
+              {
+                path: "",
+                element: <ChatRoom />,
               },
             ],
           },

@@ -9,6 +9,11 @@ const getChannelMessages = async (channelId: string) => {
   return response.data as Message[];
 };
 
+const getChatMessages = async (chatId: string) => {
+  const response = await axios.get(`/channels/${chatId}/messages`);
+  return response.data as Message[];
+};
+
 const useMessageSubscription = () => {
   const queryClient = useQueryClient();
   useEffect(() => {
@@ -29,4 +34,4 @@ const useMessageSubscription = () => {
   }, [queryClient]);
 };
 
-export { getChannelMessages, useMessageSubscription };
+export { getChatMessages, getChannelMessages, useMessageSubscription };

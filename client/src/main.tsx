@@ -8,21 +8,22 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import App from "./App.tsx";
+import App from "./features/App/App.tsx";
 import Users from "./features/Users/Users.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Logout from "./features/Logout.tsx";
 import Channels from "./features/Channels/Channels.tsx";
-import channelsLoader from "./features/Channels/loader.ts";
 import ChannelContainer from "./features/Channel/ChannelContainer.tsx";
 import ChannelRoom from "./features/Channel/ChannelRoom.tsx";
 import ChannelInfo from "./features/Channel/ChannelInfo.tsx";
 import Explorer from "./features/Explorer/Explorer.tsx";
+import appLoader from "./features/App/loader.ts";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    loader: appLoader,
     children: [
       {
         path: "/",
@@ -35,7 +36,6 @@ const router = createBrowserRouter([
       {
         path: "channels",
         element: <Channels />,
-        loader: channelsLoader,
         children: [
           {
             path: ":channelId",

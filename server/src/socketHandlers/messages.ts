@@ -4,17 +4,18 @@ import Message from "../models/Message";
 import Channel from "../models/Channel";
 import Chat from "../models/Chat";
 
-interface MessagePayload {
+export interface MessageData {
   text: string;
   senderId: string;
   recipientId: string; // Either a channelId or userId
+  recipientType: 'channel' | 'user'
 }
 
 const handleMessages = (io: Server, socket: Socket) => {
   // Channel messages
   socket.on(
     "channel message",
-    async (messagePayload: MessagePayload) => {
+    async (messagePayload: MessageData) => {
       const { recipientId: channelId, text, senderId } = messagePayload;
 
       if (!text) {
@@ -44,7 +45,7 @@ const handleMessages = (io: Server, socket: Socket) => {
   );
 
   // Chat messages
-  socket.on("chat message", async (messagePayload: MessagePayload) => {
+  socket.on("chat message", async (messagePayload: MessageData) => {
     const { recipientId, text, senderId } = messagePayload;
 
     if (!text) {

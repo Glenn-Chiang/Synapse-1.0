@@ -3,6 +3,7 @@ import { Message } from "../types";
 import axios from "./axios";
 import socket from "../socket";
 import { useEffect } from "react";
+import { MessageData } from "../../../server/src/socketHandlers/messages";
 
 const getChannelMessages = async (channelId: string) => {
   const response = await axios.get(`/channels/${channelId}/messages`);
@@ -15,12 +16,16 @@ const getChatMessages = async (chatId: string) => {
   return response.data;
 };
 
-const createMessage = (payload: {
-  text: string;
-  senderId: string;
-  recipientId: string;
-}) => {
-  socket.emit("message:create", payload);
+const createMessage = (messageData: MessageData) => {
+  socket.emit("message:create", messageData);
+};
+
+const editMessage = (messageId: string, text: string) => {
+  socket.emit("message:edit", { messageId, text });
+};
+
+const deleteMessage = (messageId: string) => {
+  socket.emit("message:delete", messageId);
 };
 
 const useMessageSubscription = () => {
@@ -51,4 +56,11 @@ const useMessageSubscription = () => {
   }, [queryClient]);
 };
 
-export { getChatMessages, getChannelMessages, useMessageSubscription, createMessage };
+export {
+  getChatMessages,
+  getChannelMessages,
+  useMessageSubscription,
+  createMessage,
+  editMessage,
+  deleteMessage,
+};

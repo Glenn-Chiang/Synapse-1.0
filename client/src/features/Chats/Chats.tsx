@@ -17,7 +17,7 @@ export default function Chats() {
     isError,
     data: chats,
   } = useQuery({
-    queryKey: ['user', "chats"],
+    queryKey: ["chats"],
     queryFn: () => getChats(userId),
   });
 

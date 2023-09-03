@@ -31,27 +31,23 @@ const deleteMessage = (messageId: string) => {
 const useMessageSubscription = () => {
   const queryClient = useQueryClient();
   useEffect(() => {
-    const onChannelMessage = async (message: Message) => {
-      console.log("message received");
+    // Messages are refetched regardless of whether it is a create, update or delete operation
+    const onMessage = async (
+      recipientId: string,
+      collection: 'channels' | 'chats'
+    ) => {
       await queryClient.invalidateQueries([
-        "channels",
-        message.channel,
+        collection,
+        recipientId,
         "messages",
       ]);
-      await queryClient.invalidateQueries(["user", "channels"]);
+      await queryClient.invalidateQueries(collection)
     };
-    socket.on("channel message", onChannelMessage);
 
-    const onChatMessage = async (message: Message) => {
-      console.log("message received");
-      await queryClient.invalidateQueries(["chats", message.chat, "messages"]);
-      await queryClient.invalidateQueries(["user", "chats"]);
-    };
-    socket.on("chat message", onChatMessage);
+    socket.on("message", onMessage);
 
     return () => {
-      socket.off("channel message", onChannelMessage);
-      socket.off("chat message", onChatMessage);
+      socket.off("message", onMessage);
     };
   }, [queryClient]);
 };

@@ -9,7 +9,7 @@ import MessageThread from "../../components/MessageThread";
 
 export default function ChannelRoom() {
   const channelId = useParams().channelId as string;
-  const currentUserId = localStorage.getItem("userId") as string
+  const currentUserId = localStorage.getItem("userId") as string;
 
   const {
     isLoading,
@@ -21,7 +21,12 @@ export default function ChannelRoom() {
   });
 
   const handleSend = async (text: string) => {
-    createMessage({text, senderId: currentUserId, recipientId: channelId})
+    createMessage({
+      text,
+      senderId: currentUserId,
+      recipientId: channelId,
+      recipientType: "channel",
+    });
   };
 
   if (isLoading) {

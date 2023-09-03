@@ -38,7 +38,7 @@ const handleMessages = (io: Server, socket: Socket) => {
 
       console.log(newMessage.toJSON());
       io.to(`channel:${channelId}`).emit(
-        "channel message",
+        "message",
         newMessage.toJSON()
       );
     }
@@ -83,7 +83,7 @@ const handleMessages = (io: Server, socket: Socket) => {
 
     console.log(newMessage.toJSON());
     io.to(`chat:${chat._id.toString()}`).emit(
-      "chat message",
+      "message",
       newMessage.toJSON()
     );
   });

@@ -27,7 +27,12 @@ export default function ChatRoom() {
   });
 
   const handleSend = (text: string) => {
-    createMessage({ text, senderId: currentUserId, recipientId: otherUserId });
+    createMessage({
+      text,
+      senderId: currentUserId,
+      recipientId: otherUserId,
+      recipientType: "user",
+    });
   };
 
   if (messagesQuery.isLoading) {

@@ -23,9 +23,6 @@ export default function ChannelPreview({ channel }: { channel: Channel }) {
       </div>
       <div className="flex flex-col justify-between items-end w-1/5">
         {lastMessage && <span>{lastMessage.timestamp}</span>}
-        <span className="rounded-full bg-cyan-500 text-white w-8 h-8 flex justify-center items-center">
-          {channel.messages.length}
-        </span>
       </div>
     </NavLink>
   );

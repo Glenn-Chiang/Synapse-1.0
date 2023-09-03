@@ -7,6 +7,7 @@ export interface IChannel extends mongoose.Document {
   admins: [{ type: mongoose.Schema.Types.ObjectId; ref: "User" }];
   dateCreated: Date;
   creator: { type: mongoose.Schema.Types.ObjectId; ref: "User" };
+  messages: [{ type: mongoose.Schema.Types.ObjectId; ref: "Message" }];
 }
 
 const channelSchema = new mongoose.Schema({
@@ -16,6 +17,7 @@ const channelSchema = new mongoose.Schema({
   admins: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   dateCreated: Date,
   creator: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
 });
 
 channelSchema.set("toJSON", {

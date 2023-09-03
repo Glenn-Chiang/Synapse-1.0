@@ -14,11 +14,13 @@ export interface MessageData {
 const createChat = async (
   socket: Socket,
   senderId: string,
-  recipientId: string
+  recipientId: string,
+  firstMessage: IMessage
 ) => {
   const chat = await new Chat({
     users: [senderId, recipientId],
     dateCreated: new Date(),
+    messages: [firstMessage],
   }).save();
 
   // Alert recipient
@@ -43,11 +45,24 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
     });
     const newMessage = await message.save();
 
-    let chat = await Chat.findOne({ users: { $all: [senderId, recipientId] } });
+    // Update channel with new message
+    if (recipientType === "Channel") {
+      await Channel.findByIdAndUpdate(recipientId, {
+        $push: { messages: newMessage._id },
+      });
+      // Update chat with new message
+    } else if (recipientType === "User") {
+      const chat = await Chat.findOneAndUpdate(
+        {
+          users: { $all: [senderId, recipientId] },
+        },
+        { $push: { messages: newMessage._id } }
+      );
 
-    // Create chat between users if it does not already exist
-    if (!chat) {
-      createChat(socket, senderId, recipientId);
+      // Create chat between users if it does not already exist
+      if (!chat) {
+        createChat(socket, senderId, recipientId, newMessage);
+      }
     }
 
     console.log(newMessage.toJSON());

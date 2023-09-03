@@ -2,10 +2,12 @@ import mongoose, { mongo } from "mongoose";
 
 export interface IChat extends mongoose.Document {
   users: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+  messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }]
 }
 
 const chatSchema = new mongoose.Schema({
   users: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+  messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }]
 })
 
 chatSchema.set('toJSON', {

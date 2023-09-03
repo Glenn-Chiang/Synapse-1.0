@@ -26,9 +26,6 @@ export default function ChatPreview({chat}: {chat: Chat}) {
       </div>
       <div className="flex flex-col justify-between items-end w-1/5">
         {lastMessage && <span>{lastMessage.timestamp}</span>}
-        <span className="rounded-full bg-cyan-500 text-white w-8 h-8 flex justify-center items-center">
-          {chat.messages.length}
-        </span>
       </div>
     </NavLink>
   );

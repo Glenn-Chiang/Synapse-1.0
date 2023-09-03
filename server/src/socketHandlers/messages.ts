@@ -8,7 +8,7 @@ export interface MessageData {
   text: string;
   senderId: string;
   recipientId: string; // Either a channelId or userId
-  recipientType: "Channel" | "Chat";
+  recipientType: "Channel" | "User";
 }
 
 const createChat = async (
@@ -21,10 +21,8 @@ const createChat = async (
     dateCreated: new Date(),
   }).save();
 
-  // Join new chat
-  socket.join(`chat:${chat._id.toString()}`);
   // Alert recipient
-  socket.to(`user:${recipientId}`).emit("new chat");
+  socket.to(recipientId).emit("new chat");
 };
 
 const registerMessageHandlers = (io: Server, socket: Socket) => {
@@ -83,6 +81,6 @@ const emitMessageEvent = (io: Server, message: IMessage) => {
   io.to(message.recipient.toString()).emit(
     "message",
     message.recipient.toString(),
-    message.recipientType.toString().toLowerCase() + "s" // 'channels' or 'chats'
+    message.recipientType.toString().toLowerCase() + "s" // 'channels' or 'users'
   );
 };

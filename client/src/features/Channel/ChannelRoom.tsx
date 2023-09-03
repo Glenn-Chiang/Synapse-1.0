@@ -25,7 +25,7 @@ export default function ChannelRoom() {
       text,
       senderId: currentUserId,
       recipientId: channelId,
-      recipientType: "channel",
+      recipientType: "Channel",
     });
   };
 

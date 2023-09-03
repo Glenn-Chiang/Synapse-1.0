@@ -4,7 +4,6 @@ export interface IUser extends mongoose.Document {
   username: string
   passwordHash: string
   dateJoined: Date,
-  sentMessages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
   channels: [{ type: mongoose.Schema.Types.ObjectId, ref: "Channel" }],
 }
 
@@ -12,7 +11,6 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   passwordHash: { type: String, required: true },
   dateJoined: Date,
-  sentMessages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
   channels: [{ type: mongoose.Schema.Types.ObjectId, ref: "Channel" }],
 });
 

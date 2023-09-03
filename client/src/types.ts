@@ -17,8 +17,8 @@ interface Message {
   id: string;
   text: string;
   sender: User;
-  channel?: string;
-  chat?: string;
+  recipientType: "Channel" | "User";
+  recipient: Channel | User;
   timestamp: string;
 }
 
@@ -36,7 +36,7 @@ interface Channel {
 interface Chat {
   id: string;
   users: User[];
-  messages: Message[]
+  messages: Message[];
 }
 
 export type { User, UserInfo, Channel, Chat, Message };

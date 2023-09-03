@@ -32,7 +32,7 @@ const useMessageSubscription = () => {
   const queryClient = useQueryClient();
   useEffect(() => {
     // Messages are refetched regardless of whether it is a create, update or delete operation
-    const onMessage = async (
+    const handleMessage = async (
       recipientId: string,
       collection: 'channels' | 'chats'
     ) => {
@@ -44,10 +44,10 @@ const useMessageSubscription = () => {
       await queryClient.invalidateQueries(collection)
     };
 
-    socket.on("message", onMessage);
+    socket.on("message", handleMessage);
 
     return () => {
-      socket.off("message", onMessage);
+      socket.off("message", handleMessage);
     };
   }, [queryClient]);
 };

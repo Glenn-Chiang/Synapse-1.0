@@ -7,7 +7,7 @@ import { verify } from "jsonwebtoken";
 const handleChannels = (io: Server, socket: Socket) => {
   // Subscribe to new channel and join its room
   socket.on("join channel", async (userId: string, channelId: string) => {
-    socket.join(`channel:${channelId}`);
+    socket.join(`${channelId}`);
 
     const channel = await Channel.findByIdAndUpdate(channelId, {
       $push: { members: new mongoose.Types.ObjectId(userId) },
@@ -16,7 +16,7 @@ const handleChannels = (io: Server, socket: Socket) => {
       $push: { channels: channel?._id },
     });
 
-    io.to(`channel:${channelId}`).emit(
+    io.to(`${channelId}`).emit(
       "join channel",
       `${user?.username} has joined the channel!`
     );
@@ -38,7 +38,7 @@ const joinChannels = async (socket: Socket, channels: IChannel[]) => {
   const userId = socket.data.userId
   
   channels.forEach((channel) => {
-    socket.join(`channel:${channel._id.toString()}`);
+    socket.join(`${channel._id.toString()}`);
     console.log(`User ${userId} has joined channel: ${channel.name}`);
   });
 };

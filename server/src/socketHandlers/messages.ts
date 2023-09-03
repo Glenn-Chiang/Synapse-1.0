@@ -1,92 +1,88 @@
 import { Server, Socket } from "socket.io";
 import mongoose from "mongoose";
-import Message from "../models/Message";
+import Message, { IMessage } from "../models/Message";
 import Channel from "../models/Channel";
-import Chat from "../models/Chat";
+import Chat, { IChat } from "../models/Chat";
 
 export interface MessageData {
   text: string;
   senderId: string;
   recipientId: string; // Either a channelId or userId
-  recipientType: 'channel' | 'user'
+  recipientType: "Channel" | "Chat";
 }
 
-const handleMessages = (io: Server, socket: Socket) => {
-  // Channel messages
-  socket.on(
-    "channel message",
-    async (messagePayload: MessageData) => {
-      const { recipientId: channelId, text, senderId } = messagePayload;
+const createChat = async (
+  socket: Socket,
+  senderId: string,
+  recipientId: string
+) => {
+  const chat = await new Chat({
+    users: [senderId, recipientId],
+    dateCreated: new Date(),
+  }).save();
 
-      if (!text) {
-        // Reject empty message
-        return;
-      }
+  // Join new chat
+  socket.join(`chat:${chat._id.toString()}`);
+  // Alert recipient
+  socket.to(`user:${recipientId}`).emit("new chat");
+};
 
-      const message = new Message({
-        text,
-        sender: new mongoose.Types.ObjectId(senderId),
-        timestamp: new Date(),
-        channel: new mongoose.Types.ObjectId(channelId),
-      });
-      const newMessage = await message.save();
+const registerMessageHandlers = (io: Server, socket: Socket) => {
+  const handleCreateMessage = async (messageData: MessageData, io: Server) => {
+    const { recipientType, recipientId, text, senderId } = messageData;
 
-      // Add message to channel's messages field
-      await Channel.findByIdAndUpdate(channelId, {
-        $push: { messages: newMessage._id },
-      });
-
-      console.log(newMessage.toJSON());
-      io.to(`channel:${channelId}`).emit(
-        "message",
-        newMessage.toJSON()
-      );
-    }
-  );
-
-  // Chat messages
-  socket.on("chat message", async (messagePayload: MessageData) => {
-    const { recipientId, text, senderId } = messagePayload;
-
+    // Reject empty message
     if (!text) {
-      // Reject empty message
       return;
-    }
-
-    let chat = await Chat.findOne({ users: { $all: [senderId, recipientId] } });
-    
-    // Create chat between users if it does not already exist
-    if (!chat) {
-      chat = await new Chat({
-        users: [senderId, recipientId],
-        dateCreated: new Date(),
-      }).save();
-
-      // Join new chat
-      socket.join(`chat:${chat._id.toString()}`)
-      // Alert recipient of new chat
-      socket.to(`user:${recipientId}`).emit("new chat")
     }
 
     const message = new Message({
       text,
-      sender: senderId,
-      chat: chat._id,
+      sender: new mongoose.Types.ObjectId(senderId),
+      recipientType,
+      recipient: recipientId,
       timestamp: new Date(),
     });
-
     const newMessage = await message.save();
 
-    // Add message to chat
-    chat.messages.push(newMessage._id);
-    await chat.save();
+    let chat = await Chat.findOne({ users: { $all: [senderId, recipientId] } });
+
+    // Create chat between users if it does not already exist
+    if (!chat) {
+      createChat(socket, senderId, recipientId);
+    }
 
     console.log(newMessage.toJSON());
-    io.to(`chat:${chat._id.toString()}`).emit(
-      "message",
-      newMessage.toJSON()
+    emitMessageEvent(io, message as IMessage);
+  };
+
+  const handleEditMessage = async (messageId: string, text: string) => {
+    const message = await Message.findByIdAndUpdate(
+      messageId,
+      { $set: { text: text } },
+      { new: true }
     );
-  });
+    console.log(message?.toJSON());
+    emitMessageEvent(io, message as IMessage);
+  };
+
+  const handleDeleteMessage = async (messageId: string) => {
+    const message = await Message.findByIdAndDelete(messageId);
+    console.log(message?.toJSON());
+    emitMessageEvent(io, message as IMessage);
+  };
+
+  socket.on("message:create", handleCreateMessage);
+  socket.on("message:edit", handleEditMessage);
+  socket.on("message:delete", handleDeleteMessage);
 };
 
-export default handleMessages;
+export default registerMessageHandlers;
+
+const emitMessageEvent = (io: Server, message: IMessage) => {
+  io.to(message.recipient.toString()).emit(
+    "message",
+    message.recipient.toString(),
+    message.recipientType.toString().toLowerCase() + "s" // 'channels' or 'chats'
+  );
+};

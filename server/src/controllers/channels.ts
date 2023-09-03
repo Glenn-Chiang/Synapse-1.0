@@ -18,7 +18,6 @@ channelsRouter.get("/channels", async (req, res, next) => {
 channelsRouter.get("/users/:userId/channels", async (req, res, next) => {
   try {
     const channels = await Channel.find({ members: { $in: req.params.userId } })
-      .populate("messages")
       .populate("members");
     res.json(channels);
   } catch (error) {

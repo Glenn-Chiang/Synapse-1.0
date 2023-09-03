@@ -14,7 +14,7 @@ import chatsRouter from "./controllers/chats"
 import passport from "passport";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
-import handleMessages from "./socketHandlers/messages";
+import registerMessageHandlers from "./socketHandlers/messages";
 import { handleChannels } from "./socketHandlers/channels";
 import { verify } from "jsonwebtoken";
 import { JwtPayload } from "./types";
@@ -66,7 +66,7 @@ io.on("connection", async (socket) => {
   const userId = socket.data.userId as string;
   console.log(`User ${userId} connected`);
   handleConnect(io, socket);
-  handleMessages(io, socket);
+  registerMessageHandlers(io, socket);
   handleChannels(io, socket);
   handleDisconnect(io, socket);
 });

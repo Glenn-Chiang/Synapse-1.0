@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Chat } from "../../types";
+import { Chat, User } from "../../types";
 
 export default function ChatPreview({chat}: {chat: Chat}) {
   const lastMessage =
@@ -7,11 +7,11 @@ export default function ChatPreview({chat}: {chat: Chat}) {
     chat.messages[chat.messages.length - 1];
 
   const currentUserId = localStorage.getItem('userId')
-  const otherUser = chat.users.find(user => user.id !== currentUserId)
+  const otherUser = chat.users.find(user => user.id !== currentUserId) as User
 
   return (
     <NavLink
-      to={`/chats/${chat.id}`}
+      to={`/chats/${otherUser.id}`}
       className={({ isActive }) =>
         `p-2 h-20 w-full shadow flex gap-2 rounded-md ${
           isActive

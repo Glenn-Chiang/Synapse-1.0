@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
 const messageSchema = new mongoose.Schema({
   text: { type: String, required: true },
   sender: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   channel: { type: mongoose.Schema.Types.ObjectId, ref: "Channel"},
-  recipient: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
+  chat: {type: mongoose.Schema.Types.ObjectId, ref: "Chat"},
   timestamp: Date,
 });
 

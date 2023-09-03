@@ -28,6 +28,7 @@ const connectToDb = async () => {
   console.log("Connected to MongoDB");
 };
 connectToDb();
+mongoose.set('strictQuery', true)
 
 // Middleware
 app.use(cors());

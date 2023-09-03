@@ -2,39 +2,90 @@ import { Server, Socket } from "socket.io";
 import mongoose from "mongoose";
 import Message from "../models/Message";
 import Channel from "../models/Channel";
+import Chat from "../models/Chat";
 
 interface MessagePayload {
   text: string;
   senderId: string;
-  channelId: string;
+  recipientId: string; // Either a channelId or userId
 }
 
 const handleMessages = (io: Server, socket: Socket) => {
-  const createMessage = async (messagePayload: MessagePayload) => {
-    const { channelId, text, senderId } = messagePayload;
+  // Channel messages
+  socket.on(
+    "channel message",
+    async (messagePayload: MessagePayload) => {
+      const { recipientId: channelId, text, senderId } = messagePayload;
 
-    if (!text) { // Reject empty message
-      return 
+      if (!text) {
+        // Reject empty message
+        return;
+      }
+
+      const message = new Message({
+        text,
+        sender: new mongoose.Types.ObjectId(senderId),
+        timestamp: new Date(),
+        channel: new mongoose.Types.ObjectId(channelId),
+      });
+      const newMessage = await message.save();
+
+      // Add message to channel's messages field
+      await Channel.findByIdAndUpdate(channelId, {
+        $push: { messages: newMessage._id },
+      });
+
+      console.log(newMessage.toJSON());
+      io.to(`channel:${channelId}`).emit(
+        "channel message",
+        newMessage.toJSON()
+      );
+    }
+  );
+
+  // Chat messages
+  socket.on("chat message", async (messagePayload: MessagePayload) => {
+    const { recipientId, text, senderId } = messagePayload;
+
+    if (!text) {
+      // Reject empty message
+      return;
+    }
+
+    let chat = await Chat.findOne({ users: { $all: [senderId, recipientId] } });
+    
+    // Create chat between users if it does not already exist
+    if (!chat) {
+      chat = await new Chat({
+        users: [senderId, recipientId],
+        dateCreated: new Date(),
+      }).save();
+
+      // Join new chat
+      socket.join(`chat:${chat._id.toString()}`)
+      // Alert recipient of new chat
+      socket.to(`user:${recipientId}`).emit("new chat")
     }
 
     const message = new Message({
       text,
-      sender: new mongoose.Types.ObjectId(senderId),
+      sender: senderId,
+      chat: chat._id,
       timestamp: new Date(),
-      channel: new mongoose.Types.ObjectId(channelId),
     });
+
     const newMessage = await message.save();
 
-    // Add message to channel's messages field
-    await Channel.findByIdAndUpdate(channelId, {
-      $push: { messages: newMessage._id },
-    });
+    // Add message to chat
+    chat.messages.push(newMessage._id);
+    await chat.save();
 
     console.log(newMessage.toJSON());
-    io.to(`channel:${channelId}`).emit("message:create", newMessage.toJSON());
-  };
-
-  socket.on("message:create", createMessage);
+    io.to(`chat:${chat._id.toString()}`).emit(
+      "chat message",
+      newMessage.toJSON()
+    );
+  });
 };
 
 export default handleMessages;

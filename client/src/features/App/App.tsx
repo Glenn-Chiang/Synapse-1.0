@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useEffect } from "react";
 import socket from "../../socket";
 import TopNav from "../../components/TopNav";
+import { useMessageSubscription } from "../../requests/messages";
 
 export default function App() {
   useEffect(() => {
@@ -10,6 +11,8 @@ export default function App() {
       console.log('Connected')
     }
   }, []);
+  
+  useMessageSubscription(); // Listen to messages from the server
 
   return (
     <>

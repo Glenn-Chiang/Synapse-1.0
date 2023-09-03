@@ -1,12 +1,8 @@
 import { faChevronLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
-import { Chat, User } from "../../types";
 
-export default function ChatHeader({ chat }: { chat: Chat }) {
-  const currentUserId = localStorage.getItem('userId')
-  const otherUser = chat.users.find(user => user.id !== currentUserId) as User
-
+export default function ChatHeader({chatname}: {chatname: string}) {
   return (
     <header className="flex items-center justify-between p-2 gap-4 h-16 w-2/3 fixed top-16 bg-white shadow ">
       <BackButton />
@@ -14,7 +10,7 @@ export default function ChatHeader({ chat }: { chat: Chat }) {
         to={"info"}
         className="text-center hover:bg-slate-200 px-2 rounded-md"
       >
-        <h1 className="line-clamp-1">{otherUser.username}</h1>
+        <h1 className="line-clamp-1">{chatname}</h1>
       </Link>
       <MenuButton />
     </header>

@@ -1,11 +1,8 @@
-import { IncomingMessage,OutgoingMessage } from "./Message";
-import { useMessageSubscription } from "../requests/messages";
+import { IncomingMessage, OutgoingMessage } from "./Message";
 import { Message } from "../types";
 
 export default function MessageThread({ messages }: { messages: Message[] }) {
   const currentUserId = localStorage.getItem("userId");
-
-  useMessageSubscription(); // Listen to messages from the server
 
   return (
     <ul className="flex flex-col gap-4 ">

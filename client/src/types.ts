@@ -17,7 +17,8 @@ interface Message {
   id: string;
   text: string;
   sender: User;
-  channel: string;
+  channel?: string;
+  chat?: string;
   timestamp: string;
 }
 

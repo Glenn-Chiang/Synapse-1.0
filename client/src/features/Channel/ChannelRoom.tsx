@@ -2,15 +2,14 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { getChannelMessages } from "../../requests/messages";
+import { createMessage, getChannelMessages } from "../../requests/messages";
 import MessageInput from "../../components/MessageInput";
-import socket from "../../socket";
 import { Message } from "../../types";
 import MessageThread from "../../components/MessageThread";
 
 export default function ChannelRoom() {
   const channelId = useParams().channelId as string;
-  const currentUserId = localStorage.getItem("userId");
+  const currentUserId = localStorage.getItem("userId") as string
 
   const {
     isLoading,
@@ -22,7 +21,7 @@ export default function ChannelRoom() {
   });
 
   const handleSend = async (text: string) => {
-    socket.emit("message:create", { senderId: currentUserId, channelId, text });
+    createMessage({text, senderId: currentUserId, recipientId: channelId})
   };
 
   if (isLoading) {

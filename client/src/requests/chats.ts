@@ -8,7 +8,7 @@ const getChats = async (userId: string) => {
 
 const getChat = async (userIds: string[]) => {
   const response = await axios.get(`/chats/${userIds[0]}+${userIds[1]}`)
-  return response.data as Chat
+  return response.data as Chat | null
 }
 
 export { getChats, getChat };

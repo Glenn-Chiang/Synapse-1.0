@@ -3,7 +3,7 @@ import { Message } from "../types";
 
 export function OutgoingMessage({ message }: { message: Message }) {
   const ref = useRef<HTMLLIElement>(null)
-
+  
   useEffect(() => {
     ref.current?.scrollIntoView()
   }, [])

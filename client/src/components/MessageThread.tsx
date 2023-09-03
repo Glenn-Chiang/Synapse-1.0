@@ -3,7 +3,6 @@ import { Message } from "../types";
 
 export default function MessageThread({ messages }: { messages: Message[] }) {
   const currentUserId = localStorage.getItem("userId");
-
   return (
     <ul className="flex flex-col gap-4 ">
       {messages?.map((message) =>

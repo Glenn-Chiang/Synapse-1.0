@@ -12,7 +12,9 @@ const getChannelMessages = async (channelId: string) => {
 
 // Get chat messages by the users involved in the chat, NOT by chatId
 const getChatMessages = async (userIds: [string, string]) => {
-  const response = await axios.get(`/messages?userIds=${userIds[0]}+${userIds[1]}`);
+  const response = await axios.get(
+    `/messages?userIds=${userIds[0]}+${userIds[1]}`
+  );
   return response.data;
 };
 
@@ -34,14 +36,17 @@ const useMessageSubscription = () => {
     // Messages are refetched regardless of whether it is a create, update or delete operation
     const handleMessage = async (
       recipientId: string,
-      recipientType: 'channels' | 'users'
+      recipientType: "channels" | "users"
     ) => {
+      console.log("Message received");
       await queryClient.invalidateQueries([
         recipientType,
         recipientId,
         "messages",
       ]);
-      await queryClient.invalidateQueries(recipientType)
+      await queryClient.invalidateQueries(
+        recipientType === "users" ? "chats" : recipientType
+      );
     };
 
     socket.on("message", handleMessage);

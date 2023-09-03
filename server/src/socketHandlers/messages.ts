@@ -28,7 +28,7 @@ const createChat = async (
 };
 
 const registerMessageHandlers = (io: Server, socket: Socket) => {
-  const handleCreateMessage = async (messageData: MessageData, io: Server) => {
+  const handleCreateMessage = async (messageData: MessageData) => {
     const { recipientType, recipientId, text, senderId } = messageData;
 
     // Reject empty message
@@ -93,7 +93,7 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
 export default registerMessageHandlers;
 
 const emitMessageEvent = (io: Server, message: IMessage) => {
-  io.to(message.recipient.toString()).emit(
+  io.to(message.sender.toString()).to(message.recipient.toString()).emit(
     "message",
     message.recipient.toString(),
     message.recipientType.toString().toLowerCase() + "s" // 'channels' or 'users'

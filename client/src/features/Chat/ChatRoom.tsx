@@ -2,23 +2,18 @@ import { useParams } from "react-router-dom";
 
 import MessageInput from "../../components/MessageInput";
 import MessageThread from "../../components/MessageThread";
-import { useQuery } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { createMessage, getChatMessages } from "../../requests/messages";
+import { createMessage, useGetChatMessages } from "../../requests/messages";
+import { useGetChat } from "../../requests/chats";
 
 export default function ChatRoom() {
   const otherUserId = useParams().userId as string;
   const currentUserId = localStorage.getItem("userId") as string;
 
-  const {
-    isLoading,
-    isError,
-    data: messages,
-  } = useQuery({
-    queryKey: ["users", otherUserId, "messages"],
-    queryFn: () => getChatMessages([currentUserId, otherUserId]),
-  });
+  const chat = useGetChat([currentUserId, otherUserId]).data;
+
+  const { isLoading, isError, data: messages } = useGetChatMessages(chat);
 
   const handleSend = (text: string) => {
     createMessage({

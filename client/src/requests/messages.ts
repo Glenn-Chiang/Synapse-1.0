@@ -1,21 +1,29 @@
-import { useQueryClient } from "react-query";
-import { Message } from "../types";
+import { useQuery, useQueryClient } from "react-query";
+import { Chat, Message } from "../types";
 import axios from "./axios";
 import socket from "../socket";
 import { useEffect } from "react";
 import { MessageData } from "../../../server/src/socketHandlers/messages";
 
-const getChannelMessages = async (channelId: string) => {
-  const response = await axios.get(`/channels/${channelId}/messages`);
-  return response.data as Message[];
+const useGetChannelMessages = (channelId: string) => {
+  return useQuery({
+    queryKey: ["channels", channelId, "messages"],
+    queryFn: async () => {
+      const response = await axios.get(`/channels/${channelId}/messages`);
+      return response.data as Message[];
+    },
+  });
 };
 
-// Get chat messages by the users involved in the chat, NOT by chatId
-const getChatMessages = async (userIds: [string, string]) => {
-  const response = await axios.get(
-    `/messages?userIds=${userIds[0]}+${userIds[1]}`
-  );
-  return response.data;
+const useGetChatMessages = (chat: Chat | null | undefined) => {
+  return useQuery({
+    queryKey: ["chats", chat?.id, "messages"],
+    queryFn: async () => {
+      const response = await axios.get(`/chats/${chat?.id}/messages`);
+      return response.data as Message[];
+    },
+    enabled: !!chat,
+  });
 };
 
 const createMessage = (messageData: MessageData) => {
@@ -36,17 +44,16 @@ const useMessageSubscription = () => {
     // Messages are refetched regardless of whether it is a create, update or delete operation
     const handleMessage = async (
       recipientId: string,
-      recipientType: "channels" | "users"
+      recipientType: "channels" | "chat"
     ) => {
       console.log("Message received");
+      console.log([recipientType, recipientId, "messages"]);
       await queryClient.invalidateQueries([
         recipientType,
         recipientId,
         "messages",
       ]);
-      await queryClient.invalidateQueries(
-        recipientType === "users" ? "chats" : recipientType
-      );
+      await queryClient.invalidateQueries(recipientType);
     };
 
     socket.on("message", handleMessage);
@@ -58,8 +65,8 @@ const useMessageSubscription = () => {
 };
 
 export {
-  getChatMessages,
-  getChannelMessages,
+  useGetChatMessages,
+  useGetChannelMessages,
   useMessageSubscription,
   createMessage,
   editMessage,

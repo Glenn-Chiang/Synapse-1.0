@@ -1,3 +1,4 @@
+import { useQuery } from "react-query";
 import { Chat } from "../types";
 import axios from "./axios";
 
@@ -6,9 +7,15 @@ const getChats = async (userId: string) => {
   return response.data as Chat[];
 };
 
-const getChat = async (userIds: string[]) => {
-  const response = await axios.get(`/chats/${userIds[0]}+${userIds[1]}`)
-  return response.data as Chat | null
+const useGetChat = (userIds: [string, string]) => {
+  return useQuery({
+    queryKey: ['chats', userIds[0], userIds[1]],
+    queryFn: async () => {
+      const response = await axios.get(`/chats/${userIds[0]}+${userIds[1]}`)
+      return response.data as Chat | null
+    }
+  })
+
 }
 
-export { getChats, getChat };
+export { getChats, useGetChat };

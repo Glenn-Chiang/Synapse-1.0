@@ -40,7 +40,7 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
       text,
       sender: new mongoose.Types.ObjectId(senderId),
       recipientType,
-      recipient: recipientId,
+      recipient: new mongoose.Types.ObjectId(recipientId),
       timestamp: new Date(),
     });
     const newMessage = await message.save();

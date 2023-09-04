@@ -6,7 +6,7 @@ import Message from "../models/Message";
 messagesRouter.get("/channels/:channelId/messages", async (req, res, next) => {
   try {
     const messages = await Message.find({
-      channel: req.params.channelId,
+      recipient: req.params.channelId,
     }).populate("sender");
     res.json(messages);
   } catch (error) {
@@ -17,14 +17,15 @@ messagesRouter.get("/channels/:channelId/messages", async (req, res, next) => {
 // Get all messages in chat by chatId
 messagesRouter.get("/chats/:chatId/messages", async (req, res, next) => {
   const messages = await Message.find({
-    chat: req.params.chatId,
+    recipient: req.params.chatId,
+    recipientType: "User",
   });
   res.json(messages);
 });
 
 // Get all messages between 2 users by their userIds
 messagesRouter.get("/messages", async (req, res, next) => {
-  const userIds = (req.query.userIds as string).split(' ')
+  const userIds = (req.query.userIds as string).split(" ");
   const messages = await Message.find({
     $or: [
       {
@@ -36,8 +37,8 @@ messagesRouter.get("/messages", async (req, res, next) => {
         recipient: userIds[0],
       },
     ],
-  }).populate('sender');
-  res.json(messages)
+  }).populate("sender");
+  res.json(messages);
 });
 
 export default messagesRouter;

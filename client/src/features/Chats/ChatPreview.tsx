@@ -6,7 +6,7 @@ export default function ChatPreview({chat}: {chat: Chat}) {
     chat.messages.length > 0 &&
     chat.messages[chat.messages.length - 1];
 
-  const currentUserId = localStorage.getItem('userId')
+    const currentUserId = localStorage.getItem('userId')
   const otherUser = chat.users.find(user => user.id !== currentUserId) as User
 
   return (

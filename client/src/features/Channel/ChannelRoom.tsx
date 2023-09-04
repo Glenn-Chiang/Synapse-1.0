@@ -1,8 +1,7 @@
 import { useParams } from "react-router-dom";
-import { useQuery } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { createMessage, getChannelMessages } from "../../requests/messages";
+import { createMessage, useGetChannelMessages } from "../../requests/messages";
 import MessageInput from "../../components/MessageInput";
 import { Message } from "../../types";
 import MessageThread from "../../components/MessageThread";
@@ -15,10 +14,7 @@ export default function ChannelRoom() {
     isLoading,
     isError,
     data: messages,
-  } = useQuery({
-    queryKey: ["channels", channelId, "messages"],
-    queryFn: () => getChannelMessages(channelId),
-  });
+  } = useGetChannelMessages(channelId);
 
   const handleSend = async (text: string) => {
     createMessage({

@@ -25,23 +25,4 @@ const handleChannels = (io: Server, socket: Socket) => {
   });
 };
 
-// Get all user's channels
-const getChannels = async (userId: string) => {
-  const channels = await Channel.find({
-    members: { $in: new mongoose.Types.ObjectId(userId) },
-  });
-  return channels
-}
-
-// Join channels
-const joinChannels = async (socket: Socket, channels: IChannel[]) => {
-  const userId = socket.data.userId
-  
-  channels.forEach((channel) => {
-    socket.join(`${channel._id.toString()}`);
-    console.log(`User ${userId} has joined channel: ${channel.name}`);
-  });
-};
-
-
-export {handleChannels, getChannels, joinChannels};
+export { handleChannels };

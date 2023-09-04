@@ -11,22 +11,6 @@ export interface MessageData {
   roomType: "Channel" | "Chat";
 }
 
-const createChat = async (
-  socket: Socket,
-  senderId: string,
-  roomId: string,
-  firstMessage: IMessage
-) => {
-  const chat = await new Chat({
-    users: [senderId, roomId],
-    dateCreated: new Date(),
-    messages: [firstMessage],
-  }).save();
-
-  // Alert recipient
-  socket.to(roomId).emit("new chat");
-};
-
 const registerMessageHandlers = (io: Server, socket: Socket) => {
   const handleCreateMessage = async (messageData: MessageData) => {
     const { roomType, roomId, text, senderId } = messageData;

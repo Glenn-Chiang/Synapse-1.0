@@ -1,6 +1,8 @@
 import { useQuery } from "react-query";
 import { Chat } from "../types";
 import axios from "./axios";
+import { ChatMessage } from '../../../server/src/socketHandlers/chats';
+import socket from "../socket";
 
 const getChats = async (userId: string) => {
   const response = await axios.get(`/users/${userId}/chats`);
@@ -18,4 +20,8 @@ const useGetChat = (userIds: [string, string]) => {
 
 }
 
-export { getChats, useGetChat };
+const createChat = (chatMessage: ChatMessage) => {
+  socket.emit('chat:create', chatMessage)
+}
+
+export { getChats, useGetChat, createChat };

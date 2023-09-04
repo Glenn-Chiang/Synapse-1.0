@@ -5,7 +5,7 @@ import MessageThread from "../../components/MessageThread";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { createMessage, useGetChatMessages } from "../../requests/messages";
-import { useGetChat } from "../../requests/chats";
+import { createChat, useGetChat } from "../../requests/chats";
 
 export default function ChatRoom() {
   const otherUserId = useParams().userId as string;
@@ -16,12 +16,16 @@ export default function ChatRoom() {
   const { isLoading, isError, data: messages } = useGetChatMessages(chat);
 
   const handleSend = (text: string) => {
-    createMessage({
-      text,
-      senderId: currentUserId,
-      recipientId: otherUserId,
-      recipientType: "User",
-    });
+    if (chat) {
+      createMessage({
+        text,
+        senderId: currentUserId,
+        roomId: chat.id,
+        roomType: "Chat",
+      });
+    } else {
+      createChat({ text, senderId: currentUserId, recipientId: otherUserId });
+    }
   };
 
   if (isLoading) {

@@ -34,7 +34,7 @@ const handleChats = (io: Server, socket: Socket) => {
       await chat.save();
 
       // Alert recipient
-      socket.to(recipientId).emit("new chat");
+      socket.to(recipientId).emit("chat:create");
     }
   );
 };

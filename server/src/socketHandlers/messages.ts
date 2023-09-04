@@ -7,29 +7,29 @@ import Chat, { IChat } from "../models/Chat";
 export interface MessageData {
   text: string;
   senderId: string;
-  recipientId: string; // Either a channelId or userId
-  recipientType: "Channel" | "User";
+  roomId: string; // Either a channelId or chatId
+  roomType: "Channel" | "Chat";
 }
 
 const createChat = async (
   socket: Socket,
   senderId: string,
-  recipientId: string,
+  roomId: string,
   firstMessage: IMessage
 ) => {
   const chat = await new Chat({
-    users: [senderId, recipientId],
+    users: [senderId, roomId],
     dateCreated: new Date(),
     messages: [firstMessage],
   }).save();
 
   // Alert recipient
-  socket.to(recipientId).emit("new chat");
+  socket.to(roomId).emit("new chat");
 };
 
 const registerMessageHandlers = (io: Server, socket: Socket) => {
   const handleCreateMessage = async (messageData: MessageData) => {
-    const { recipientType, recipientId, text, senderId } = messageData;
+    const { roomType, roomId, text, senderId } = messageData;
 
     // Reject empty message
     if (!text) {
@@ -39,30 +39,25 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
     const message = new Message({
       text,
       sender: new mongoose.Types.ObjectId(senderId),
-      recipientType,
-      recipient: new mongoose.Types.ObjectId(recipientId),
+      roomType: roomType,
+      room: new mongoose.Types.ObjectId(roomId),
       timestamp: new Date(),
     });
     const newMessage = await message.save();
 
     // Update channel with new message
-    if (recipientType === "Channel") {
-      await Channel.findByIdAndUpdate(recipientId, {
+    if (roomType === "Channel") {
+      await Channel.findByIdAndUpdate(roomId, {
         $push: { messages: newMessage._id },
       });
       // Update chat with new message
-    } else if (recipientType === "User") {
+    } else if (roomType === "Chat") {
       const chat = await Chat.findOneAndUpdate(
         {
-          users: { $all: [senderId, recipientId] },
+          users: { $all: [senderId, roomId] },
         },
         { $push: { messages: newMessage._id } }
       );
-
-      // Create chat between users if it does not already exist
-      if (!chat) {
-        createChat(socket, senderId, recipientId, newMessage);
-      }
     }
 
     console.log(newMessage.toJSON());
@@ -93,9 +88,11 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
 export default registerMessageHandlers;
 
 const emitMessageEvent = (io: Server, message: IMessage) => {
-  io.to(message.sender.toString()).to(message.recipient.toString()).emit(
-    "message",
-    message.recipient.toString(),
-    message.recipientType.toString().toLowerCase() + "s" // 'channels' or 'users'
-  );
+  io.to(message.sender.toString())
+    .to(message.roomType.toString())
+    .emit(
+      "message",
+      message.room.toString(),
+      message.roomType.toString().toLowerCase() + "s" // 'channels' or 'chats'
+    );
 };

@@ -3,10 +3,10 @@ import mongoose, { mongo } from "mongoose";
 export interface IMessage extends mongoose.Document {
   text: string
   sender: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  recipientType: { type: String, required: true, enum: ["Channel", "User"] },
-  recipient: {
+  roomType: { type: String, required: true, enum: ["Channel", "Chat"] },
+  room: {
     type: mongoose.Schema.Types.ObjectId,
-    refPath: "recipientType",
+    refPath: "roomType",
     required: true,
   },
   timestamp: Date,
@@ -15,10 +15,10 @@ export interface IMessage extends mongoose.Document {
 const messageSchema = new mongoose.Schema({
   text: { type: String, required: true },
   sender: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  recipientType: { type: String, required: true, enum: ["Channel", "User"] },
-  recipient: {
+  roomType: { type: String, required: true, enum: ["Channel", "Chat"] },
+  room: {
     type: mongoose.Schema.Types.ObjectId,
-    refPath: "recipientType",
+    refPath: "roomType",
     required: true,
   },
   timestamp: Date,

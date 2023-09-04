@@ -18,8 +18,8 @@ messagesRouter.get("/channels/:channelId/messages", async (req, res, next) => {
 messagesRouter.get("/chats/:chatId/messages", async (req, res, next) => {
   const messages = await Message.find({
     recipient: req.params.chatId,
-    recipientType: "User",
-  });
+    recipientType: "Chat",
+  }).populate('sender');
   res.json(messages);
 });
 

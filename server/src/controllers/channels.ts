@@ -7,18 +7,19 @@ import User from "../models/User";
 // Get all channels
 channelsRouter.get("/channels", async (req, res, next) => {
   try {
-    const channels = await Channel.find({}).populate("messages")
-    res.json(channels)
+    const channels = await Channel.find({}).populate("messages");
+    res.json(channels);
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
 
 // Get all user's channels
 channelsRouter.get("/users/:userId/channels", async (req, res, next) => {
   try {
     const channels = await Channel.find({ members: { $in: req.params.userId } })
-      .populate("members");
+      .populate("members")
+      .populate("messages");
     res.json(channels);
   } catch (error) {
     next(error);
@@ -29,7 +30,7 @@ channelsRouter.get("/users/:userId/channels", async (req, res, next) => {
 channelsRouter.get("/channels/:channelId", async (req, res, next) => {
   try {
     const channel = await Channel.findById(req.params.channelId)
-      .populate({path: "messages", populate: "sender"})
+      .populate({ path: "messages", populate: "sender" })
       .populate("members")
       .populate("admins")
       .populate("creator");
@@ -54,8 +55,8 @@ channelsRouter.post("/channels", async (req, res, next) => {
     const newChannel = await channel.save();
     // Add channels to creator's channels
     await User.findByIdAndUpdate(creatorId, {
-      $push: {channels: newChannel._id}
-    })
+      $push: { channels: newChannel._id },
+    });
     res.json(newChannel);
   } catch (error) {
     next(error);

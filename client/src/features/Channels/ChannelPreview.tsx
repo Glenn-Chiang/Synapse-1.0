@@ -6,7 +6,7 @@ export default function ChannelPreview({ channel }: { channel: Channel }) {
     channel.messages.length > 0 &&
     channel.messages[channel.messages.length - 1];
 
-  return (
+    return (
     <NavLink
       to={`/channels/${channel.id}`}
       className={({ isActive }) =>

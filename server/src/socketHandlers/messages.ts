@@ -60,6 +60,15 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
 
   const handleDeleteMessage = async (messageId: string) => {
     const message = await Message.findByIdAndDelete(messageId);
+    if (message?.roomType.toString() === "Channel") {
+      await Channel.findByIdAndUpdate(message.room, {
+        $pull: { messages: { messageId } },
+      });
+    } else if (message?.roomType.toString() === "Channel") {
+      await Chat.findByIdAndUpdate(message.room, {
+        $pull: { messages: { messageId } },
+      });
+    }
     console.log(message?.toJSON());
     emitMessageEvent(io, message as IMessage);
   };

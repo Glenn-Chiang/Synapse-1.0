@@ -9,7 +9,7 @@ import mongoose from "mongoose";
 import loginRouter from "./controllers/login";
 import usersRouter from "./controllers/users";
 import channelsRouter from "./controllers/channels";
-import chatsRouter from "./controllers/chats"
+import chatsRouter from "./controllers/chats";
 
 import passport from "passport";
 import { createServer } from "http";
@@ -20,6 +20,7 @@ import { verify } from "jsonwebtoken";
 import { JwtPayload } from "./types";
 import { handleConnect, handleDisconnect } from "./socketHandlers/connection";
 import messagesRouter from "./controllers/messages";
+import handleChats from "./socketHandlers/chats";
 
 // Db connection
 const connectToDb = async () => {
@@ -28,7 +29,7 @@ const connectToDb = async () => {
   console.log("Connected to MongoDB");
 };
 connectToDb();
-mongoose.set('strictQuery', true)
+mongoose.set("strictQuery", true);
 
 // Middleware
 app.use(cors());
@@ -68,6 +69,7 @@ io.on("connection", async (socket) => {
   handleConnect(io, socket);
   registerMessageHandlers(io, socket);
   handleChannels(io, socket);
+  handleChats(io, socket);
   handleDisconnect(io, socket);
 });
 

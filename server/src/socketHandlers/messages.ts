@@ -23,7 +23,7 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
     const message = new Message({
       text,
       sender: new mongoose.Types.ObjectId(senderId),
-      roomType: roomType,
+      roomType,
       room: new mongoose.Types.ObjectId(roomId),
       timestamp: new Date(),
     });

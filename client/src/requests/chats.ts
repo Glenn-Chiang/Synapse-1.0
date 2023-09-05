@@ -23,8 +23,8 @@ const useGetChat = (userIds: [string, string]) => {
 const useCreateChat = () => {
   const queryClient = useQueryClient();
   return (chatMessage: ChatMessage) => {
-    socket.emit("chat:create", chatMessage, () => {
-      queryClient.invalidateQueries("chats"); // Refetch chats when new chat is created
+    socket.emit("chat:create", chatMessage, async () => {
+      await queryClient.invalidateQueries("chats"); // Refetch chats when new chat is created
     });
   };
 };
@@ -34,7 +34,7 @@ const useChatSubscription = () => {
 
   useEffect(() => {
     const handleChat = async () => {
-      queryClient.invalidateQueries("chats"); // Refetch chats when new chat is created
+      await queryClient.invalidateQueries("chats"); // Refetch chats when new chat is created
     };
 
     socket.on("chat:create", handleChat);

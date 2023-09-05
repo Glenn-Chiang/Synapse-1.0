@@ -26,48 +26,57 @@ const useGetChatMessages = (chat: Chat | null | undefined) => {
   });
 };
 
-const createMessage = (messageData: MessageData) => {
-  socket.emit("message:create", messageData);
+const useCreateMessage = () => {
+  const handleMessage = useMessageHandler();
+  return (messageData: MessageData) => {
+    socket.emit("message:create", messageData, handleMessage);
+  };
 };
 
-const editMessage = (messageId: string, text: string) => {
-  socket.emit("message:edit", { messageId, text });
+const useEditMessage = () => {
+  const handleMessage = useMessageHandler();
+  return (messageId: string, text: string) => {
+    socket.emit("message:edit", { messageId, text }, handleMessage);
+  };
 };
 
-const deleteMessage = (messageId: string) => {
-  socket.emit("message:delete", messageId);
+const useDeleteMessage = () => {
+  const handleMessage = useMessageHandler();
+  return (messageId: string) => {
+    socket.emit("message:delete", messageId, handleMessage);
+  };
+};
+
+// All create/update/delete operations on messages are handled by simply refetching messages and chats/channels
+const useMessageHandler = () => {
+  const queryClient = useQueryClient();
+  return async (recipientId: string, recipientType: "channels" | "chat") => {
+    console.log("Message received");
+    await queryClient.invalidateQueries([
+      recipientType,
+      recipientId,
+      "messages",
+    ]);
+    await queryClient.invalidateQueries(recipientType);
+  };
 };
 
 const useMessageSubscription = () => {
-  const queryClient = useQueryClient();
+  const handleMessage = useMessageHandler();
   useEffect(() => {
-    // Messages are refetched regardless of whether it is a create, update or delete operation
-    const handleMessage = async (
-      recipientId: string,
-      recipientType: "channels" | "chat"
-    ) => {
-      console.log("Message received");
-      await queryClient.invalidateQueries([
-        recipientType,
-        recipientId,
-        "messages",
-      ]);
-      await queryClient.invalidateQueries(recipientType);
-    };
-
     socket.on("message", handleMessage);
 
     return () => {
       socket.off("message", handleMessage);
     };
-  }, [queryClient]);
+  }, [handleMessage]);
 };
 
 export {
   useGetChatMessages,
   useGetChannelMessages,
   useMessageSubscription,
-  createMessage,
-  editMessage,
-  deleteMessage,
+  useCreateMessage,
+  useEditMessage,
+  useDeleteMessage,
 };

@@ -4,7 +4,7 @@ import MessageInput from "../../components/MessageInput";
 import MessageThread from "../../components/MessageThread";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { createMessage, useGetChatMessages } from "../../requests/messages";
+import { useCreateMessage, useGetChatMessages } from "../../requests/messages";
 import { useCreateChat, useGetChat } from "../../requests/chats";
 
 export default function ChatRoom() {
@@ -15,6 +15,7 @@ export default function ChatRoom() {
 
   const { isLoading, isError, data: messages } = useGetChatMessages(chat);
 
+  const createMessage = useCreateMessage()
   const createChat = useCreateChat();
 
   const handleSend = (text: string) => {

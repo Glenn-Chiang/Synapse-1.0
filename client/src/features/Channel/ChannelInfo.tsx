@@ -50,7 +50,7 @@ export default function ChannelInfo() {
           <FontAwesomeIcon icon={faUsers} />
           Members ({channel.members.length})
         </h2>
-        <ul>
+        <ul className="flex flex-col gap-2">
           {channel.members.map((user) => (
             <UserPreview key={user.id} user={user} />
           ))}

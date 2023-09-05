@@ -28,6 +28,8 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
       timestamp: new Date(),
     });
     const newMessage = await message.save();
+    console.log(newMessage.toJSON());
+    emitMessageEvent(io, message as IMessage);
 
     // Update channel with new message
     if (roomType === "Channel") {
@@ -41,8 +43,6 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
       });
     }
 
-    console.log(newMessage.toJSON());
-    emitMessageEvent(io, message as IMessage);
   };
 
   const handleEditMessage = async (messageId: string, text: string) => {

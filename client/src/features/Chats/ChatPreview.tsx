@@ -1,13 +1,13 @@
 import { NavLink } from "react-router-dom";
-import { Chat, User } from "../../types";
+import { Chat } from "../../types";
 
-export default function ChatPreview({chat}: {chat: Chat}) {
+export default function ChatPreview({ chat }: { chat: Chat }) {
   const lastMessage =
-    chat.messages.length > 0 &&
-    chat.messages[chat.messages.length - 1];
+    chat.messages.length > 0 && chat.messages[chat.messages.length - 1];
 
-    const currentUserId = localStorage.getItem('userId')
-  const otherUser = chat.users.find(user => user.id !== currentUserId) as User
+  const currentUserId = localStorage.getItem("userId");
+  const otherUser =
+    chat.users.find((user) => user.id !== currentUserId) || chat.users[0]; // Possible to chat with yourself
 
   return (
     <NavLink

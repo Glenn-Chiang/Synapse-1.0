@@ -1,5 +1,6 @@
 import * as express from "express";
 import Chat from "../models/Chat";
+import mongoose from "mongoose";
 const chatsRouter = express.Router();
 
 // Get user's chats
@@ -13,7 +14,17 @@ chatsRouter.get("/users/:userId/chats", async (req, res, next) => {
 // Get chat by userIds. This is useful to check whether the two users already have a chat
 chatsRouter.get("/chats/:userIds", async (req, res, next) => {
   const userIds = req.params.userIds.split("+");
-  const chat = await Chat.findOne({ users: { $all: userIds } });
+  const chat = await Chat.findOne({
+    $or: [
+      {
+        users: [userIds[0], userIds[1]],
+      },
+      {
+        users: [userIds[1], userIds[0]],
+      },
+    ],
+  });
+  console.log(chat);
   res.json(chat);
 });
 

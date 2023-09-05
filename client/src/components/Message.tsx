@@ -21,7 +21,7 @@ export function OutgoingMessage({ message }: { message: Message }) {
 export function IncomingMessage({ message }: { message: Message }) {
   const ref = useRef<HTMLLIElement>(null);
 
-  const usernameIsShown = message.roomType === 'Chat'
+  const usernameIsShown = message.roomType === 'Channel'
 
   useEffect(() => {
     ref.current?.scrollIntoView();
@@ -29,7 +29,7 @@ export function IncomingMessage({ message }: { message: Message }) {
 
   return (
     <li ref={ref} className="self-start flex flex-col ">
-      {usernameIsShown && <span className="p-2 text-cyan-500">{message.sender.username}</span>}
+      {usernameIsShown && <span className="p-2 text-cyan-500 font-medium">{message.sender.username}</span>}
       <p className="bg-white p-2 rounded-xl shadow max-w-xs break-words">
         {message.text}
       </p>

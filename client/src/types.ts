@@ -17,8 +17,8 @@ interface Message {
   id: string;
   text: string;
   sender: User;
-  recipientType: "Channel" | "User";
-  recipient: Channel | User;
+  roomType: "Channel" | "Chat";
+  room: Channel | Chat;
   timestamp: string;
 }
 

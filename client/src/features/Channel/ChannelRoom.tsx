@@ -20,8 +20,8 @@ export default function ChannelRoom() {
     createMessage({
       text,
       senderId: currentUserId,
-      recipientId: channelId,
-      recipientType: "Channel",
+      roomId: channelId,
+      roomType: "Channel",
     });
   };
 

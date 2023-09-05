@@ -36,12 +36,9 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
       });
       // Update chat with new message
     } else if (roomType === "Chat") {
-      const chat = await Chat.findOneAndUpdate(
-        {
-          users: { $all: [senderId, roomId] },
-        },
-        { $push: { messages: newMessage._id } }
-      );
+      await Chat.findByIdAndUpdate(roomId, {
+        $push: { messages: newMessage._id },
+      });
     }
 
     console.log(newMessage.toJSON());
@@ -81,11 +78,9 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
 export default registerMessageHandlers;
 
 const emitMessageEvent = (io: Server, message: IMessage) => {
-  io.to(message.sender.toString())
-    .to(message.roomType.toString())
-    .emit(
-      "message",
-      message.room.toString(),
-      message.roomType.toString().toLowerCase() + "s" // 'channels' or 'chats'
-    );
+  io.to(message.room.toString()).emit(
+    "message",
+    message.room.toString(),
+    message.roomType.toString().toLowerCase() + "s" // 'channels' or 'chats'
+  );
 };

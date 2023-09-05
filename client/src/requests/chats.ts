@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { Chat } from "../types";
 import axios from "./axios";
-import { ChatMessage } from '../../../server/src/socketHandlers/chats';
+import { ChatMessage } from "../../../server/src/socketHandlers/chats";
 import socket from "../socket";
 
 const getChats = async (userId: string) => {
@@ -11,17 +11,16 @@ const getChats = async (userId: string) => {
 
 const useGetChat = (userIds: [string, string]) => {
   return useQuery({
-    queryKey: ['chats', userIds[0], userIds[1]],
+    queryKey: ["chats", userIds[0], userIds[1]],
     queryFn: async () => {
-      const response = await axios.get(`/chats/${userIds[0]}+${userIds[1]}`)
-      return response.data as Chat | null
-    }
-  })
-
-}
+      const response = await axios.get(`/chats/${userIds[0]}+${userIds[1]}`);
+      return response.data as Chat | null;
+    },
+  });
+};
 
 const createChat = (chatMessage: ChatMessage) => {
-  socket.emit('chat:create', chatMessage)
-}
+  socket.emit("chat:create", chatMessage);
+};
 
 export { getChats, useGetChat, createChat };

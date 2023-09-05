@@ -21,7 +21,7 @@ export function OutgoingMessage({ message }: { message: Message }) {
 export function IncomingMessage({ message }: { message: Message }) {
   const ref = useRef<HTMLLIElement>(null);
 
-  const usernameIsShown = message.recipientType === 'Channel'
+  const usernameIsShown = message.roomType === 'Chat'
 
   useEffect(() => {
     ref.current?.scrollIntoView();

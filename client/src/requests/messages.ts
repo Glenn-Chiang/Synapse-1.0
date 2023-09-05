@@ -47,7 +47,6 @@ const useMessageSubscription = () => {
       recipientType: "channels" | "chat"
     ) => {
       console.log("Message received");
-      console.log([recipientType, recipientId, "messages"]);
       await queryClient.invalidateQueries([
         recipientType,
         recipientId,

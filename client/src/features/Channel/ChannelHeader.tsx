@@ -5,7 +5,7 @@ import { Channel } from "../../types";
 
 export default function ChannelHeader({ channel }: { channel: Channel }) {
   return (
-    <header className="flex items-center justify-between p-2 gap-4 h-16 w-2/3 fixed top-16 bg-white shadow ">
+    <header className="flex items-center justify-between p-2 gap-4 h-16 w-2/3 fixed top-16 bg-white shadow z-10">
       <BackButton />
       <Link
         to={"info"}

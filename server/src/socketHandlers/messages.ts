@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import Message, { IMessage } from "../models/Message";
 import Channel from "../models/Channel";
 import Chat, { IChat } from "../models/Chat";
+import socket from '../../../client/src/socket';
 
 export interface MessageData {
   text: string;
@@ -29,7 +30,7 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
     });
     const newMessage = await message.save();
     console.log(newMessage.toJSON());
-    emitMessageEvent(io, message as IMessage);
+    emitMessageEvent(socket, message as IMessage);
 
     // Update channel with new message
     if (roomType === "Channel") {
@@ -52,7 +53,7 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
       { new: true }
     );
     console.log(message?.toJSON());
-    emitMessageEvent(io, message as IMessage);
+    emitMessageEvent(socket, message as IMessage);
   };
 
   const handleDeleteMessage = async (messageId: string) => {
@@ -67,7 +68,7 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
       });
     }
     console.log(message?.toJSON());
-    emitMessageEvent(io, message as IMessage);
+    emitMessageEvent(socket, message as IMessage);
   };
 
   socket.on("message:create", handleCreateMessage);
@@ -77,8 +78,8 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
 
 export default registerMessageHandlers;
 
-const emitMessageEvent = (io: Server, message: IMessage) => {
-  io.to(message.room.toString()).emit(
+const emitMessageEvent = (socket: Socket, message: IMessage) => {
+  socket.to(message.room.toString()).emit(
     "message",
     message.room.toString(),
     message.roomType.toString().toLowerCase() + "s" // 'channels' or 'chats'

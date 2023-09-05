@@ -50,14 +50,19 @@ const useDeleteMessage = () => {
 // All create/update/delete operations on messages are handled by simply refetching messages and chats/channels
 const useMessageHandler = () => {
   const queryClient = useQueryClient();
-  return async (recipientId: string, recipientType: "channels" | "chat") => {
-    console.log("Message received");
+  return async ({
+    roomId,
+    roomType,
+  }: {
+    roomId: string;
+    roomType: "Chat" | "Channel";
+  }) => {
     await queryClient.invalidateQueries([
-      recipientType,
-      recipientId,
+      roomType.toLowerCase() + "s",
+      roomId,
       "messages",
     ]);
-    await queryClient.invalidateQueries(recipientType);
+    await queryClient.invalidateQueries(roomType.toLowerCase() + 's');
   };
 };
 

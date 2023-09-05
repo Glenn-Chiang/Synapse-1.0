@@ -3,7 +3,7 @@ import mongoose, { mongo } from "mongoose";
 export interface IMessage extends mongoose.Document {
   text: string
   sender: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  roomType: { type: String, required: true, enum: ["Channel", "Chat"] },
+  roomType: 'Channel' | 'Chat',
   room: {
     type: mongoose.Schema.Types.ObjectId,
     refPath: "roomType",

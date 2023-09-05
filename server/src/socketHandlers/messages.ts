@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import Message, { IMessage } from "../models/Message";
 import Channel from "../models/Channel";
 import Chat, { IChat } from "../models/Chat";
-import socket from '../../../client/src/socket';
+import socket from "../../../client/src/socket";
 
 export interface MessageData {
   text: string;
@@ -12,8 +12,19 @@ export interface MessageData {
   roomType: "Channel" | "Chat";
 }
 
+export type MessageCallback = ({
+  roomId,
+  roomType,
+}: {
+  roomId: string;
+  roomType: 'Channel' | 'Chat';
+}) => void;
+
 const registerMessageHandlers = (io: Server, socket: Socket) => {
-  const handleCreateMessage = async (messageData: MessageData) => {
+  const handleCreateMessage = async (
+    messageData: MessageData,
+    messageCallback: MessageCallback
+  ) => {
     const { roomType, roomId, text, senderId } = messageData;
 
     // Reject empty message
@@ -21,54 +32,78 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
       return;
     }
 
-    const message = new Message({
+    const message = await new Message({
       text,
       sender: new mongoose.Types.ObjectId(senderId),
       roomType,
       room: new mongoose.Types.ObjectId(roomId),
       timestamp: new Date(),
-    });
-    const newMessage = await message.save();
-    console.log(newMessage.toJSON());
+    }).save();
+    console.log(message.toJSON());
     emitMessageEvent(socket, message as IMessage);
 
     // Update channel with new message
     if (roomType === "Channel") {
       await Channel.findByIdAndUpdate(roomId, {
-        $push: { messages: newMessage._id },
+        $push: { messages: message._id },
       });
       // Update chat with new message
     } else if (roomType === "Chat") {
       await Chat.findByIdAndUpdate(roomId, {
-        $push: { messages: newMessage._id },
+        $push: { messages: message._id },
       });
     }
 
+    messageCallback({
+      roomId: message.room.toString(),
+      roomType: message.toJSON().roomType,
+    });
   };
 
-  const handleEditMessage = async (messageId: string, text: string) => {
+  const handleEditMessage = async (
+    messageId: string,
+    text: string,
+    messageCallback: MessageCallback
+  ) => {
     const message = await Message.findByIdAndUpdate(
       messageId,
       { $set: { text: text } },
       { new: true }
     );
-    console.log(message?.toJSON());
-    emitMessageEvent(socket, message as IMessage);
+
+    if (message) {
+      messageCallback({
+        roomId: message.room.toString(),
+        roomType: message.roomType,
+      });
+      console.log(message.toJSON());
+      emitMessageEvent(socket, message as IMessage);
+    }
   };
 
-  const handleDeleteMessage = async (messageId: string) => {
+  const handleDeleteMessage = async (
+    messageId: string,
+    messageCallback: MessageCallback
+  ) => {
     const message = await Message.findByIdAndDelete(messageId);
-    if (message?.roomType.toString() === "Channel") {
-      await Channel.findByIdAndUpdate(message.room, {
-        $pull: { messages: { messageId } },
+    
+    if (message) {
+      if (message.roomType.toString() === "Channel") {
+        await Channel.findByIdAndUpdate(message.room, {
+          $pull: { messages: { messageId } },
+        });
+      } else if (message.roomType.toString() === "Channel") {
+        await Chat.findByIdAndUpdate(message.room, {
+          $pull: { messages: { messageId } },
+        });
+      }
+      messageCallback({
+        roomId: message.room.toString(),
+        roomType: message.roomType,
       });
-    } else if (message?.roomType.toString() === "Channel") {
-      await Chat.findByIdAndUpdate(message.room, {
-        $pull: { messages: { messageId } },
-      });
+      console.log(message.toJSON());
+      emitMessageEvent(socket, message as IMessage);
     }
-    console.log(message?.toJSON());
-    emitMessageEvent(socket, message as IMessage);
   };
 
   socket.on("message:create", handleCreateMessage);
@@ -79,9 +114,8 @@ const registerMessageHandlers = (io: Server, socket: Socket) => {
 export default registerMessageHandlers;
 
 const emitMessageEvent = (socket: Socket, message: IMessage) => {
-  socket.to(message.room.toString()).emit(
-    "message",
-    message.room.toString(),
-    message.roomType.toString().toLowerCase() + "s" // 'channels' or 'chats'
-  );
+  socket.to(message.room.toString()).emit("message", {
+    roomId: message.room.toString(),
+    roomType: message.roomType.toString(), // Channel or Chat
+  });
 };

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import socket from "../../socket";
 import TopNav from "../../components/TopNav";
 import { useMessageSubscription } from "../../requests/messages";
+import { useChatSubscription } from "../../requests/chats";
 
 export default function App() {
   useEffect(() => {
@@ -13,6 +14,7 @@ export default function App() {
   }, []);
   
   useMessageSubscription(); // Listen to messages from the server
+  useChatSubscription(); // Listen to new chats from the server
 
   return (
     <>

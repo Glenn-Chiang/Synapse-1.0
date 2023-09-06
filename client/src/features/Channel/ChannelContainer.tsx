@@ -44,6 +44,11 @@ export default function ChannelContainer() {
     setSearchTerms(inputValue);
   };
 
+  const toggleSearch = () => {
+    setSearchIsVisible((prev) => !prev);
+    setSearchTerms("");
+  };
+
   const filteredMessages = messages
     ? messages.filter((message) =>
         message.text.toLowerCase().includes(searchTerms.toLowerCase())
@@ -53,10 +58,7 @@ export default function ChannelContainer() {
   return (
     <section className="">
       {channel && (
-        <ChannelHeader
-          channel={channel}
-          toggleSearch={() => setSearchIsVisible((prev) => !prev)}
-        />
+        <ChannelHeader channel={channel} toggleSearch={toggleSearch} />
       )}
       {searchIsVisible && (
         <SearchBar

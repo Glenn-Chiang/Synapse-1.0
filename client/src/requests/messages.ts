@@ -36,7 +36,7 @@ const useCreateMessage = () => {
 const useEditMessage = () => {
   const handleMessage = useMessageHandler();
   return (messageId: string, text: string) => {
-    socket.emit("message:edit", { messageId, text }, handleMessage);
+    socket.emit("message:edit", messageId, text, handleMessage);
   };
 };
 

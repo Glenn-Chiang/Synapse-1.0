@@ -49,6 +49,8 @@ type EditModalProps = {
 function EditModal({ close, message }: EditModalProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const [isSaving, setIsSaving] = useState(false);
+
   const editMessage = useEditMessage();
 
   const handleSubmit = () => {
@@ -57,26 +59,36 @@ function EditModal({ close, message }: EditModalProps) {
       return;
     }
     editMessage(message.id, text);
+    setIsSaving(true)
     close();
   };
 
   return (
     <ModalContainer>
-      <div className="flex justify-between">
-        <h2 className="text-cyan-500">Edit message</h2>
-        <FontAwesomeIcon
-          icon={faX}
-          onClick={close}
-          className="absolute right-2 top-2 p-2 hover:bg-slate-200 rounded-md w-4 h-4"
-        />
-      </div>
-      <textarea className="bg-slate-100 rounded shadow p-2" ref={useRef} />
-      <button
-        onClick={handleSubmit}
-        className="bg-cyan-500 text-white w-max p-2 rounded-md hover:bg-cyan-600"
-      >
-        Save changes
-      </button>
+      {isSaving ? (
+        "Saving..."
+      ) : (
+        <>
+          <div className="flex justify-between">
+            <h2 className="text-cyan-500">Edit message</h2>
+            <FontAwesomeIcon
+              icon={faX}
+              onClick={close}
+              className="absolute right-2 top-2 p-2 hover:bg-slate-200 rounded-md w-4 h-4"
+            />
+          </div>
+          <textarea
+            className="bg-slate-100 rounded shadow p-2"
+            ref={inputRef}
+          />
+          <button
+            onClick={handleSubmit}
+            className="bg-cyan-500 text-white w-max p-2 rounded-md hover:bg-cyan-600"
+          >
+            Save changes
+          </button>
+        </>
+      )}
     </ModalContainer>
   );
 }

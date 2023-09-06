@@ -34,7 +34,7 @@ export default function ChannelContainer() {
   };
 
   useEffect(() => {
-    setSearchIsVisible(false)
+    setSearchIsVisible(false) // Reset search display when route changes
   }, [channelId])
 
   const [searchIsVisible, setSearchIsVisible] = useState(false);

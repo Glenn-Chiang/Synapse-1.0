@@ -21,7 +21,19 @@ function Channels() {
     queryFn: () => getUserChannels(userId),
   });
 
-  const [filterShown, setFilterShown] = useState(false);
+  const [searchIsVisible, setSearchIsVisible] = useState(false);
+  const [searchTerms, setSearchTerms] = useState("");
+
+  const filteredChannels = channels
+    ? channels.filter((channel) =>
+        channel.name.toLowerCase().includes(searchTerms.toLowerCase())
+      )
+    : [];
+
+    const handleSearch = (inputValue: string) => {
+    setSearchTerms(inputValue);
+  };
+
 
   return (
     <main className="flex">
@@ -32,20 +44,20 @@ function Channels() {
             Channels
           </h1>
           <button
-            onClick={() => setFilterShown((prev) => !prev)}
+            onClick={() => setSearchIsVisible((prev) => !prev)}
             className="p-2 rounded-full w-10 hover:bg-slate-200"
           >
             <FontAwesomeIcon icon={faSearch} />
           </button>
         </div>
-        {filterShown && <SearchBar placeholder="Search your channels..." />}
+        {searchIsVisible && <SearchBar placeholder="Search your channels..." handleSearch={handleSearch} />}
         {isLoading ? (
           <Loading />
         ) : isError ? (
           <ErrorMessage message="Error fetching channels" />
-        ) : channels && channels.length > 0 ? (
+        ) : filteredChannels.length > 0 ? (
           <ul className="flex flex-col gap-2 p-2 h-[calc(100%-8rem)] overflow-auto">
-            {channels?.map((channel) => (
+            {filteredChannels.map((channel) => (
               <li key={channel.id}>
                 <ChannelPreview channel={channel} />
               </li>

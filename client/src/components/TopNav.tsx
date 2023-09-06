@@ -15,7 +15,7 @@ export default function TopNav() {
       {
         showModal && <CreateChannel handleClose={() => setShowModal(false)} />
       }
-      <nav className="z-10 fixed top-0 left-0 w-full h-16 flex items-center justify-between bg-cyan-500 text-white p-4 text-2xl">
+      <nav className="z-20 fixed top-0 left-0 w-full h-16 flex items-center justify-between bg-cyan-500 text-white p-4 text-2xl">
         <Link to={"/"}>
           <h1 className="flex gap-2 items-center text-white">
             <FontAwesomeIcon icon={faBoltLightning} />

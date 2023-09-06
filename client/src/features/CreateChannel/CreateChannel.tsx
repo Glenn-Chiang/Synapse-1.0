@@ -103,8 +103,8 @@ export default function CreateChannel({
 
 function Modal({ children }: { children: React.ReactNode }) {
   return (
-    <div className="fixed left-0 top-0 w-screen h-screen bg-cyan-800/50 z-10">
-      <div className="w-1/2 relative top-20 m-auto rounded-xl shadow bg-white">
+    <div className="fixed left-0 top-0 w-screen h-screen bg-cyan-800/50 z-30">
+      <div className="w-11/12 sm:w-3/4 relative top-20 m-auto rounded-xl shadow bg-white">
         {children}
       </div>
     </div>

@@ -7,7 +7,7 @@ import { getUserChannels } from "../../requests/channels";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { Outlet } from "react-router-dom";
-import ChannelPreview from "./ChannelPreview"
+import ChannelPreview from "./ChannelPreview";
 
 function Channels() {
   const userId = localStorage.getItem("userId") as string;
@@ -30,10 +30,9 @@ function Channels() {
       )
     : [];
 
-    const handleSearch = (inputValue: string) => {
+  const handleSearch = (inputValue: string) => {
     setSearchTerms(inputValue);
   };
-
 
   return (
     <main className="flex">
@@ -50,13 +49,25 @@ function Channels() {
             <FontAwesomeIcon icon={faSearch} />
           </button>
         </div>
-        {searchIsVisible && <SearchBar position="" placeholder="Search your channels..." handleSearch={handleSearch} />}
+        {searchIsVisible && (
+          <SearchBar
+            position="fixed top-32"
+            placeholder="Search your channels..."
+            handleSearch={handleSearch}
+          />
+        )}
         {isLoading ? (
           <Loading />
         ) : isError ? (
           <ErrorMessage message="Error fetching channels" />
         ) : filteredChannels.length > 0 ? (
-          <ul className="flex flex-col gap-2 p-2 h-[calc(100%-8rem)] overflow-auto">
+          <ul
+            className={`flex flex-col gap-2 p-2 overflow-auto ${
+              searchIsVisible
+                ? "mt-16 h-[calc(100%-12rem)]"
+                : "h-[calc(100%-8rem)]"
+            }`}
+          >
             {filteredChannels.map((channel) => (
               <li key={channel.id}>
                 <ChannelPreview channel={channel} />

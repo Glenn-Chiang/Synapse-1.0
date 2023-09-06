@@ -55,9 +55,16 @@ function EditModal({ close, message }: EditModalProps) {
     if (!input) {
       return
     }
-    input.setSelectionRange(input.value.length, input.value.length)
+    input.setSelectionRange(input.value.length, input.value.length) // Move cursor to end of text
     input.focus()
   }, [])
+
+  useEffect(() => {
+    if (isSaving) {
+      close()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [message, close, ])
 
   const editMessage = useEditMessage();
 
@@ -67,8 +74,8 @@ function EditModal({ close, message }: EditModalProps) {
       return;
     }
     editMessage(message.id, text);
-    // setIsSaving(true)
-    close();
+    setIsSaving(true)
+    // close();
   };
 
   return (

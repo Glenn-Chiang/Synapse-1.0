@@ -1,8 +1,36 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Message } from "../types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash, faX } from "@fortawesome/free-solid-svg-icons";
+import {
+  faX,
+} from "@fortawesome/free-solid-svg-icons";
 import { useDeleteMessage, useEditMessage } from "../requests/messages";
+import MessageTools from "./MessageTools";
+
+export function IncomingMessage({ message }: { message: Message }) {
+  const ref = useRef<HTMLLIElement>(null);
+
+  const usernameIsShown = message.roomType === "Channel";
+
+  useEffect(() => {
+    ref.current?.scrollIntoView();
+  }, []);
+
+  return (
+    <li ref={ref} className="self-start flex flex-col group w-full relative">
+      {usernameIsShown && (
+        <span className="p-2 text-cyan-500 font-medium">
+          {message.sender.username}
+        </span>
+      )}
+      <p className="bg-white p-2 rounded-xl shadow max-w-xs break-words">
+        {message.text}
+      </p>
+      <span className="p-2 text-sm text-slate-400">{message.timestamp}</span>
+      <MessageTools isOwnMessage={false} />
+    </li>
+  );
+}
 
 export function OutgoingMessage({ message }: { message: Message }) {
   const ref = useRef<HTMLLIElement>(null);
@@ -25,6 +53,7 @@ export function OutgoingMessage({ message }: { message: Message }) {
       </p>
       <span className="p-2 text-sm text-slate-400">{message.timestamp}</span>
       <MessageTools
+        isOwnMessage={true}
         toggleEdit={() => setEditIsToggled((prev) => !prev)}
         toggleDelete={() => setDeleteIsToggled((prev) => !prev)}
       />
@@ -51,20 +80,20 @@ function EditModal({ close, message }: EditModalProps) {
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    const input = inputRef.current
+    const input = inputRef.current;
     if (!input) {
-      return
+      return;
     }
-    input.setSelectionRange(input.value.length, input.value.length) // Move cursor to end of text
-    input.focus()
-  }, [])
+    input.setSelectionRange(input.value.length, input.value.length); // Move cursor to end of text
+    input.focus();
+  }, []);
 
   useEffect(() => {
     if (isSaving) {
-      close()
+      close();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [message, close, ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [message, close]);
 
   const editMessage = useEditMessage();
 
@@ -74,7 +103,7 @@ function EditModal({ close, message }: EditModalProps) {
       return;
     }
     editMessage(message.id, text);
-    setIsSaving(true)
+    setIsSaving(true);
     // close();
   };
 
@@ -159,51 +188,5 @@ function ModalContainer({ children }: { children: React.ReactNode }) {
         </section>
       </div>
     </div>
-  );
-}
-
-type MessageToolsProps = {
-  toggleEdit: () => void;
-  toggleDelete: () => void;
-};
-
-function MessageTools({ toggleEdit, toggleDelete }: MessageToolsProps) {
-  return (
-    <div className="hidden group-hover:flex p-2 rounded-xl bg-white shadow gap-2 absolute -bottom-4">
-      <FontAwesomeIcon
-        onClick={toggleEdit}
-        icon={faEdit}
-        className="shadow text-white bg-cyan-500 hover:bg-cyan-600 p-2 rounded-md transition"
-      />
-      <FontAwesomeIcon
-        onClick={toggleDelete}
-        icon={faTrash}
-        className="shadow text-white bg-red-500 hover:bg-red-600 p-2 rounded-md transition"
-      />
-    </div>
-  );
-}
-
-export function IncomingMessage({ message }: { message: Message }) {
-  const ref = useRef<HTMLLIElement>(null);
-
-  const usernameIsShown = message.roomType === "Channel";
-
-  useEffect(() => {
-    ref.current?.scrollIntoView();
-  }, []);
-
-  return (
-    <li ref={ref} className="self-start flex flex-col ">
-      {usernameIsShown && (
-        <span className="p-2 text-cyan-500 font-medium">
-          {message.sender.username}
-        </span>
-      )}
-      <p className="bg-white p-2 rounded-xl shadow max-w-xs break-words">
-        {message.text}
-      </p>
-      <span className="p-2 text-sm text-slate-400">{message.timestamp}</span>
-    </li>
   );
 }

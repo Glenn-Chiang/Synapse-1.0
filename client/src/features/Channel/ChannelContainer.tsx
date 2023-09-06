@@ -7,6 +7,8 @@ import { useCreateMessage, useGetChannelMessages } from "../../requests/messages
 import MessageThread from "../../components/MessageThread";
 import MessageInput from "../../components/MessageInput";
 import { Message } from "../../types";
+import {useState} from 'react'
+import SearchBar from "../../components/Searchbar";
 
 export default function ChannelContainer() {
   const channelId = useParams().channelId as string;
@@ -28,9 +30,13 @@ export default function ChannelContainer() {
     });
   };
 
+  const [searchIsVisible, setSearchIsVisible] = useState(false)
+
+
   return (
     <section>
-      {channel && <ChannelHeader channel={channel} />}
+      {channel && <ChannelHeader channel={channel} toggleSearch={() => setSearchIsVisible(prev => !prev)}/>}
+      {searchIsVisible && <SearchBar placeholder="Search messages..."/>}
       {(channelQuery.isLoading || messagesQuery.isLoading) ? (
         <Loading />
       ) : (channelQuery.isError || messagesQuery.isError) ? (
@@ -48,3 +54,4 @@ export default function ChannelContainer() {
     </section>
   );
 }
+

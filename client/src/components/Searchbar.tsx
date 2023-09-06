@@ -10,10 +10,10 @@ export default function SearchBar({placeholder}: {placeholder: string}) {
   }, []);
 
   return (
-    <div>
+    <div className="fixed w-full z-10">
       <input
         ref={inputRef}
-        className="w-full p-4 bg-slate-100 shadow-inner focus:outline-none"
+        className="w-full p-4 bg-slate-200 shadow-inner focus:outline-none"
         placeholder={placeholder}
       />
     </div>

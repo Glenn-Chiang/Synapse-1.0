@@ -1,9 +1,13 @@
-import { faChevronLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faEllipsisV,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import { Channel } from "../../types";
 
-export default function ChannelHeader({ channel }: { channel: Channel }) {
+export default function ChannelHeader({ channel, toggleSearch }: { channel: Channel, toggleSearch: () => void }) {
   return (
     <header className="flex items-center justify-between p-2 gap-4 h-16 w-2/3 fixed top-16 bg-white shadow z-20">
       <BackButton />
@@ -14,8 +18,22 @@ export default function ChannelHeader({ channel }: { channel: Channel }) {
         <h1 className="line-clamp-1">{channel.name}</h1>
         <p>{channel.members.length} members</p>
       </Link>
-      <MenuButton />
+      <div>
+        <SearchButton onClick={toggleSearch}/>
+        <MenuButton />
+      </div>
     </header>
+  );
+}
+
+function SearchButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      className="hover:bg-slate-300 rounded-full w-10 h-10 "
+      onClick={onClick}
+    >
+      <FontAwesomeIcon icon={faSearch} />
+    </button>
   );
 }
 

@@ -34,8 +34,8 @@ export default function ChannelContainer() {
   };
 
   useEffect(() => {
-    setSearchIsVisible(false) // Reset search display when route changes
-  }, [channelId])
+    setSearchIsVisible(false); // Reset search display when route changes
+  }, [channelId]);
 
   const [searchIsVisible, setSearchIsVisible] = useState(false);
   const [searchTerms, setSearchTerms] = useState("");
@@ -60,6 +60,7 @@ export default function ChannelContainer() {
       )}
       {searchIsVisible && (
         <SearchBar
+          position="fixed top-32"
           placeholder="Search messages..."
           handleSearch={handleSearch}
         />
@@ -70,7 +71,7 @@ export default function ChannelContainer() {
         <ErrorMessage message="Error loading channel" />
       ) : (
         channel && (
-          <div className={`h-full ${searchIsVisible ? "mt-16" : "mt-16"}`}>
+          <div className={`h-full ${searchIsVisible ? "mt-32" : "mt-16"}`}>
             {filteredMessages.length > 0 && (
               <section className="mb-20 p-2 bg-slate-100 flex flex-col">
                 <MessageThread messages={filteredMessages} />

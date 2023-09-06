@@ -37,7 +37,7 @@ function Channels() {
 
   return (
     <main className="flex">
-      <section className="fixed w-1/3 h-full bg-slate-200">
+      <section className="fixed w-1/3 h-full bg-slate-300">
         <div className="p-2 flex items-center justify-between gap-2 shadow bg-white h-16">
           <h1 className="flex gap-2 items-center text-cyan-500">
             <FontAwesomeIcon icon={faCommentDots} />
@@ -50,7 +50,7 @@ function Channels() {
             <FontAwesomeIcon icon={faSearch} />
           </button>
         </div>
-        {searchIsVisible && <SearchBar placeholder="Search your channels..." handleSearch={handleSearch} />}
+        {searchIsVisible && <SearchBar position="" placeholder="Search your channels..." handleSearch={handleSearch} />}
         {isLoading ? (
           <Loading />
         ) : isError ? (

@@ -12,13 +12,12 @@ import App from "./features/App/App.tsx";
 import Users from "./features/Users/Users.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Logout from "./features/Logout.tsx";
-import Channels from "./features/Channels/Channels.tsx";
-import ChannelContainer from "./features/Channel/ChannelContainer.tsx";
+import Channels from "./features/Channels/Channels";
+import ChannelContainer from './features/Channel/ChannelContainer';
 import Explorer from "./features/Explorer/Explorer.tsx";
 import appLoader from "./features/App/loader.ts";
 import Chats from "./features/Chats/Chats.tsx";
 import ChatContainer from "./features/Chat/ChatContainer.tsx";
-import ChatRoom from "./features/Chat/ChatRoom.tsx";
 
 const router = createBrowserRouter([
   {
@@ -31,37 +30,31 @@ const router = createBrowserRouter([
         element: <Navigate to={"channels"} />,
       },
       {
-        path: "explore",
+        path: "/explore",
         element: <Explorer />,
       },
       {
-        path: "channels",
+        path: "/channels",
         element: <Channels />,
         children: [
           {
             path: ":channelId",
-            element: <ChannelContainer />,
+            element: <ChannelContainer/>,
           },
         ],
       },
       {
-        path: "Chats",
+        path: "/chats",
         element: <Chats />,
         children: [
           {
             path: ":userId",
             element: <ChatContainer />,
-            children: [
-              {
-                path: "",
-                element: <ChatRoom />,
-              },
-            ],
           },
         ],
       },
       {
-        path: "users",
+        path: "/users",
         element: <Users />,
       },
     ],

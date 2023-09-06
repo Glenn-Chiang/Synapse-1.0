@@ -16,7 +16,7 @@ export default function SearchBar({placeholder, handleSearch}: props) {
       <input
         autoFocus
         onChange={handleChange}
-        className="w-full p-4 bg-slate-400/20 shadow-inner focus:outline-none"
+        className="w-full p-4 bg-slate-200 shadow focus:outline-none"
         placeholder={placeholder}
       />
     </div>

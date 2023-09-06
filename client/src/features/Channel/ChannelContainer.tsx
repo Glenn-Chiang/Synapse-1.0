@@ -9,7 +9,7 @@ import {
 } from "../../requests/messages";
 import MessageThread from "../../components/MessageThread";
 import MessageInput from "../../components/MessageInput";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchBar from "../../components/Searchbar";
 
 export default function ChannelContainer() {
@@ -32,6 +32,10 @@ export default function ChannelContainer() {
       roomType: "Channel",
     });
   };
+
+  useEffect(() => {
+    setSearchIsVisible(false)
+  }, [channelId])
 
   const [searchIsVisible, setSearchIsVisible] = useState(false);
   const [searchTerms, setSearchTerms] = useState("");
@@ -66,7 +70,7 @@ export default function ChannelContainer() {
         <ErrorMessage message="Error loading channel" />
       ) : (
         channel && (
-          <div className={`h-full ${searchIsVisible ? 'mt-16' : 'mt-16'}`}>
+          <div className={`h-full ${searchIsVisible ? "mt-16" : "mt-16"}`}>
             {filteredMessages.length > 0 && (
               <section className="mb-20 p-2 bg-slate-100 flex flex-col">
                 <MessageThread messages={filteredMessages} />

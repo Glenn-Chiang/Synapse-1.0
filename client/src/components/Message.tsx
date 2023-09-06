@@ -48,8 +48,16 @@ type EditModalProps = {
 
 function EditModal({ close, message }: EditModalProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
-
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    const input = inputRef.current
+    if (!input) {
+      return
+    }
+    input.setSelectionRange(input.value.length, input.value.length)
+    input.focus()
+  }, [])
 
   const editMessage = useEditMessage();
 
@@ -59,7 +67,7 @@ function EditModal({ close, message }: EditModalProps) {
       return;
     }
     editMessage(message.id, text);
-    setIsSaving(true)
+    // setIsSaving(true)
     close();
   };
 
@@ -78,6 +86,7 @@ function EditModal({ close, message }: EditModalProps) {
             />
           </div>
           <textarea
+            defaultValue={message.text}
             className="bg-slate-100 rounded shadow p-2"
             ref={inputRef}
           />
@@ -136,8 +145,8 @@ function DeleteModal({ close, handleSubmit }: DeleteModalProps) {
 
 function ModalContainer({ children }: { children: React.ReactNode }) {
   return (
-    <div className=" w-full z-10 ">
-      <div className="fixed top-0 w-full h-screen bg-cyan-600/20 p-4 ">
+    <div className=" w-full z-10">
+      <div className="fixed top-0 w-full h-screen bg-cyan-600/20 p-4 -ml-2">
         <section className="fixed top-60 w-1/2 bg-white rounded-xl flex flex-col p-4 gap-2 shadow ">
           {children}
         </section>

@@ -1,19 +1,22 @@
-import { useEffect, useRef } from "react";
+import { ChangeEvent } from "react";
 
-export default function SearchBar({placeholder}: {placeholder: string}) {
-  const inputRef = useRef<HTMLInputElement>(null);
+type props = {
+  placeholder: string;
+  handleSearch: (inputValue: string) => void
+}
 
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
+export default function SearchBar({placeholder, handleSearch}: props) {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value
+    handleSearch(inputValue)
+  }
 
   return (
     <div className="fixed w-full z-10">
       <input
-        ref={inputRef}
-        className="w-full p-4 bg-slate-200 shadow-inner focus:outline-none"
+        autoFocus
+        onChange={handleChange}
+        className="w-full p-4 bg-slate-400/20 shadow-inner focus:outline-none"
         placeholder={placeholder}
       />
     </div>

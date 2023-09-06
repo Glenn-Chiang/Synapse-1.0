@@ -34,6 +34,11 @@ function Channels() {
     setSearchTerms(inputValue);
   };
 
+  const toggleSearch = () => {
+    setSearchIsVisible((prev) => !prev);
+    setSearchTerms("");
+  };
+
   return (
     <main className="flex">
       <section className="fixed w-1/3 h-full bg-slate-300">
@@ -43,7 +48,7 @@ function Channels() {
             Channels
           </h1>
           <button
-            onClick={() => setSearchIsVisible((prev) => !prev)}
+            onClick={toggleSearch}
             className="p-2 rounded-full w-10 hover:bg-slate-200"
           >
             <FontAwesomeIcon icon={faSearch} />

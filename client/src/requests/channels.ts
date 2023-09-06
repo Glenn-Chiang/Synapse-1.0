@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Channel } from "../types";
 import axios from "./axios";
 import socket from "../socket";
@@ -13,9 +13,14 @@ const getUserChannels = async (userId: string) => {
   return response.data as Channel[];
 };
 
-const getChannel = async (channelId: string) => {
-  const response = await axios.get(`/channels/${channelId}`);
-  return response.data as Channel;
+const useGetChannel = (channelId: string) => {
+  return useQuery({
+    queryKey: ["channels", channelId],
+    queryFn: async () => {
+      const response = await axios.get(`/channels/${channelId}`);
+      return response.data as Channel;
+    },
+  });
 };
 
 const createChannel = async (
@@ -58,7 +63,7 @@ const joinChannel = (userId: string, channelId: string) => {
 export {
   getAllChannels,
   getUserChannels,
-  getChannel,
+  useGetChannel,
   createChannel,
   useCreateChannel,
   joinChannel,

@@ -14,8 +14,6 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Logout from "./features/Logout.tsx";
 import Channels from "./features/Channels/Channels.tsx";
 import ChannelContainer from "./features/Channel/ChannelContainer.tsx";
-import ChannelRoom from "./features/Channel/ChannelRoom.tsx";
-import ChannelInfo from "./features/Channel/ChannelInfo.tsx";
 import Explorer from "./features/Explorer/Explorer.tsx";
 import appLoader from "./features/App/loader.ts";
 import Chats from "./features/Chats/Chats.tsx";
@@ -34,7 +32,7 @@ const router = createBrowserRouter([
       },
       {
         path: "explore",
-        element: <Explorer/>
+        element: <Explorer />,
       },
       {
         path: "channels",
@@ -43,16 +41,6 @@ const router = createBrowserRouter([
           {
             path: ":channelId",
             element: <ChannelContainer />,
-            children: [
-              {
-                path: "",
-                element: <ChannelRoom />,
-              },
-              {
-                path: "info",
-                element: <ChannelInfo />,
-              },
-            ],
           },
         ],
       },

@@ -20,6 +20,12 @@ const handleChannels = (io: Server, socket: Socket) => {
     io.to(channelId).emit("join channel", userId);
     console.log(`${user?.username} has joined the channel!`);
   });
+
+  // When user GETs a channel, return the number of online users in the channel
+  socket.on("get channel", async (channelId: string) => {
+    const numberOnline = (await io.in(channelId).fetchSockets()).length
+    console.log('Number online:', numberOnline)
+  })
 };
 
 export { handleChannels };

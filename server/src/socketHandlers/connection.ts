@@ -1,19 +1,26 @@
 import { Server, Socket } from "socket.io";
-import Channel from "../models/Channel";
+import Channel, { IChannel } from "../models/Channel";
 import mongoose from "mongoose";
 import Chat from "../models/Chat";
+import { MySocket } from '../types';
 
-// Join channels
-const joinChannels = async (socket: Socket) => {
+const getChannels = async (socket: MySocket) => {
   const userId = socket.data.userId;
-
   const channels = await Channel.find({
     members: { $in: userId },
   });
+  return channels;
+};
 
+// Join channels
+const joinChannels = async (socket: MySocket, channels: IChannel[]) => {
+  const userId = socket.data.userId;
   channels.forEach((channel) => {
-    socket.join(`${channel._id.toString()}`);
-    console.log(`User ${userId} has joined channel: ${channel.name}`);
+    const channelId = channel._id.toString()
+    socket.join(channelId);
+    // Broadcast to channel members that a member has connected
+    socket.to(channelId).emit('member connected')
+    console.log(`User ${userId} has connected to channel: ${channel.name}`);
   });
 };
 
@@ -34,7 +41,8 @@ const joinChats = async (socket: Socket) => {
 const handleConnect = async (io: Server, socket: Socket) => {
   const userId = socket.data.userId;
   socket.join(userId);
-  joinChannels(socket);
+  const channels = await getChannels(socket)
+  joinChannels(socket, channels);
   joinChats(socket);
 };
 

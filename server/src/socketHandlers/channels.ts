@@ -3,24 +3,21 @@ import Channel, { IChannel } from "../models/Channel";
 import User from "../models/User";
 import mongoose from "mongoose";
 import { verify } from "jsonwebtoken";
+import { ObjectId } from "mongodb";
 
 const handleChannels = (io: Server, socket: Socket) => {
-  // Subscribe to new channel and join its room
+  // Join channel
   socket.on("join channel", async (userId: string, channelId: string) => {
-    socket.join(`${channelId}`);
-
+    // Add user to channel only if they are not already a member of the channel
     const channel = await Channel.findByIdAndUpdate(channelId, {
-      $push: { members: new mongoose.Types.ObjectId(userId) },
+      $addToSet: { members: new mongoose.Types.ObjectId(userId) },
     });
     const user = await User.findByIdAndUpdate(userId, {
-      $push: { channels: channel?._id },
+      $addToSet: { channels: channel?._id },
     });
 
-    io.to(`${channelId}`).emit(
-      "join channel",
-      `${user?.username} has joined the channel!`
-    );
-
+    socket.join(`${channelId}`);
+    io.to(channelId).emit("join channel", userId);
     console.log(`${user?.username} has joined the channel!`);
   });
 };

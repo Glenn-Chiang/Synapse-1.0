@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBoltLightning,
   faPlus,
-  faUserCircle,
+  faSignOut,
 } from "@fortawesome/free-solid-svg-icons";
 import CreateChannel from "../features/CreateChannel/CreateChannel";
 import { Link } from "react-router-dom";
@@ -30,9 +30,9 @@ export default function TopNav() {
             <FontAwesomeIcon icon={faPlus} />
             Create
           </button>
-          <Link to={"/profile"}>
+          <Link to={"/logout"}>
             <h1 className="text-white">
-              <FontAwesomeIcon icon={faUserCircle} />
+              <FontAwesomeIcon icon={faSignOut} />
             </h1>
           </Link>
         </div>

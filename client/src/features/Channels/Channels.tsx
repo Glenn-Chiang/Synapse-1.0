@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
 import { getUserChannels } from "../../requests/channels";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import ChannelPreview from "./ChannelPreview";
 
 function Channels() {
@@ -43,10 +43,12 @@ function Channels() {
     <main className="flex">
       <section className="fixed w-1/3 h-full bg-slate-300">
         <div className="p-2 flex items-center justify-between gap-2 shadow bg-white h-16">
-          <h1 className="flex gap-2 items-center text-cyan-500">
-            <FontAwesomeIcon icon={faCommentDots} />
-            Channels
-          </h1>
+          <Link to={"/channels"}>
+            <h1 className="flex gap-2 items-center text-cyan-500 hover:text-cyan-600 transition">
+              <FontAwesomeIcon icon={faCommentDots} />
+              Channels
+            </h1>
+          </Link>
           <button
             onClick={toggleSearch}
             className="p-2 rounded-full w-10 hover:bg-slate-200"

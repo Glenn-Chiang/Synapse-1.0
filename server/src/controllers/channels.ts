@@ -7,7 +7,7 @@ import User from "../models/User";
 // Get all channels
 channelsRouter.get("/channels", async (req, res, next) => {
   try {
-    const channels = await Channel.find({}).populate("messages");
+    const channels = await Channel.find({}).populate("members");
     res.json(channels);
   } catch (error) {
     next(error);

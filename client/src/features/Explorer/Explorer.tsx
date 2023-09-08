@@ -45,28 +45,44 @@ function ChannelsGrid({ channels }: { channels: Channel[] }) {
 }
 
 function ChannelCard({ channel }: { channel: Channel }) {
-  const currentUserId = localStorage.getItem("userId") as string
+  const currentUserId = localStorage.getItem("userId") as string;
 
-  const navigate = useNavigate()
+  const alreadyJoined = !!channel.members.find(
+    (user) => user.id === currentUserId
+  );
+
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    joinChannel(currentUserId, channel.id)
-    navigate(`/channels/${channel.id}`)
-  }
+    joinChannel(currentUserId, channel.id);
+    navigate(`/channels/${channel.id}`);
+  };
 
   return (
     <article className="w-48 h-48 shadow bg-white p-4 rounded-xl flex flex-col justify-between">
       <h1 className="p-1 text-center text-xl">{channel.name}</h1>
       <p className="p-1 text-center">{channel.description}</p>
-      <JoinButton onClick={handleClick}/>
+      <JoinButton onClick={handleClick} disabled={alreadyJoined} />
     </article>
   );
 }
 
-function JoinButton({ onClick }: { onClick: () => void }) {
+function JoinButton({
+  onClick,
+  disabled,
+}: {
+  onClick: () => void;
+  disabled: boolean;
+}) {
   return (
-    <button onClick={onClick} className="bg-cyan-500 text-white rounded-md p-2">
-      Join Channel
+    <button
+      onClick={onClick}
+      className={`text-white rounded-md p-2 ${
+        disabled ? "bg-cyan-600/40" : "bg-cyan-500 "
+      }`}
+      disabled={disabled}
+    >
+      {disabled ? "Joined" : "Join"}
     </button>
   );
 }

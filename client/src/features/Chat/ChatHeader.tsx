@@ -2,7 +2,12 @@ import { faChevronLeft, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function ChatHeader({chatname}: {chatname: string}) {
+type ChatHeaderProps = {
+  chatname: string,
+  isTyping: boolean,
+}
+
+export default function ChatHeader({chatname, isTyping }: ChatHeaderProps) {
   return (
     <header className="flex items-center justify-between p-2 gap-4 h-16 w-2/3 fixed top-16 bg-white shadow z-20">
       <BackButton />
@@ -11,6 +16,7 @@ export default function ChatHeader({chatname}: {chatname: string}) {
         className="text-center hover:bg-slate-200 px-2 rounded-md"
       >
         <h1 className="line-clamp-1">{chatname}</h1>
+        {isTyping && <p>is typing...</p>}
       </Link>
       <MenuButton />
     </header>

@@ -1,10 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Message } from "../types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faX,
-} from "@fortawesome/free-solid-svg-icons";
-import { useDeleteMessage, useEditMessage } from "../requests/messages";
+import { faX } from "@fortawesome/free-solid-svg-icons";
+import { useDeleteMessage, useEditMessage } from "../services/messages";
 import MessageTools from "./MessageTools";
 
 export function IncomingMessage({ message }: { message: Message }) {

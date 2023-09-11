@@ -4,7 +4,7 @@ import FormField from "../../components/FormField";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useMutation, useQueryClient } from "react-query";
-import { createChannel } from "../../requests/channels";
+import { createChannel } from "../../services/channels";
 import React from "react";
 
 export default function CreateChannel({

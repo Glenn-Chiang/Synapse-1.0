@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { Link, Outlet } from "react-router-dom";
-import { getChats } from "../../requests/chats";
+import { getChats } from "../../services/chats";
 import ChatPreview from "./ChatPreview";
 
 export default function Chats() {
@@ -27,7 +27,7 @@ export default function Chats() {
     <main className="flex">
       <section className="fixed w-1/3 h-full bg-slate-200">
         <div className="p-2 flex items-center justify-between gap-2 shadow bg-white h-16">
-          <Link to={'/chats'}>
+          <Link to={"/chats"}>
             <h1 className="flex gap-2 items-center text-cyan-500 hover:text-cyan-600">
               <FontAwesomeIcon icon={faCommentDots} />
               Chats
@@ -63,5 +63,3 @@ export default function Chats() {
     </main>
   );
 }
-
-

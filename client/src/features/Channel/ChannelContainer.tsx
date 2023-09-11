@@ -1,20 +1,26 @@
 import { useParams } from "react-router-dom";
-import { useConnectionSubscription, useGetChannel } from "../../requests/channels";
+import {
+  useConnectionSubscription,
+  useGetChannel,
+} from "../../services/channels";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import ChannelHeader from "./ChannelHeader";
 import {
   useCreateMessage,
   useGetChannelMessages,
-} from "../../requests/messages";
+  useTypingSubscription,
+} from "../../services/messages";
 import MessageThread from "../../components/MessageThread";
 import MessageInput from "../../components/MessageInput";
 import { useState, useEffect } from "react";
 import SearchBar from "../../components/Searchbar";
+import socket from "../../socket";
 
 export default function ChannelContainer() {
   const channelId = useParams().channelId as string;
   const currentUserId = localStorage.getItem("userId") as string;
+  const currentUsername = localStorage.getItem("username") as string;
 
   const channelQuery = useGetChannel(channelId);
   const channel = channelQuery.data;
@@ -22,9 +28,9 @@ export default function ChannelContainer() {
   const messagesQuery = useGetChannelMessages(channelId);
   const messages = messagesQuery.data;
 
+  // Sending messages
   const createMessage = useCreateMessage();
-
-  const handleSend = async (text: string) => {
+  const handleSend = (text: string) => {
     createMessage({
       text,
       senderId: currentUserId,
@@ -33,7 +39,15 @@ export default function ChannelContainer() {
     });
   };
 
-  useConnectionSubscription(channelId)
+  // Emit typing event
+  const handleTyping = () => {
+    socket.emit("user typing", currentUsername, channel?.name);
+  };
+
+  // Listen for typing event
+  useTypingSubscription();
+
+  useConnectionSubscription(channelId);
 
   useEffect(() => {
     setSearchIsVisible(false); // Reset search display when route changes
@@ -81,7 +95,7 @@ export default function ChannelContainer() {
                 <MessageThread messages={filteredMessages} />
               </section>
             )}
-            <MessageInput onSend={handleSend} />
+            <MessageInput onSend={handleSend} onType={handleTyping} />
           </div>
         )
       )}

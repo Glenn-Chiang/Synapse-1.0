@@ -2,9 +2,9 @@ import { Link, useNavigate } from "react-router-dom";
 import FormField from "../components/FormField";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { faLock, faUserCircle } from "@fortawesome/free-solid-svg-icons";
-import { createUser } from "../requests/users";
+import { createUser } from "../services/users";
 import { AxiosError } from "axios";
-import {useEffect} from 'react'
+import { useEffect } from "react";
 
 export default function Register() {
   const {
@@ -26,23 +26,23 @@ export default function Register() {
     ...register("password", { required: "Password is required" }),
   };
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
     const { username, password } = formValues;
     try {
-      await createUser(username, password)
-      console.log('Registered!')
-      navigate('/login') // Redirect to login screen after successful registration
+      await createUser(username, password);
+      console.log("Registered!");
+      navigate("/login"); // Redirect to login screen after successful registration
     } catch (e) {
-      const error = e as AxiosError
-      console.error(error.response?.data)
+      const error = e as AxiosError;
+      console.error(error.response?.data);
     }
   };
 
   useEffect(() => {
-    setFocus("username")
-  }, [setFocus])
+    setFocus("username");
+  }, [setFocus]);
 
   return (
     <main className="bg-slate-100 min-h-screen p-2 sm:p-8 flex items-center">

@@ -1,7 +1,7 @@
 import { faEarth } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "react-query";
-import { getAllChannels, joinChannel } from "../../requests/channels";
+import { getAllChannels, joinChannel } from "../../services/channels";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { Channel } from "../../types";

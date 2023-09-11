@@ -3,7 +3,7 @@ import FormField from "../components/FormField";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { faLock, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
-import { login } from "../requests/auth";
+import { login } from "../services/auth";
 import ErrorMessage from "../components/ErrorMessage";
 
 export default function Login() {
@@ -31,7 +31,7 @@ export default function Login() {
   const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
     const { username, password } = formValues;
     try {
-      const user = await login(username, password);      
+      const user = await login(username, password);
       console.log(`Signed in as: ${user.username}`);
       navigate("/");
     } catch (error) {
@@ -91,4 +91,3 @@ export default function Login() {
     </main>
   );
 }
-

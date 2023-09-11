@@ -7,10 +7,10 @@ const login = async (username: string, password: string) => {
   const user = response.data as UserInfo;
   localStorage.setItem("token", user.token);
   localStorage.setItem("userId", user.userId);
+  localStorage.setItem("username", user.username);
   socket.connect();
-  socket.auth.token = user.token
+  socket.auth.token = user.token;
   return user;
 };
 
 export { login };
-

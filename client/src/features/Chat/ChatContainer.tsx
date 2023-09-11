@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import ChatHeader from "./ChatHeader";
-import { getUser } from "../../requests/users";
-import { useCreateMessage, useGetChatMessages } from "../../requests/messages";
-import { useCreateChat, useGetChat } from "../../requests/chats";
+import { getUser } from "../../services/users";
+import { useCreateMessage, useGetChatMessages } from "../../services/messages";
+import { useCreateChat, useGetChat } from "../../services/chats";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import MessageInput from "../../components/MessageInput";

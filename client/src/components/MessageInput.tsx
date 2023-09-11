@@ -1,7 +1,13 @@
 import { useRef } from "react";
 
-export default function MessageInput({ onSend }: { onSend: (content: string) => void }) {
+type props = {
+  onSend: (content: string) => void;
+  onType: () => void
+}
+
+export default function MessageInput({ onSend, onType }: props) {
   const inputRef = useRef<HTMLInputElement>(null);
+  
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (
     event
   ) => {
@@ -14,6 +20,11 @@ export default function MessageInput({ onSend }: { onSend: (content: string) => 
       inputRef.current.value = "";
     }
   };
+  
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = () => {
+    onType()
+  }
+
   return (
     <div className="fixed bottom-0 w-2/3 bg-white p-4 flex justify-center">
       <input
@@ -22,6 +33,7 @@ export default function MessageInput({ onSend }: { onSend: (content: string) => 
         placeholder="Type something..."
         className="w-11/12 rounded-full p-3 bg-slate-100"
         onKeyDown={handleKeyDown}
+        onChange={handleChange}
       />
     </div>
   );

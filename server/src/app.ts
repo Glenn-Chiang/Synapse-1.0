@@ -21,6 +21,7 @@ import { JwtPayload } from "./types";
 import { handleConnect, handleDisconnect } from "./socketHandlers/connection";
 import messagesRouter from "./controllers/messages";
 import handleChats from "./socketHandlers/chats";
+import { registerTypingHandler } from "./socketHandlers/userTyping";
 
 // Db connection
 const connectToDb = async () => {
@@ -67,6 +68,7 @@ io.on("connection", async (socket) => {
   console.log(`User ${userId} connected`);
   handleConnect(io, socket);
   registerMessageHandlers(io, socket);
+  registerTypingHandler(socket)
   handleChannels(io, socket);
   handleChats(io, socket);
   handleDisconnect(io, socket);

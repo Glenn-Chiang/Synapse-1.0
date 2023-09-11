@@ -77,6 +77,19 @@ const useMessageSubscription = () => {
   }, [handleMessage]);
 };
 
+const useTypingSubscription = () => {
+  const handleUserTyping = (username: string) => {
+    console.log(username, 'is typing')
+  }
+  useEffect(() => {
+    socket.on('user typing', handleUserTyping)
+
+    return  () => {
+      socket.off('user typing', handleUserTyping)
+    }
+  }, [])
+}
+
 export {
   useGetChatMessages,
   useGetChannelMessages,
@@ -84,4 +97,5 @@ export {
   useCreateMessage,
   useEditMessage,
   useDeleteMessage,
+  useTypingSubscription
 };

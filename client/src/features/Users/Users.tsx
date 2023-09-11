@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import SearchBar from "../../components/Searchbar";
 import { useQuery } from "react-query";
-import { getUsers } from "../../requests/users";
+import { getUsers } from "../../services/users";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import UserPreview from "../../components/UserPreview";

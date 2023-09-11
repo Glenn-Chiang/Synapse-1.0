@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import SearchBar from "../../components/Searchbar";
 import { useQuery } from "react-query";
-import { getUserChannels } from "../../requests/channels";
+import { getUserChannels } from "../../services/channels";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { Link, Outlet } from "react-router-dom";

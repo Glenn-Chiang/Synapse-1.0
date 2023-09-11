@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useGetChannel } from "../../requests/channels";
+import { useConnectionSubscription, useGetChannel } from "../../requests/channels";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import ChannelHeader from "./ChannelHeader";
@@ -32,6 +32,8 @@ export default function ChannelContainer() {
       roomType: "Channel",
     });
   };
+
+  useConnectionSubscription(channelId)
 
   useEffect(() => {
     setSearchIsVisible(false); // Reset search display when route changes

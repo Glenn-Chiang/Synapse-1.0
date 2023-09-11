@@ -34,7 +34,7 @@ const joinChats = async (socket: Socket) => {
 
   chats.forEach((chat) => {
     socket.join(`${chat._id.toString()}`);
-    console.log(`User ${userId} has joined chat: ${chat._id.toString()}`);
+    console.log(`User ${userId} has connected to chat: ${chat._id.toString()}`);
   });
 };
 

@@ -61,29 +61,16 @@ const joinChannel = (userId: string, channelId: string) => {
   console.log("emitted join channel");
 };
 
-// Emit 'request' for current number of channel members online
-const useGetOnlineMembers = async (channelId: string) => {
-  return useQuery({
-    queryKey: ["channels", channelId, "number online"],
-    queryFn: () => {
-      socket.emit('get channel', channelId, (numberOnline: number) => {
-        console.log(numberOnline)
-        return numberOnline
-      })
-    }
-  });
-}
-
 // Event listener for members connecting to channel
 // When member connects to channel, refetch 'number online'
 const useConnectionSubscription = (channelId: string) => {
-  const queryClient = useQueryClient()
+  // const queryClient = useQueryClient()
   useEffect(() => {
     socket.on('member connected', (userId: string) => {
-      queryClient.invalidateQueries(['channels', channelId, 'number online'])
-      console.log(`User ${userId} has joined channel`)
+      // queryClient.invalidateQueries(['channels', channelId, 'number online'])
+      console.log(`User ${userId} has connected to channel`)
     })
-  }, [queryClient, channelId])
+  }, [channelId])
 }
 
 export {
@@ -93,6 +80,5 @@ export {
   createChannel,
   useCreateChannel,
   joinChannel,
-  useGetOnlineMembers,
   useConnectionSubscription
 };

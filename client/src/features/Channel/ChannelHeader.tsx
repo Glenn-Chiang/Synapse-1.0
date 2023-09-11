@@ -7,7 +7,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import { Channel } from "../../types";
 
-export default function ChannelHeader({ channel, toggleSearch }: { channel: Channel, toggleSearch: () => void }) {
+type ChannelHeaderProps = {
+  channel: Channel;
+  toggleSearch: () => void;
+  typingUser?: string;
+};
+
+export default function ChannelHeader({
+  channel,
+  toggleSearch,
+  typingUser,
+}: ChannelHeaderProps) {
   return (
     <header className="flex items-center justify-between p-2 gap-4 h-16 w-2/3 fixed top-16 bg-white shadow z-20">
       <BackButton />
@@ -16,10 +26,14 @@ export default function ChannelHeader({ channel, toggleSearch }: { channel: Chan
         className="text-center hover:bg-slate-200 px-2 rounded-md"
       >
         <h1 className="line-clamp-1">{channel.name}</h1>
-        <p>{channel.members.length} members</p>
+        {typingUser ? (
+          <p>{typingUser} is typing...</p>
+        ) : (
+          <p>{channel.members.length} members</p>
+        )}
       </Link>
       <div>
-        <SearchButton onClick={toggleSearch}/>
+        <SearchButton onClick={toggleSearch} />
         <MenuButton />
       </div>
     </header>

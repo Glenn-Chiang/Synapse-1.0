@@ -9,7 +9,6 @@ import ChannelHeader from "./ChannelHeader";
 import {
   useCreateMessage,
   useGetChannelMessages,
-  useTypingSubscription,
 } from "../../services/messages";
 import MessageThread from "../../components/MessageThread";
 import MessageInput from "../../components/MessageInput";
@@ -41,11 +40,25 @@ export default function ChannelContainer() {
 
   // Emit typing event
   const handleTyping = () => {
-    socket.emit("user typing", currentUsername, channel?.name);
+    socket.emit("user typing", currentUsername, channelId);
   };
 
-  // Listen for typing event
-  useTypingSubscription();
+  // 'User is typing' listener
+  const [typingUser, setTypingUser] = useState<string>("");
+  useEffect(() => {
+    let typingTimer: NodeJS.Timeout | undefined = undefined;
+    const handleUserTyping = (username: string) => {
+      setTypingUser(username);
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(() => {
+        setTypingUser("");
+      }, 1000);
+    };
+    socket.on("user typing", handleUserTyping);
+    return () => {
+      socket.off("user typing", handleUserTyping);
+    };
+  }, []);
 
   useConnectionSubscription(channelId);
 
@@ -74,7 +87,11 @@ export default function ChannelContainer() {
   return (
     <section className="">
       {channel && (
-        <ChannelHeader channel={channel} toggleSearch={toggleSearch} />
+        <ChannelHeader
+          channel={channel}
+          toggleSearch={toggleSearch}
+          typingUser={typingUser}
+        />
       )}
       {searchIsVisible && (
         <SearchBar

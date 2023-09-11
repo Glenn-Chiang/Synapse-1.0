@@ -22,9 +22,10 @@ const handleChannels = (io: Server, socket: Socket) => {
   });
 
   // When user GETs a channel, return the number of online users in the channel
-  socket.on("get channel", async (channelId: string) => {
+  socket.on("get channel", async (channelId: string, callback: (numberOnline: number) => void) => {
     const numberOnline = (await io.in(channelId).fetchSockets()).length
     console.log('Number online:', numberOnline)
+    callback(numberOnline)
   })
 };
 

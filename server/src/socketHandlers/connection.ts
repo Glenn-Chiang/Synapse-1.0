@@ -19,7 +19,7 @@ const joinChannels = async (socket: MySocket, channels: IChannel[]) => {
     const channelId = channel._id.toString()
     socket.join(channelId);
     // Broadcast to channel members that a member has connected
-    socket.to(channelId).emit('member connected')
+    socket.to(channelId).emit('member connected', userId)
     console.log(`User ${userId} has connected to channel: ${channel.name}`);
   });
 };

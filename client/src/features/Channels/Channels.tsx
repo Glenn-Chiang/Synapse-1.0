@@ -69,7 +69,7 @@ function Channels() {
           <ErrorMessage message="Error fetching channels" />
         ) : filteredChannels.length > 0 ? (
           <ul
-            className={`flex flex-col gap-2 p-2 overflow-auto ${
+            className={`flex flex-col gap-2 p-2 overflow-auto no-scrollbar ${
               searchIsVisible
                 ? "mt-16 h-[calc(100%-12rem)]"
                 : "h-[calc(100%-8rem)]"

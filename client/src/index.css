@@ -4,21 +4,27 @@
 
 @layer base {
   body {
-   @apply text-slate-600 bg-slate-100
+    @apply text-slate-600 bg-slate-100;
   }
   h1 {
-    @apply font-medium text-2xl text-slate-900
+    @apply font-medium text-2xl text-slate-900;
   }
   h2 {
-    @apply font-medium 
+    @apply font-medium;
   }
   button {
-    @apply transition
+    @apply transition;
   }
   a {
-    @apply transition
+    @apply transition;
   }
   input {
-    @apply focus:outline-none
+    @apply focus:outline-none;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }

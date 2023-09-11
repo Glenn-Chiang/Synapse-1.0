@@ -27,7 +27,10 @@ export default function ChannelHeader({
       >
         <h1 className="line-clamp-1">{channel.name}</h1>
         {typingUser ? (
-          <p>{typingUser} is typing...</p>
+          <p>
+            <span className="text-cyan-500">{typingUser}</span>{" "}
+            <span className="text-slate-400">is typing...</span>
+          </p>
         ) : (
           <p>{channel.members.length} members</p>
         )}

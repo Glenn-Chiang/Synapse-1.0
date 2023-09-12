@@ -1,4 +1,4 @@
-import { faEarth } from "@fortawesome/free-solid-svg-icons";
+import { faNetworkWired } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "react-query";
 import { getAllChannels, joinChannel } from "../../services/channels";
@@ -20,7 +20,7 @@ export default function Explorer() {
   return (
     <main className="p-2">
       <h1 className="text-cyan-500 flex items-center gap-2 py-4 justify-center">
-        <FontAwesomeIcon icon={faEarth} />
+        <FontAwesomeIcon icon={faNetworkWired} />
         Explore Channels
       </h1>
       {isLoading ? (

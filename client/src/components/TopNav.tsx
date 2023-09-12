@@ -4,8 +4,9 @@ import {
   faBoltLightning,
   faComment,
   faComments,
-  faEarth,
+  faNetworkWired,
   faSignOut,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, NavLink } from "react-router-dom";
 
@@ -21,7 +22,8 @@ export default function TopNav() {
       <div className="flex gap-4">
         <NavIcon to="/channels" label="My Channels" icon={faComments} />
         <NavIcon to="/chats" label="My Chats" icon={faComment} />
-        <NavIcon to="/explore" label="Explore" icon={faEarth} />
+        <NavIcon to="/explore" label="Explore Channels" icon={faNetworkWired} />
+        <NavIcon to="/users" label="Find Users" icon={faUsers}/>
         <NavIcon to="logout" icon={faSignOut} />
       </div>
     </nav>

@@ -1,7 +1,7 @@
 import * as express from "express";
 const messagesRouter = express.Router();
-import Message from "../models/Message";
-import passport from "../middleware/auth"
+import Message from "../models/Message.js";
+import passport from "../middleware/auth.js"
 
 // Get all messages in channel
 messagesRouter.get(

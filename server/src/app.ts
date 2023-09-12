@@ -5,23 +5,23 @@ configDotenv();
 import cors from "cors";
 import morgan from "morgan";
 import mongoose from "mongoose";
-
-import loginRouter from "./controllers/login";
-import usersRouter from "./controllers/users";
-import channelsRouter from "./controllers/channels";
-import chatsRouter from "./controllers/chats";
-
+import jwt from "jsonwebtoken";
 import passport from "passport";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
-import registerMessageHandlers from "./socketHandlers/messages";
-import { handleChannels } from "./socketHandlers/channels";
-import { verify } from "jsonwebtoken";
-import { JwtPayload } from "./types";
-import { handleConnect, handleDisconnect } from "./socketHandlers/connection";
-import messagesRouter from "./controllers/messages";
-import handleChats from "./socketHandlers/chats";
-import { registerTypingHandler } from "./socketHandlers/userTyping";
+
+import loginRouter from "./controllers/login.js";
+import usersRouter from "./controllers/users.js";
+import channelsRouter from "./controllers/channels.js";
+import chatsRouter from "./controllers/chats.js";
+
+import registerMessageHandlers from "./socketHandlers/messages.js";
+import { handleChannels } from "./socketHandlers/channels.js";
+import { handleConnect, handleDisconnect } from "./socketHandlers/connection.js";
+import messagesRouter from "./controllers/messages.js";
+import handleChats from "./socketHandlers/chats.js";
+import { registerTypingHandler } from "./socketHandlers/userTyping.js";
+import { JwtPayload } from "./types.js";
 
 // Db connection
 const connectToDb = async () => {
@@ -54,7 +54,7 @@ io.use((socket, next) => {
     console.log("Unauthorised");
     return;
   }
-  const decodedToken = verify(
+  const decodedToken = jwt.verify(
     token,
     process.env.SECRET as string
   ) as JwtPayload;

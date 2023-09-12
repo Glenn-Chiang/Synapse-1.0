@@ -1,8 +1,10 @@
+import { configDotenv } from "dotenv";
+configDotenv();
 import passport from "passport";
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import { Strategy as LocalStrategy } from "passport-local";
-import User from "../models/User";
 import { compare } from "bcrypt";
+import User from "../models/User.js";
 
 // Local strategy used for login
 const localStrategy = new LocalStrategy(async (username, password, done) => {
@@ -46,7 +48,7 @@ const jwtStrategy = new JwtStrategy(
   }
 );
 
-passport.use(localStrategy)
-passport.use(jwtStrategy)
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
-export default passport
+export default passport;

@@ -1,7 +1,6 @@
 import * as express from "express";
-import Chat from "../models/Chat";
-import mongoose from "mongoose";
-import passport from "../middleware/auth";
+import Chat from "../models/Chat.js";
+import passport from "../middleware/auth.js";
 const chatsRouter = express.Router();
 
 // Get user's chats

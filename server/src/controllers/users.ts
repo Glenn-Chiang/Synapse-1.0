@@ -1,7 +1,7 @@
 import * as express from 'express'
 const usersRouter = express.Router();
 import {hash} from 'bcrypt'
-import User from '../models/User';
+import User from '../models/User.js';
 
 // Register/Create new user
 usersRouter.post("/users", async (req, res, next) => {

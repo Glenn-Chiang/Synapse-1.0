@@ -1,9 +1,9 @@
 import * as express from "express";
 const channelsRouter = express.Router();
 import mongoose from "mongoose";
-import Channel from "../models/Channel";
-import User from "../models/User";
-import passport from "../middleware/auth";
+import Channel from "../models/Channel.js";
+import User from "../models/User.js";
+import passport from "../middleware/auth.js";
 
 // Get all channels
 channelsRouter.get("/channels", async (req, res, next) => {

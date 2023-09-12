@@ -1,8 +1,7 @@
 import { Server, Socket } from "socket.io";
-import Channel, { IChannel } from "../models/Channel";
-import mongoose from "mongoose";
-import Chat from "../models/Chat";
-import { MySocket } from '../types';
+import Channel, { IChannel } from "../models/Channel.js";
+import Chat from "../models/Chat.js";
+import { MySocket } from '../types.js';
 
 const getChannels = async (socket: MySocket) => {
   const userId = socket.data.userId;
@@ -55,6 +54,7 @@ const handleDisconnect = async (io: Server, socket: Socket) => {
     if (isDisconnected) {
       console.log(`User ${userId} disconnected`);
     }
+    socket.removeAllListeners()
   });
 };
 

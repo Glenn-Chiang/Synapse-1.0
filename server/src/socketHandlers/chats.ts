@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
-import Chat from "../models/Chat";
-import Message, { IMessage } from "../models/Message";
+import Chat from "../models/Chat.js";
+import Message, { IMessage } from "../models/Message.js";
 import mongoose from "mongoose";
 
 export interface ChatMessage {

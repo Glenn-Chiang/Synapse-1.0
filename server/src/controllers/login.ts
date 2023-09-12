@@ -1,7 +1,7 @@
 import * as express from "express";
 const loginRouter = express.Router();
 import * as jwt from 'jsonwebtoken'
-import passport from '../middleware/auth'
+import passport from '../middleware/auth.js'
 import { IUser } from "../models/User";
 
 loginRouter.post(

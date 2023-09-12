@@ -1,9 +1,7 @@
 import { Server, Socket } from "socket.io";
-import Channel, { IChannel } from "../models/Channel";
-import User from "../models/User";
 import mongoose from "mongoose";
-import { verify } from "jsonwebtoken";
-import { ObjectId } from "mongodb";
+import Channel from "../models/Channel.js";
+import User from "../models/User.js";
 
 const handleChannels = (io: Server, socket: Socket) => {
   // Join channel

@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 export interface IChat extends mongoose.Document {
   users: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
@@ -11,7 +11,7 @@ const chatSchema = new mongoose.Schema({
 })
 
 chatSchema.set('toJSON', {
-  transform: (document, object) => {
+  transform: (_, object) => {
     object.id = object.id || object._id.toString();
     delete object._id;
     delete object.__v;

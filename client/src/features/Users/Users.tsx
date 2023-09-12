@@ -20,6 +20,16 @@ export default function Users() {
 
   const [filterShown, setFilterShown] = useState(false);
 
+  const [searchTerms, setSearchTerms] = useState("");
+
+  const filteredUsers = users
+    ? users.filter((user) => user.username.toLowerCase().includes(searchTerms.toLowerCase()))
+    : [];
+
+  const handleSearch = (inputValue: string) => {
+    setSearchTerms(inputValue);
+  };
+
   return (
     <main className="bg-white">
       <div className="w-full p-2 flex items-center justify-between gap-2 shadow">
@@ -34,14 +44,20 @@ export default function Users() {
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
-      {filterShown && <SearchBar placeholder="Search users..." />}
+      {filterShown && (
+        <SearchBar
+          position=""
+          handleSearch={handleSearch}
+          placeholder="Search users..."
+        />
+      )}
       {isLoading ? (
         <Loading />
       ) : isError ? (
         <ErrorMessage message="Error fetching users" />
       ) : (
         <ul>
-          {users?.map((user) => (
+          {filteredUsers.map((user) => (
             <UserPreview key={user.id} user={user} />
           ))}
         </ul>

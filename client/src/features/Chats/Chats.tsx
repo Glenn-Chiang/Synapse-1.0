@@ -21,6 +21,20 @@ export default function Chats() {
     queryFn: () => getChats(userId),
   });
 
+  const [searchTerms, setSearchTerms] = useState("");
+
+  const filteredChats = chats
+    ? chats.filter((chat) =>
+        chat.users.some((user) =>
+          user.username.toLowerCase().includes(searchTerms.toLowerCase())
+        )
+      )
+    : [];
+
+  const handleSearch = (inputValue: string) => {
+    setSearchTerms(inputValue);
+  };
+
   const [filterShown, setFilterShown] = useState(false);
 
   return (
@@ -40,12 +54,18 @@ export default function Chats() {
             <FontAwesomeIcon icon={faSearch} />
           </button>
         </div>
-        {filterShown && <SearchBar placeholder="Search your chats..." />}
+        {filterShown && (
+          <SearchBar
+            handleSearch={handleSearch}
+            position="top-32"
+            placeholder="Search your chats..."
+          />
+        )}
         {isLoading ? (
           <Loading />
         ) : isError ? (
           <ErrorMessage message="Error fetching chats" />
-        ) : chats && chats.length > 0 ? (
+        ) : filteredChats.length > 0 ? (
           <ul className="flex flex-col gap-2 p-2 h-[calc(100%-8rem)] overflow-auto">
             {chats?.map((chat) => (
               <li key={chat.id}>

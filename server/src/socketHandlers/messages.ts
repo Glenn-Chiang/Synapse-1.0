@@ -1,8 +1,8 @@
-import { Server, Socket } from "socket.io";
+import { Socket } from "socket.io";
 import mongoose from "mongoose";
 import Message, { IMessage } from "../models/Message.js";
 import Channel from "../models/Channel.js";
-import Chat, { IChat } from "../models/Chat.js";
+import Chat from "../models/Chat.js";
 
 export interface MessageData {
   text: string;
@@ -19,7 +19,7 @@ export type MessageCallback = ({
   roomType: 'Channel' | 'Chat';
 }) => void;
 
-const registerMessageHandlers = (io: Server, socket: Socket) => {
+const registerMessageHandlers = (socket: Socket) => {
   const handleCreateMessage = async (
     messageData: MessageData,
     messageCallback: MessageCallback

@@ -21,7 +21,7 @@ const channelSchema = new mongoose.Schema({
 });
 
 channelSchema.set("toJSON", {
-  transform: (document, object) => {
+  transform: (_, object) => {
     object.id = object.id || object._id.toString();
     object.dateCreated = object.dateCreated.toLocaleDateString();
     delete object._id;

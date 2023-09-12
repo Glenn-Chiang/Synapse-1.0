@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 export interface IMessage extends mongoose.Document {
   text: string
@@ -25,7 +25,7 @@ const messageSchema = new mongoose.Schema({
 });
 
 messageSchema.set("toJSON", {
-  transform: (document, object) => {
+  transform: (_, object) => {
     object.id = object._id.toString();
     object.timestamp =
       object.timestamp.toLocaleDateString() < new Date().toLocaleDateString()

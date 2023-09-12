@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import passport from "passport";
 import { createServer } from "http";
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 
 import loginRouter from "./controllers/login.js";
 import usersRouter from "./controllers/users.js";
@@ -17,7 +17,10 @@ import chatsRouter from "./controllers/chats.js";
 
 import registerMessageHandlers from "./socketHandlers/messages.js";
 import { handleChannels } from "./socketHandlers/channels.js";
-import { handleConnect, handleDisconnect } from "./socketHandlers/connection.js";
+import {
+  handleConnect,
+  handleDisconnect,
+} from "./socketHandlers/connection.js";
 import messagesRouter from "./controllers/messages.js";
 import handleChats from "./socketHandlers/chats.js";
 import { registerTypingHandler } from "./socketHandlers/userTyping.js";
@@ -67,10 +70,10 @@ io.on("connection", async (socket) => {
   const userId = socket.data.userId as string;
   console.log(`User ${userId} connected`);
   handleConnect(io, socket);
-  registerMessageHandlers(io, socket);
-  registerTypingHandler(socket)
+  registerMessageHandlers(socket);
+  registerTypingHandler(socket);
   handleChannels(io, socket);
-  handleChats(io, socket);
+  handleChats(socket);
   handleDisconnect(io, socket);
 });
 

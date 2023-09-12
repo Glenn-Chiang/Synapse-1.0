@@ -1,6 +1,6 @@
-import { Server, Socket } from "socket.io";
+import { Socket } from "socket.io";
 import Chat from "../models/Chat.js";
-import Message, { IMessage } from "../models/Message.js";
+import Message from "../models/Message.js";
 import mongoose from "mongoose";
 
 export interface ChatMessage {
@@ -10,7 +10,7 @@ export interface ChatMessage {
 }
 
 // New chat is created together with first message
-const handleChats = (io: Server, socket: Socket) => {
+const handleChats = (socket: Socket) => {
   socket.on(
     "chat:create",
     async ({ text, senderId, recipientId }: ChatMessage) => {

@@ -3,7 +3,6 @@ import { Chat, Message } from "../types";
 import axios from "./axios";
 import socket from "../socket";
 import { useEffect } from "react";
-import { MessageData } from "../../../server/src/socketHandlers/messages";
 
 const useGetChannelMessages = (channelId: string) => {
   return useQuery({
@@ -28,7 +27,12 @@ const useGetChatMessages = (chat: Chat | null | undefined) => {
 
 const useCreateMessage = () => {
   const handleMessage = useMessageHandler();
-  return (messageData: MessageData) => {
+  return (messageData: {
+    text: string;
+    senderId: string;
+    roomId: string; // Either a channelId or chatId
+    roomType: "Channel" | "Chat";
+  }) => {
     socket.emit("message:create", messageData, handleMessage);
   };
 };
@@ -62,7 +66,7 @@ const useMessageHandler = () => {
       roomId,
       "messages",
     ]);
-    await queryClient.invalidateQueries(roomType.toLowerCase() + 's');
+    await queryClient.invalidateQueries(roomType.toLowerCase() + "s");
   };
 };
 
@@ -76,7 +80,6 @@ const useMessageSubscription = () => {
     };
   }, [handleMessage]);
 };
-
 
 export {
   useGetChatMessages,

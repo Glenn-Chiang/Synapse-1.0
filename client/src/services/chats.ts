@@ -1,7 +1,6 @@
 import { useQuery, useQueryClient } from "react-query";
 import { Chat } from "../types";
 import axios from "./axios";
-import { ChatMessage } from "../../../server/src/socketHandlers/chats";
 import socket from "../socket";
 import { useEffect } from "react";
 
@@ -22,7 +21,11 @@ const useGetChat = (userIds: [string, string]) => {
 
 const useCreateChat = () => {
   const queryClient = useQueryClient();
-  return (chatMessage: ChatMessage) => {
+  return (chatMessage: {
+    text: string;
+    senderId: string;
+    recipientId: string;
+  }) => {
     socket.emit("chat:create", chatMessage, async () => {
       await queryClient.invalidateQueries("chats"); // Refetch chats when new chat is created
     });

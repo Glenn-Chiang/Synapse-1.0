@@ -1,6 +1,6 @@
 import * as express from "express";
 const loginRouter = express.Router();
-import * as jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import passport from '../middleware/auth.js'
 import { IUser } from "../models/User";
 

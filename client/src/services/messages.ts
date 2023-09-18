@@ -81,6 +81,12 @@ const useMessageSubscription = () => {
   }, [handleMessage]);
 };
 
+const markMessagesAsRead = (messages: Message[]) => {
+  messages.forEach(message => {
+    socket.emit("message:read", message.id)
+  })
+}
+
 export {
   useGetChatMessages,
   useGetChannelMessages,
@@ -88,4 +94,5 @@ export {
   useCreateMessage,
   useEditMessage,
   useDeleteMessage,
+  markMessagesAsRead
 };

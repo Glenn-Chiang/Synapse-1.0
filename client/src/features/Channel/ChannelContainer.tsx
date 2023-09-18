@@ -7,6 +7,7 @@ import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import ChannelHeader from "./ChannelHeader";
 import {
+  markMessagesAsRead,
   useCreateMessage,
   useGetChannelMessages,
 } from "../../services/messages";
@@ -26,8 +27,8 @@ export default function ChannelContainer() {
 
   const messagesQuery = useGetChannelMessages(channelId);
   const messages = messagesQuery.data;
-  // console.log('Total messages:', messages?.length)
-  // console.log('Unread messages:', messages?.filter(message => !message.isRead).length)
+  
+  messages && markMessagesAsRead(messages)
 
   // Sending messages
   const createMessage = useCreateMessage();

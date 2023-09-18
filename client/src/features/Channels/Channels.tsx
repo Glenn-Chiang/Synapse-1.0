@@ -1,4 +1,8 @@
-import { faCommentDots, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCommentDots,
+  faPlus,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import SearchBar from "../../components/Searchbar";
@@ -84,6 +88,7 @@ function Channels() {
         ) : (
           <p className="p-4 shadow bg-white">No channels found</p>
         )}
+        <CreateChannelButton />
       </section>
       <div className="absolute w-2/3 left-1/3">
         <Outlet />
@@ -93,3 +98,11 @@ function Channels() {
 }
 
 export default Channels;
+
+function CreateChannelButton() {
+  return (
+    <button className="absolute bottom-20 right-4 bg-cyan-500 text-white p-2 rounded-full w-10 h-10 shadow hover:bg-cyan-600">
+      <FontAwesomeIcon icon={faPlus} />
+    </button>
+  );
+}

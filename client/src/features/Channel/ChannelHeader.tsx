@@ -4,8 +4,8 @@ import {
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useNavigate } from "react-router-dom";
 import { Channel } from "../../types";
+import { Link } from "react-router-dom";
 
 type ChannelHeaderProps = {
   channel: Channel;
@@ -21,10 +21,7 @@ export default function ChannelHeader({
   return (
     <header className="flex items-center justify-between p-2 gap-4 h-16 w-2/3 fixed top-16 bg-white shadow z-20">
       <BackButton />
-      <Link
-        to={"info"}
-        className="text-center hover:bg-slate-200 px-2 rounded-md"
-      >
+      <div className="text-center px-2 rounded-md">
         <h1 className="line-clamp-1">{channel.name}</h1>
         {typingUser ? (
           <p>
@@ -34,7 +31,7 @@ export default function ChannelHeader({
         ) : (
           <p>{channel.members.length} members</p>
         )}
-      </Link>
+      </div>
       <div>
         <SearchButton onClick={toggleSearch} />
         <MenuButton />
@@ -55,14 +52,13 @@ function SearchButton({ onClick }: { onClick: () => void }) {
 }
 
 function BackButton() {
-  const navigate = useNavigate();
   return (
-    <button
-      onClick={() => navigate(-1)}
+    <Link
+      to={"/channels"}
       className="hover:bg-slate-300 rounded-full w-10 h-10 flex items-center justify-center"
     >
       <FontAwesomeIcon icon={faChevronLeft} />
-    </button>
+    </Link>
   );
 }
 

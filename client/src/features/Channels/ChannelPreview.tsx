@@ -2,6 +2,11 @@ import { NavLink } from "react-router-dom";
 import { Channel } from "../../types";
 
 export default function ChannelPreview({ channel }: { channel: Channel }) {
+  const messagesCount = channel.messages.length 
+  const unreadCount = channel.messages.filter(message => !message.isRead).length
+  console.log('Total messages:', messagesCount)
+  console.log('Unread messages:', unreadCount)
+
   const lastMessage =
     channel.messages.length > 0 &&
     channel.messages[channel.messages.length - 1];
@@ -23,6 +28,7 @@ export default function ChannelPreview({ channel }: { channel: Channel }) {
       </div>
       <div className="flex flex-col justify-between items-end w-1/5">
         {lastMessage && <span>{lastMessage.timestamp}</span>}
+        {unreadCount > 0 && <span className="bg-cyan-400 text-white rounded-full w-8 h-8 flex justify-center items-center">{unreadCount}</span>}
       </div>
     </NavLink>
   );

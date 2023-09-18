@@ -20,6 +20,7 @@ interface Message {
   roomType: "Channel" | "Chat";
   room: Channel | Chat;
   timestamp: string;
+  isRead: boolean;
 }
 
 interface Channel {

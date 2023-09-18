@@ -16,7 +16,7 @@ export type MessageCallback = ({
   roomType,
 }: {
   roomId: string;
-  roomType: 'Channel' | 'Chat';
+  roomType: "Channel" | "Chat";
 }) => void;
 
 const registerMessageHandlers = (socket: Socket) => {
@@ -37,6 +37,7 @@ const registerMessageHandlers = (socket: Socket) => {
       roomType,
       room: new mongoose.Types.ObjectId(roomId),
       timestamp: new Date(),
+      isRead: false,
     }).save();
     console.log(message.toJSON());
     emitMessageEvent(socket, message as IMessage);
@@ -85,7 +86,7 @@ const registerMessageHandlers = (socket: Socket) => {
     messageCallback: MessageCallback
   ) => {
     const message = await Message.findByIdAndDelete(messageId);
-    
+
     if (message) {
       if (message.roomType.toString() === "Channel") {
         await Channel.findByIdAndUpdate(message.room, {

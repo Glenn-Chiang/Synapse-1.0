@@ -48,7 +48,7 @@ app.use(loginRouter, usersRouter, channelsRouter, chatsRouter, messagesRouter);
 // Sockets
 const server = createServer(app);
 const io = new Server(server, {
-  cors: { origin: "https://synapse-tan.vercel.app" },
+  cors: { origin: ["https://synapse-tan.vercel.app", "http://localhost:5173"] },
 });
 
 io.use((socket, next) => {

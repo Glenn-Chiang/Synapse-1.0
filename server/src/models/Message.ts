@@ -10,6 +10,7 @@ export interface IMessage extends mongoose.Document {
     required: true,
   },
   timestamp: Date,
+  isRead: boolean
 }
 
 const messageSchema = new mongoose.Schema({
@@ -22,6 +23,7 @@ const messageSchema = new mongoose.Schema({
     required: true,
   },
   timestamp: Date,
+  isRead: {type: Boolean, default: false}
 });
 
 messageSchema.set("toJSON", {

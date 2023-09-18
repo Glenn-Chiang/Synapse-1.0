@@ -26,6 +26,8 @@ export default function ChannelContainer() {
 
   const messagesQuery = useGetChannelMessages(channelId);
   const messages = messagesQuery.data;
+  // console.log('Total messages:', messages?.length)
+  // console.log('Unread messages:', messages?.filter(message => !message.isRead).length)
 
   // Sending messages
   const createMessage = useCreateMessage();

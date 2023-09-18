@@ -8,6 +8,7 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
+import { Provider } from "react-redux";
 import App from "./features/App/App.tsx";
 import Users from "./features/Users/Users.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -18,6 +19,7 @@ import Explorer from "./features/Explorer/Explorer.tsx";
 import appLoader from "./features/App/loader.ts";
 import Chats from "./features/Chats/Chats.tsx";
 import ChatContainer from "./features/Chat/ChatContainer.tsx";
+import store from "./store.ts";
 
 const router = createBrowserRouter([
   {
@@ -77,8 +79,10 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </Provider>
   </React.StrictMode>
 );

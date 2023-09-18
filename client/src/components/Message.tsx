@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Message } from "../types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faCheckDouble, faX } from "@fortawesome/free-solid-svg-icons";
 import { useDeleteMessage, useEditMessage } from "../services/messages";
 import MessageTools from "./MessageTools";
 
@@ -46,8 +46,15 @@ export function OutgoingMessage({ message }: { message: Message }) {
       ref={ref}
       className="self-end flex flex-col items-end relative group w-full"
     >
-      <p className="bg-cyan-500 text-white p-2 rounded-xl shadow max-w-xs break-words hover:bg-cyan-600 transition">
+      <p className="bg-cyan-500 text-white p-2 rounded-xl shadow max-w-xs break-words hover:bg-cyan-600 transition flex gap-2">
         {message.text}
+        <span className="self-end text-sm text-white/60">
+          {message.isRead ? (
+            <FontAwesomeIcon icon={faCheckDouble} />
+          ) : (
+            <FontAwesomeIcon icon={faCheck} />
+          )}
+        </span>
       </p>
       <span className="p-2 text-sm text-slate-400">{message.timestamp}</span>
       <MessageTools

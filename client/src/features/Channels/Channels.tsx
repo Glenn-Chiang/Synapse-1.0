@@ -12,6 +12,9 @@ import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { Link, Outlet } from "react-router-dom";
 import ChannelPreview from "./ChannelPreview";
+import { useAppDispatch, useAppSelector } from "../../store";
+import CreateChannelModal from "../CreateChannel/CreateChannelModal";
+import { openModal } from "../CreateChannel/channelModalSlice";
 
 function Channels() {
   const userId = localStorage.getItem("userId") as string;
@@ -42,6 +45,8 @@ function Channels() {
     setSearchIsVisible((prev) => !prev);
     setSearchTerms("");
   };
+
+  const modalIsOpen = useAppSelector((state) => state.channelModal.isOpen);
 
   return (
     <main className="flex">
@@ -90,6 +95,7 @@ function Channels() {
         )}
         <CreateChannelButton />
       </section>
+      {modalIsOpen && <CreateChannelModal />}
       <div className="absolute w-2/3 left-1/3">
         <Outlet />
       </div>
@@ -100,8 +106,12 @@ function Channels() {
 export default Channels;
 
 function CreateChannelButton() {
+  const dispatch = useAppDispatch()
+  const handleClick = () => {
+    dispatch(openModal())
+  }
   return (
-    <button className="absolute bottom-20 right-4 bg-cyan-500 text-white p-2 rounded-full w-10 h-10 shadow hover:bg-cyan-600">
+    <button onClick={handleClick} className="absolute bottom-20 right-4 bg-cyan-500 text-white p-2 rounded-full w-10 h-10 shadow hover:bg-cyan-600">
       <FontAwesomeIcon icon={faPlus} />
     </button>
   );

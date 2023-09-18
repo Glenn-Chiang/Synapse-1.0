@@ -6,12 +6,10 @@ import ErrorMessage from "../../components/ErrorMessage";
 import { useMutation, useQueryClient } from "react-query";
 import { createChannel } from "../../services/channels";
 import React from "react";
+import { useAppDispatch } from "../../store";
+import { closeModal } from "./channelModalSlice";
 
-export default function CreateChannel({
-  handleClose,
-}: {
-  handleClose: () => void;
-}) {
+export default function CreateChannelModal() {
   const currentUserId = localStorage.getItem("userId") as string;
 
   interface FormValues {
@@ -39,6 +37,12 @@ export default function CreateChannel({
   const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
     createChannelMutation.mutate(formValues);
     handleClose();
+  };
+
+  // Closing modal
+  const dispatch = useAppDispatch();
+  const handleClose = () => {
+    dispatch(closeModal());
   };
 
   return (

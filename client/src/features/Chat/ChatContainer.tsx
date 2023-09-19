@@ -2,7 +2,11 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import ChatHeader from "./ChatHeader";
 import { getUser } from "../../services/users";
-import { useCreateMessage, useGetChatMessages } from "../../services/messages";
+import {
+  markMessagesAsRead,
+  useCreateMessage,
+  useGetChatMessages,
+} from "../../services/messages";
 import { useCreateChat, useGetChat } from "../../services/chats";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
@@ -43,6 +47,14 @@ export default function ChatContainer() {
     }
   };
 
+  // Mark all unread messages as read when channel is opened, and when new messages come in
+  useEffect(() => {
+    if (!chat) {
+      return;
+    }
+    markMessagesAsRead(currentUserId, chat.id, "Chat");
+  }, [currentUserId, messages, chat]);
+
   // Emit typing event
   const handleTyping = () => {
     socket.emit("user typing", currentUsername, chat?.id);
@@ -52,8 +64,12 @@ export default function ChatContainer() {
   const [isTyping, setIsTyping] = useState(false);
   useEffect(() => {
     let typingTimer: NodeJS.Timeout | undefined = undefined;
-    const handleUserTyping = (username: string) => {
-      console.log(username, 'is typing')
+    const handleUserTyping = (username: string, roomId: string) => {
+      if (roomId !== chat?.id || !chat) {
+        // Each chat only listens for whether the other user is typing in the current chat
+        return;
+      }
+      console.log(username, "is typing");
       setIsTyping(true);
       clearTimeout(typingTimer);
       typingTimer = setTimeout(() => {
@@ -64,7 +80,7 @@ export default function ChatContainer() {
     return () => {
       socket.off("user typing", handleUserTyping);
     };
-  }, []);
+  }, [chat]);
 
   if (isLoading) {
     return <Loading />;
@@ -75,7 +91,9 @@ export default function ChatContainer() {
 
   return (
     <section>
-      {otherUser && <ChatHeader chatname={otherUser.username} isTyping={isTyping} />}
+      {otherUser && (
+        <ChatHeader chatname={otherUser.username} isTyping={isTyping} />
+      )}
       <div className="mt-16 h-full">
         <section className="mb-20 p-2 bg-slate-100 flex flex-col">
           {messages && <MessageThread messages={messages} />}

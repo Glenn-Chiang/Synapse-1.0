@@ -53,8 +53,11 @@ export default function ChannelContainer() {
   const [typingUser, setTypingUser] = useState<string>("");
   useEffect(() => {
     let typingTimer: NodeJS.Timeout | undefined = undefined;
-    const handleUserTyping = (username: string) => {
-      setTypingUser(username);
+    const handleUserTyping = (username: string, roomId: string) => {
+      if (roomId !== channelId) { // Each channel only listens for users typing in the current channel
+        return
+      }
+      setTypingUser(username); 
       clearTimeout(typingTimer);
       typingTimer = setTimeout(() => {
         setTypingUser("");
@@ -64,7 +67,7 @@ export default function ChannelContainer() {
     return () => {
       socket.off("user typing", handleUserTyping);
     };
-  }, []);
+  }, [channelId]);
 
   useConnectionSubscription(channelId);
 

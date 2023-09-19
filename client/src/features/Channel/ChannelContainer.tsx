@@ -27,8 +27,11 @@ export default function ChannelContainer() {
 
   const messagesQuery = useGetChannelMessages(channelId);
   const messages = messagesQuery.data;
-  
-  messages && markMessagesAsRead(messages)
+
+  // Mark all unread messages as read when channel is opened, and when new messages come in
+  useEffect(() => {
+    markMessagesAsRead(currentUserId, channelId, "Channel");
+  }, [channelId, currentUserId, messages]);
 
   // Sending messages
   const createMessage = useCreateMessage();

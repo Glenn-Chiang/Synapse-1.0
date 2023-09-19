@@ -40,4 +40,6 @@ interface Chat {
   messages: Message[];
 }
 
-export type { User, UserInfo, Channel, Chat, Message };
+type RoomType = 'Channel' | 'Chat'
+
+export type { User, UserInfo, Channel, Chat, Message, RoomType };

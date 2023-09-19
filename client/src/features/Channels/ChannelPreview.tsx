@@ -2,11 +2,8 @@ import { NavLink } from "react-router-dom";
 import { Channel } from "../../types";
 
 export default function ChannelPreview({ channel }: { channel: Channel }) {
-  const messagesCount = channel.messages.length 
   const unreadCount = channel.messages.filter(message => !message.isRead).length
-  console.log('Total messages:', messagesCount)
-  console.log('Unread messages:', unreadCount)
-
+  
   const lastMessage =
     channel.messages.length > 0 &&
     channel.messages[channel.messages.length - 1];

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import Message, { IMessage } from "../models/Message.js";
 import Channel from "../models/Channel.js";
 import Chat from "../models/Chat.js";
+import { RoomType } from "../types.js";
 
 export interface MessageData {
   text: string;
@@ -40,7 +41,7 @@ const registerMessageHandlers = (socket: Socket) => {
       isRead: false,
     }).save();
     console.log(message.toJSON());
-    emitMessageEvent(socket, message as IMessage);
+    emitMessageEvent(socket, message.room.toString(), message.roomType);
 
     // Update channel with new message
     if (roomType === "Channel") {
@@ -77,7 +78,7 @@ const registerMessageHandlers = (socket: Socket) => {
         roomType: message.roomType,
       });
       console.log(message.toJSON());
-      emitMessageEvent(socket, message as IMessage);
+      emitMessageEvent(socket, message.room.toString(), message.roomType);
     }
   };
 
@@ -102,20 +103,40 @@ const registerMessageHandlers = (socket: Socket) => {
         roomType: message.roomType,
       });
       console.log(message.toJSON());
-      emitMessageEvent(socket, message as IMessage);
+      emitMessageEvent(socket, message.room.toString(), message.roomType);
     }
+  };
+
+  const handleReadMessages = async (
+    currentUserId: string,
+    roomId: string,
+    roomType: RoomType
+  ) => {
+    console.log("Received messages:read event");
+    const messages = await Message.updateMany(
+      {
+        room: roomId,
+        isRead: false,
+        sender: { $ne: currentUserId },
+      },
+      {
+        $set: { isRead: true },
+      }
+    );
+    emitMessageEvent(socket, roomId, roomType);
   };
 
   socket.on("message:create", handleCreateMessage);
   socket.on("message:edit", handleEditMessage);
   socket.on("message:delete", handleDeleteMessage);
+  socket.on("messages:read", handleReadMessages);
 };
 
 export default registerMessageHandlers;
 
-const emitMessageEvent = (socket: Socket, message: IMessage) => {
-  socket.to(message.room.toString()).emit("message", {
-    roomId: message.room.toString(),
-    roomType: message.roomType.toString(), // Channel or Chat
+const emitMessageEvent = (socket: Socket, roomId: string, roomType: RoomType) => {
+  socket.to(roomId).emit("message", {
+    roomId,
+    roomType, 
   });
 };

@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "react-query";
-import { Chat, Message } from "../types";
+import { Chat, Message, RoomType } from "../types";
 import axios from "./axios";
 import socket from "../socket";
 import { useEffect } from "react";
@@ -59,8 +59,9 @@ const useMessageHandler = () => {
     roomType,
   }: {
     roomId: string;
-    roomType: "Chat" | "Channel";
+    roomType: RoomType;
   }) => {
+    console.log('received message event')
     await queryClient.invalidateQueries([
       roomType.toLowerCase() + "s",
       roomId,
@@ -73,19 +74,17 @@ const useMessageHandler = () => {
 const useMessageSubscription = () => {
   const handleMessage = useMessageHandler();
   useEffect(() => {
-    socket.on("message", handleMessage);
-
+    socket.on("message", handleMessage); // All message events are handled by simply invalidating messages queries
     return () => {
       socket.off("message", handleMessage);
     };
   }, [handleMessage]);
 };
 
-const markMessagesAsRead = (messages: Message[]) => {
-  messages.forEach(message => {
-    socket.emit("message:read", message.id)
-  })
-}
+// When user opens a room, mark unread incoming messages as read
+const markMessagesAsRead = (currentUserId: string, roomId: string, roomType: RoomType) => {
+  socket.emit("messages:read", currentUserId, roomId, roomType);
+};
 
 export {
   useGetChatMessages,
@@ -94,5 +93,5 @@ export {
   useCreateMessage,
   useEditMessage,
   useDeleteMessage,
-  markMessagesAsRead
+  markMessagesAsRead,
 };

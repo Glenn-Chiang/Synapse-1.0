@@ -9,3 +9,5 @@ export interface MySocket extends Socket {
     userId: string;
   };
 }
+
+export type RoomType = 'Channel' | 'Chat'
